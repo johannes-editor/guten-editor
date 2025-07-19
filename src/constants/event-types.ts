@@ -19,4 +19,5 @@ export class EventTypes {
     static readonly Drop = 'drop';
     static readonly DragStart = 'dragstart';
     static readonly DragEnd = 'dragend';
+    static readonly Mouseover = 'mouseover';
 }
