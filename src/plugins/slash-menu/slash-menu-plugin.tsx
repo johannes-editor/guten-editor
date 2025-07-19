@@ -1,14 +1,14 @@
 /** @jsx h */
 import { h } from "../../jsx.ts";
-import { EventTypes } from "../../utils/event-types.ts";
-import { KeyboardKeys } from "../../utils/keyboard-keys.ts";
+import { EventTypes } from "../../constants/event-types.ts";
+import { KeyboardKeys } from "../../constants/keyboard-keys.ts";
 import { SlashMenuOverlay } from "./components/slash-menu.tsx";
 import { Plugin } from "../../core/plugin-engine/plugin.ts";
 
 /**
  * String literal used as a type discriminator for SlashMenu extension plugins.
  */
-export const SLASH_MENU_PLUGIN_TYPE = "slash-menu-plugin-extension" as const;
+export const SlashMenuPluginExtensionType = "slash-menu-plugin-extension-type" as const;
 
 
 /**
@@ -36,6 +36,26 @@ export class SlashMenuPlugin extends Plugin {
 
     private readonly handleKey = (event: KeyboardEvent, root: HTMLElement, extensionPlugins: (Plugin & SlashMenuPluginExtension)[]) => {
         if (event.key === KeyboardKeys.Slash && !this.mounted()) {
+
+            // Prevent Firefox from opening the "Quick Find" bar when pressing the "/" key
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            // Insert "/" manually at caret position
+            const selection = window.getSelection();
+            if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const slashNode = document.createTextNode("/");
+
+                range.insertNode(slashNode);
+
+                // Move caret after the inserted slash
+                range.setStartAfter(slashNode);
+                range.setEndAfter(slashNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+
             root.append(
                 <SlashMenuOverlay extensionPlugins={extensionPlugins} />
             );
@@ -45,7 +65,6 @@ export class SlashMenuPlugin extends Plugin {
     private mounted(): boolean {
         return document.getElementsByTagName(SlashMenuOverlay.getTagName()).length > 0;
     }
-
 }
 
 /**
@@ -54,7 +73,9 @@ export class SlashMenuPlugin extends Plugin {
  */
 export interface SlashMenuPluginExtension {
     /** Discriminator for identifying plugins that implements SlashMenuPluginExtension */
-    type: typeof SLASH_MENU_PLUGIN_TYPE;
+    type: typeof SlashMenuPluginExtensionType;
+
+    sort: number;
     /** The display label for the menu item */
     label: string;
     /** The handler invoked when the menu item is selected */
@@ -64,6 +85,9 @@ export interface SlashMenuPluginExtension {
     * Use this to perform any setup or side effects needed by the plugin when the menu appears.
     */
     onMounted(): void;
+
+    /** Used by filter */
+    synonyms?: string[];
 }
 
 /**
@@ -73,7 +97,7 @@ export interface SlashMenuPluginExtension {
  */
 function isSlashMenuPluginExtension(plugin: Plugin): plugin is Plugin & SlashMenuPluginExtension {
     return (
-        "type" in plugin && plugin["type"] === SLASH_MENU_PLUGIN_TYPE &&
+        "type" in plugin && plugin["type"] === SlashMenuPluginExtensionType &&
         "label" in plugin && typeof plugin["label"] === "string" &&
         "onSelect" in plugin && typeof plugin["onSelect"] === "function"
     );
