@@ -10,7 +10,7 @@ export abstract class Component<P = any, S = any> extends HTMLElement {
 
     // shadow = this.attachShadow({ mode: 'open' });
 
-    private listeners: Array<[EventTarget, string, EventListenerOrEventListenerObject, boolean?]> = [];
+    private eventListeners: Array<[EventTarget, string, EventListenerOrEventListenerObject, boolean?]> = [];
 
     constructor() {
         super();
@@ -36,10 +36,10 @@ export abstract class Component<P = any, S = any> extends HTMLElement {
 
     disconnectedCallback() {
         this.onUnmount?.();
-        for (const [target, type, listener, options] of this.listeners) {
+        for (const [target, type, listener, options] of this.eventListeners) {
             target.removeEventListener(type, listener, options);
         }
-        this.listeners = [];
+        this.eventListeners = [];
     }
 
     public setState(partial: Partial<S>) {
@@ -48,14 +48,9 @@ export abstract class Component<P = any, S = any> extends HTMLElement {
         this.renderDOM();
     }
 
-    protected on(
-        target: EventTarget,
-        type: string,
-        listener: EventListenerOrEventListenerObject,
-        options?: boolean
-    ) {
+    protected registerEvent(target: EventTarget, type: string, listener: EventListenerOrEventListenerObject, options?: boolean) {
         target.addEventListener(type, listener, options);
-        this.listeners.push([target, type, listener, options]);
+        this.eventListeners.push([target, type, listener, options]);
     }
 
     protected injectStyles() {
@@ -66,15 +61,13 @@ export abstract class Component<P = any, S = any> extends HTMLElement {
             );
         }
 
-
-        // const ctor = this.constructor as ComponentConstructor;
-        // const styles = this.styles;
-        // if (styles && typeof styles === "string") {
-        //     const styleEl = document.createElement("style");
-        //     styleEl.textContent = styles;
-        //     this.shadow.appendChild(styleEl);
-        // }
-
+        const ctor = this.constructor as typeof Component;
+        const styles = ctor.styles;
+        if (styles && typeof styles === "string") {
+            const styleEl = document.createElement("style");
+            styleEl.textContent = styles;
+            this.appendChild(styleEl);
+        }
     }
 
     private renderDOM() {
