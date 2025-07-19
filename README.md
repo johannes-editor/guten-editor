@@ -1,1 +1,1 @@
-# Johhane Next
+# Guten Editor
