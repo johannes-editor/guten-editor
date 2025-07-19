@@ -2,11 +2,32 @@
     outline: none;
 }
 
-*:empty:not(:focus)::before {
+/* *:empty:not(:focus)::before {
     content: attr(data-placeholder);
+    color: #9ca3af;
+
+} */
+
+
+.placeholder {
+    position: relative;
 }
 
-::part(menu) {
+.placeholder::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #9ca3af;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.placeholder.empty::before {
+    visibility: visible;
+}
+
+/* ::part(menu) {
     display: block;
     width: 350px;
     background-color: antiquewhite;
@@ -20,12 +41,8 @@
 
 ::part(button) {
     width: 100%;
-}
-
-[part="button"].selected {
-    background-color: lightblue;
-}
-
+    box-sizing: border-box;
+} */
 
 
 
@@ -36,18 +53,56 @@
     list-style: none;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
     max-height: 200px;
     overflow-y: auto;
     min-width: 180px;
     width: 300px;
 }
+
 .emoji-picker li {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
 }
+
 .emoji-picker button.selected {
     background: #e6e6e6;
     border-radius: 6px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid rgb(233, 233, 231);
+    text-align: left;
+    vertical-align: top;
+    padding: .375rem .625rem;
+}
+
+th {
+    
+    font-weight: bold;
+}
+
+td {
+    min-width: 7.5rem;
+    max-width: 15rem;
+    height: 1rem;
 }

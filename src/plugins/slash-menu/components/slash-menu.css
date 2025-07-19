@@ -1,0 +1,18 @@
+slash-menu ul {
+
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    padding: 8px;
+    width: fit-content;
+    background-color: white;
+
+
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+}
+
+slash-menu ul li {
+    list-style: none;
+
+}
