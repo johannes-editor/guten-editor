@@ -25,7 +25,7 @@ export class Counter extends Component<CounterProps> {
     override onMount() {
         console.log("mounted element");
 
-        this.on(document, "keydown", this.handleKey as EventListener);
+        this.registerEvent(document, "keydown", this.handleKey as EventListener);
     }
 
     override onUnmount() {
@@ -36,7 +36,7 @@ export class Counter extends Component<CounterProps> {
         return (
             <div>
                 <span>{this.props.count}</span>
-                <button onClick={this.props.increment}>+</button>
+                <button type="button" onClick={this.props.increment}>+</button>
             </div>
         );
     }
