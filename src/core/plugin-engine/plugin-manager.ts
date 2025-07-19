@@ -5,7 +5,7 @@ const requiredPluginManifestFields = ["name", "path", "class", "active"] as cons
 
 export class PluginManager {
     
-    pluginManifests = import.meta.glob("../../plugins/*/manifest.json");
+    manifests = import.meta.glob("../../plugins/*/manifest.json");
     
     async init(root: HTMLElement) {
         const plugins = await this.fetchPlugins();
@@ -23,9 +23,9 @@ export class PluginManager {
     async fetchPlugins(): Promise<Plugin[]> {
         const plugins: Plugin[] = [];
 
-        for (const manifestPath in this.pluginManifests) {
+        for (const manifestPath in this.manifests) {
             try {
-                const manifestModule = await this.pluginManifests[manifestPath]();
+                const manifestModule = await this.manifests[manifestPath]();
                 const manifest = (manifestModule as any).default as PluginManifest;
 
                 for (const field of requiredPluginManifestFields) {
