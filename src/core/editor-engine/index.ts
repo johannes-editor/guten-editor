@@ -6,6 +6,8 @@ const editorManager = new EditorManager();
 const overlayManager = new OverlayManager();
 
 export const setRoot = (editorRoot: HTMLElement) => editorManager.setRoot(editorRoot);
+export const appendChildren = (element: Node) => editorManager.appendChildren(element);
+
 export const appendOverlay = (element: OverlayComponent) => editorManager.appendOverlay(element);
 
 export const push = (element: HTMLElement) => overlayManager.push(element);
