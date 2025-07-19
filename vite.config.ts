@@ -11,7 +11,7 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       entry: "./src/loader.ts",
-      name: "JohannesEditor",
+      name: "GutenEditor",
       formats: ["es"],
       fileName: () => "loader.js",
     },
