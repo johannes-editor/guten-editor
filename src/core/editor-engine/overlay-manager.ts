@@ -1,5 +1,5 @@
-import { EventTypes } from "../../utils/event-types.ts";
-import { KeyboardKeys } from "../../utils/keyboard-keys.ts";
+import { EventTypes } from "../../constants/event-types.ts";
+import { KeyboardKeys } from "../../constants/keyboard-keys.ts";
 
 export class OverlayManager {
 
