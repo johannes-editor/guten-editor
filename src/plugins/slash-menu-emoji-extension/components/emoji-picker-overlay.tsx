@@ -1,8 +1,8 @@
 /** @jsx h */
 import { Fragment, h } from "../../../jsx.ts";
 import { OverlayComponent } from "../../../components/overlay-component.ts";
-import { EventTypes } from "../../../utils/event-types.ts";
-import { KeyboardKeys } from "../../../utils/keyboard-keys.ts";
+import { EventTypes } from "../../../constants/event-types.ts";
+import { KeyboardKeys } from "../../../constants/keyboard-keys.ts";
 
 interface EmojiPickerOverlayProps {
     range: Range;
@@ -39,7 +39,7 @@ export class EmojiPickerOverlay extends OverlayComponent<EmojiPickerOverlayProps
     }
 
     override onMount(): void {
-        this.on(document, EventTypes.KeyDown, this.handleKey as EventListener);
+        this.registerEvent(document, EventTypes.KeyDown, this.handleKey as EventListener);
     }
 
     private readonly handleKey = (event: KeyboardEvent) => {
