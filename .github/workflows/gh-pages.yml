@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: demo/dist
-  deploy:
+    deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
