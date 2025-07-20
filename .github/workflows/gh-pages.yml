@@ -19,16 +19,14 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno --version
-      # Bundle the contents of the demo folder using Vite. The `--base` option
-      # ensures asset paths work when the site is served from
-      # https://<user>.github.io/<repo>/.
       - name: Build Demo
         run: deno run -A npm:vite build demo -- --base=/${{ github.event.repository.name }}/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: demo/dist
-    deploy:
+          artifact_name: github-pages
+  deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:

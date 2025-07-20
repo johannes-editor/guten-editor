@@ -5,7 +5,7 @@
   },
   "tasks": {
     "dev": "deno run -A npm:vite demo",
-    "build": "deno run -A npm:vite build",
+    "build": "deno run -A npm:vite build demo",
     "test": "deno test -A"
   }
 }
