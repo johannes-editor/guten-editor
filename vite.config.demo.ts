@@ -2,7 +2,7 @@ import { defineConfig } from "npm:vite";
 
 export default defineConfig({
   root: "demo",
-  base: process.env.BASE ?? "/",
+  publicDir: "public",
   build: {
     outDir: "dist",
     emptyOutDir: true,

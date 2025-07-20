@@ -30,7 +30,8 @@ jobs:
           deno-version: v2.x
 
       - name: Build demo
-        run: deno run -A npm:vite build --config vite.config.demo.ts
+        run: deno run -A npm:vite build --config vite.config.demo.ts -- --base=/${{ github.event.repository.name }}/
+
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
