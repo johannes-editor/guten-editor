@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Component } from "./components/component.ts";
 
 function applyAttributes(el: HTMLElement, props: Record<string, any>) {
@@ -8,7 +7,9 @@ function applyAttributes(el: HTMLElement, props: Record<string, any>) {
         } else if (key.startsWith('on') && typeof value === 'function') {
             el.addEventListener(key.slice(2).toLowerCase(), value);
         } else if (key !== "children" && value != null) {
-            el.setAttribute(key, String(value));
+            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+                el.setAttribute(key, String(value));
+            }
         }
     }
 }
@@ -33,7 +34,16 @@ export function h(tag: any, props: Record<string, any> | null, ...children: any[
             return el;
         }
 
-        return tag({ ...(props || {}), children });
+        let normalizedChildren;
+        if (children.length === 0) {
+            normalizedChildren = undefined;
+        } else if (children.length === 1) {
+            normalizedChildren = children[0];
+        } else {
+            normalizedChildren = children;
+        }
+
+        return tag({ ...(props || {}), children: normalizedChildren });
     }
 
     const el = document.createElement(tag);
