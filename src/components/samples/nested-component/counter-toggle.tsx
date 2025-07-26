@@ -2,14 +2,14 @@
 import { Fragment, h } from "../../../jsx.ts";
 import { Component } from "../../component.ts";
 import { Counter } from "./counter.tsx";
-import { EmptyProps } from "../../types.ts";
+import { DefaultProps } from "../../types.ts";
 
 interface CounterToggleState {
     mounted: boolean;
     count: number;
 }
 
-export class CounterToggle extends Component<EmptyProps, CounterToggleState> {
+export class CounterToggle extends Component<DefaultProps, CounterToggleState> {
 
     // styles = /*css*/ `
     //     .counter-holder {

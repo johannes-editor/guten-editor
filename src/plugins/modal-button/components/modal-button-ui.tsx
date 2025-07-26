@@ -1,15 +1,14 @@
 /** @jsx h */
 import { h } from '../../../jsx.ts';
-
 import { Component } from "../../../components/component.ts";
-import { EmptyProps } from "../../../components/types.ts";
+import { DefaultProps } from "../../../components/types.ts";
 import { Modal } from "./modal.tsx";
 
 interface ModalButtonUIState {
     open: boolean;
 }
 
-export class ModalButtonUI extends Component<EmptyProps, ModalButtonUIState> {
+export class ModalButtonUI extends Component<DefaultProps, ModalButtonUIState> {
 
     toggleModal = () => {
         this.setState({ open: !this.state.open });

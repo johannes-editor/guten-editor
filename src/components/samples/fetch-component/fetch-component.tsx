@@ -1,14 +1,14 @@
 /** @jsx h */
 import { h } from "../../../jsx.ts";
 import { Component } from "../../component.ts";
-import { EmptyProps } from "../../types.ts";
+import { DefaultProps } from "../../types.ts";
 
 interface FetchComponentState {
     data: any | null;
     loading: boolean;
 }
 
-export class FetchButton extends Component<EmptyProps, FetchComponentState> {
+export class FetchButton extends Component<DefaultProps, FetchComponentState> {
 
     fetchData = async () => {
 
