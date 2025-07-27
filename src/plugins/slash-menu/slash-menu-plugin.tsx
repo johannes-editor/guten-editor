@@ -4,6 +4,23 @@ import { EventTypes } from "../../constants/event-types.ts";
 import { KeyboardKeys } from "../../constants/keyboard-keys.ts";
 import { SlashMenuOverlay } from "./components/slash-menu.tsx";
 import { Plugin } from "../../core/plugin-engine/plugin.ts";
+import { DomUtils } from "../../utils/dom-utils.ts";
+import { ClassName } from "../../constants/class-name.ts";
+import { SlashMenuItemData } from "./components/types.ts";
+import { appendElementOnOverlayArea } from "../../core/editor-engine/index.ts";
+import { ParagraphFn } from "../../components/blocks/paragraph-fn.tsx";
+import { Heading1Fn } from "../../components/blocks/header1-fn.tsx";
+import { Heading2Fn } from "../../components/blocks/header2-fn.tsx";
+import { Heading3Fn } from "../../components/blocks/header3-fn.tsx";
+import { Heading4Fn } from "../../components/blocks/header4-fn.tsx";
+import { Heading5Fn } from "../../components/blocks/header5-fn.tsx";
+import { BlockquoteFn } from "../../components/blocks/blockquote-fn.tsx";
+import { BulletedListFn } from "../../components/blocks/bulleted-list-fn.tsx";
+import { NumberedListFn } from "../../components/blocks/numbered-list-fn.tsx";
+import { registerTranslation, t } from "../../core/i18n/index.ts";
+
+import { en } from "./i18n/en.ts";
+import pt from "./i18n/pt.ts";
 
 /**
  * String literal used as a type discriminator for SlashMenu extension plugins.
@@ -27,14 +44,30 @@ export class SlashMenuPlugin extends Plugin {
     * @param root The editor's root HTMLElement.
     * @param plugins The list of all loaded editor plugins.
     */
-    override setup(root: HTMLElement, plugins: Plugin[]): void {
+    override setup(_root: HTMLElement, plugins: Plugin[]): void {
+
+        registerTranslation("en", en);
+        registerTranslation("pt", pt);
 
         const extensionPlugins = plugins.filter(isSlashMenuPluginExtension);
 
-        document.addEventListener(EventTypes.KeyDown, (event) => this.handleKey(event, root, extensionPlugins))
+        const slashMenuItems: SlashMenuItemData[] = [];
+
+        for (const plugin of extensionPlugins) {
+            slashMenuItems.push({
+                sort: plugin.sort || 99,
+                label: plugin.label,
+                onSelect: () => plugin.onSelect(),
+                synonyms: plugin.synonyms || [],
+            });
+        }
+
+        document.addEventListener(EventTypes.KeyDown, (event) => this.handleKey(event, slashMenuItems));
     }
 
-    private readonly handleKey = (event: KeyboardEvent, root: HTMLElement, extensionPlugins: (Plugin & SlashMenuPluginExtension)[]) => {
+
+
+    private readonly handleKey = (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
         if (event.key === KeyboardKeys.Slash && !this.mounted()) {
 
             // Prevent Firefox from opening the "Quick Find" bar when pressing the "/" key
@@ -56,14 +89,106 @@ export class SlashMenuPlugin extends Plugin {
                 selection.addRange(range);
             }
 
-            root.append(
-                <SlashMenuOverlay extensionPlugins={extensionPlugins} />
-            );
+
+            const block = DomUtils.findClosestAncestorOfSelectionByClass(ClassName.Block);
+            const slashMenuItems = this.getBaseItems(block);
+            slashMenuItems.push(...extensionItems);
+
+            appendElementOnOverlayArea(<SlashMenuOverlay items={slashMenuItems} />);
         }
     }
 
     private mounted(): boolean {
         return document.getElementsByTagName(SlashMenuOverlay.getTagName()).length > 0;
+    }
+
+    private getBaseItems(block: HTMLElement | null): SlashMenuItemData[] {
+        return [
+            {
+                sort: 1,
+                label: t("paragraph"),
+                synonyms: [t("paragraph"), t("text")],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <ParagraphFn />);
+                    DomUtils.focusOnElement(element);
+                }
+            },
+            {
+                sort: 2,
+                label: t("heading_1"),
+                synonyms: [t("title"), "h1"],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <Heading1Fn />);
+                    DomUtils.focusOnElement(element);
+                }
+            },
+            {
+                sort: 3,
+                label: t("heading_2"),
+                synonyms: [t("title"), "h2"],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <Heading2Fn />);
+                    DomUtils.focusOnElement(element);
+                }
+            },
+            {
+                sort: 4,
+                label: t("heading_3"),
+                synonyms: [t("title"), "h3"],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <Heading3Fn />);
+                    DomUtils.focusOnElement(element);
+                }
+            },
+            {
+                sort: 5,
+                label: t("heading_4"),
+                synonyms: [t("title"), "h4"],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <Heading4Fn />);
+                    DomUtils.focusOnElement(element);
+                }
+            },
+            {
+                sort: 6,
+                label: t("heading_5"),
+                synonyms: [t("title"), "h5"],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <Heading5Fn />);
+                    DomUtils.focusOnElement(element);
+                }
+            },
+            {
+                sort: 7,
+                label: t("quotation"),
+                synonyms: ["cite", "blockquote"],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <BlockquoteFn />)
+                    DomUtils.focusOnElement(element);
+                }
+            },
+            {
+                sort: 7,
+                label: t("bulleted_list"),
+                synonyms: [t("list"), t("bulleted_list")],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <BulletedListFn />)
+                    const item = element.querySelector("li");
+                    DomUtils.focusOnElement(item);
+                }
+            },
+            {
+                sort: 7,
+                label: t("numbered_list"),
+                synonyms: [t("list"), t("numbered"), t("ordered")],
+                onSelect: () => {
+                    const element = DomUtils.insertElementAfter(block, <NumberedListFn />)
+                    const item = element.querySelector("li");
+                    DomUtils.focusOnElement(item);
+                }
+            }
+
+        ];
     }
 }
 
@@ -84,7 +209,7 @@ export interface SlashMenuPluginExtension {
     * Callback invoked when the SlashMenu is mounted in the editor.
     * Use this to perform any setup or side effects needed by the plugin when the menu appears.
     */
-    onMounted(): void;
+    // onMounted(): void;
 
     /** Used by filter */
     synonyms?: string[];
