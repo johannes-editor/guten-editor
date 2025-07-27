@@ -16,4 +16,8 @@ jobs:
       - run: deno --version
       - run: deno cache npm:vite
       - run: deno task test
-      - run: deno task build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node --version
+      - run: npx vite build --config vite.config.demo.ts
