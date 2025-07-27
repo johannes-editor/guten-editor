@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "lib": ["dom", "esnext"],
-    "strict": true
+    "strict": true,
+    "types": ["./src/jsx.d.ts"]
   },
   "tasks": {
     "dev": "deno run -A npm:vite demo",
