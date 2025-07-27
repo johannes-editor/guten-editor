@@ -29,11 +29,8 @@ jobs:
         with:
           deno-version: v2.x
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
       - name: Build demo
-        run: npx vite build --config vite.config.demo.ts -- --base=/${{ github.event.repository.name }}/
+        run: deno run -A npm:vite build --config vite.config.demo.ts -- --base=/${{ github.event.repository.name }}/
 
 
       - name: Upload artifact
