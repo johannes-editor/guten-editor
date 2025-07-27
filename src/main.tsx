@@ -1,9 +1,10 @@
 /** @jsx h */
 import { Fragment, h } from "./jsx.ts";
 import { setLocale, t } from "./core/i18n/index.ts";
-import { appendChildren, setRoot } from "./core/editor-engine/index.ts";
+import { appendElementOnContentArea, setRoot } from "./core/editor-engine/index.ts";
 import { init } from "./core/plugin-engine/index.ts";
-import { ClassName } from "./constants/class-name.ts";
+import { ParagraphFn } from "./components/blocks/paragraph-fn.tsx";
+import { Heading1Fn } from "./components/blocks/header1-fn.tsx";
 
 /**
 * Initializes the text editor.
@@ -18,10 +19,10 @@ export async function initEditor(root: HTMLElement) {
     await setLocale(lang);
 
     /** Load the basic editor layout */
-    appendChildren(
+    appendElementOnContentArea(
         <Fragment>
-            <h1 class={`${ClassName.Block} ${ClassName.Placeholder} ${ClassName.Empty}`} data-placeholder={t("untitled")}><br/></h1>
-            <p class={`${ClassName.Block} ${ClassName.Placeholder} ${ClassName.Empty}`} data-placeholder={t("startTyping")}><br/></p>
+            <Heading1Fn data-placeholder={t("untitled")} />
+            <ParagraphFn />
         </Fragment>
     );
 
