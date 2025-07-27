@@ -6,7 +6,7 @@
   },
   "tasks": {
     "dev": "deno run -A npm:vite demo",
-    "build": "deno cache npm:vite && deno run -A npm:vite build demo",
+    "build": "deno cache npm:vite && deno run -A npm:vite build --config vite.config.demo.ts",
     "test": "deno test -A"
   }
 }
