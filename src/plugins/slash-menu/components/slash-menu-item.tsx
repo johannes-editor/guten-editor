@@ -12,7 +12,7 @@ export interface SlashMenuItemProps {
 
 export class SlashMenuItem extends Component<SlashMenuItemProps> {
 
-    override getTagName(): string {
+    static override getTagName(): string {
         return "x-slash-menu-item";
     }
 
