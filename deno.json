@@ -6,8 +6,8 @@
   },
   "tasks": {
     "dev": "deno run -A npm:vite demo",
-    "build": "deno run -A npm:vite build demo",
-    "test": "deno test -A",
-    "build-lib": "deno run -A npm:vite build"
+    "build": "deno run -A npm:vite build",
+    "build-demo": "deno run -A npm:vite build demo",
+    "test": "deno test -A"
   }
 }
