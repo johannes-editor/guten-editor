@@ -2,7 +2,7 @@
 import { h } from "../../jsx.ts";
 import { SlashMenuPluginExtension, SlashMenuPluginExtensionType } from "../slash-menu/slash-menu-plugin.tsx";
 import { EmojiPickerOverlay } from "./components/emoji-picker-overlay.tsx";
-import { appendOverlay } from "../../core/editor-engine/index.ts";
+import { appendElementOnOverlayArea } from "../../core/editor-engine/index.ts";
 import { Plugin } from "../../core/plugin-engine/plugin.ts";
 import { SelectionUtils } from "../../utils/selection-utils.ts";
 
@@ -15,7 +15,6 @@ import { SelectionUtils } from "../../utils/selection-utils.ts";
 export class EmojiPlugin extends Plugin implements SlashMenuPluginExtension {
 
     sort: number = 3;
-    range: Range | null = null;
     /**
      * Discriminator used by the system to identify this plugin as a SlashMenu extension.
      * Must be set to `SLASH_MENU_PLUGIN_TYPE`.
@@ -25,13 +24,15 @@ export class EmojiPlugin extends Plugin implements SlashMenuPluginExtension {
     label: string = "Emoji Picker";
 
     onSelect(): void {
-        appendOverlay(
-            <EmojiPickerOverlay range={this.range} />
+        const range = SelectionUtils.getCurrentSelectionRange();
+
+        appendElementOnOverlayArea(
+            <EmojiPickerOverlay range={range} />
         );
     }
 
     onMounted(): void {
-        this.range = SelectionUtils.getCurrentSelectionRange();
+
     }
 
     override setup(_root: HTMLElement): void {

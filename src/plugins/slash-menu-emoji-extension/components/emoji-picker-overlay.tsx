@@ -1,6 +1,6 @@
 /** @jsx h */
 import { Fragment, h } from "../../../jsx.ts";
-import { OverlayComponent } from "../../../components/overlay-component.ts";
+import { OverlayComponent } from "../../../components/overlay/overlay-component.ts";
 import { EventTypes } from "../../../constants/event-types.ts";
 import { KeyboardKeys } from "../../../constants/keyboard-keys.ts";
 
@@ -19,6 +19,8 @@ export class EmojiPickerOverlay extends OverlayComponent<EmojiPickerOverlayProps
     static override get tagName() {
         return "emoji-picker-overlay";
     }
+
+    override zIndex: number = 1100;
 
     constructor() {
         super();
