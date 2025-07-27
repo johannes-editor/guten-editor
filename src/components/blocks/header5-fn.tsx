@@ -8,7 +8,7 @@ export function Heading5Fn(props: DefaultProps) {
     return (
         <h5
             className={`block placeholder ${!props.children && "empty"}`}
-            data-placeholder={t("heading5")}
+            data-placeholder={t("heading_5")}
             {...props}
         >
             {props.children ?? <br />}
