@@ -1,10 +1,15 @@
 
+/**
+ * Base class for editor plugins.
+ * Implement this to add features to the editor.
+ */
 export abstract class Plugin {
-    
+
     /**
-     * Essa funcao é responsavel por inicializar o plugin
-     * @param root 
-     * @param plugins 
-     */
-    abstract setup(root: HTMLElement, plugins: Plugin[] ): void;
+    * Initialize the plugin.
+    *
+    * @param root - Editor root element.
+    * @param plugins - All active plugins
+    */
+    abstract setup(root: HTMLElement, plugins: Plugin[]): void;
 }
