@@ -6,16 +6,17 @@ on:
   pull_request:
 
 jobs:
-  test-and-build:
+  test_and_build:
     runs-on: ubuntu-latest
-
     env:
       BASE: /${{ github.event.repository.name }}/
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: denoland/setup-deno@v1
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
         with:
           deno-version: v2.x
 
@@ -29,13 +30,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deno-
 
-      - run: deno --version
+      - name: Show versions
+        run: deno --version
 
-      - name: Cache npm: resolution (optional)
+      - name: Cache npm vite (optional)
         run: deno cache npm:vite
 
       - name: Run tests
         run: deno task test
 
-      - name: Build demo (Vite via Deno)
-        run: deno run -A npm:vite build --config vite.config.demo.ts -- --base=${{ env.BASE }}
+      - name: Build demo
+        run: deno run -A npm:vite build --config vite.config.demo.ts -- --base="${{ env.BASE }}"
