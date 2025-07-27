@@ -1,4 +1,3 @@
 export interface TranslationSchema {
-  untitled: string;
-  startTyping: string;
+    [key: string]: string;
 }
