@@ -2,14 +2,12 @@
 import { h } from "../../jsx.ts";
 import { SlashMenuPluginExtension, SlashMenuPluginExtensionType } from "../slash-menu/slash-menu-plugin.tsx";
 import { Plugin } from "../../core/plugin-engine/plugin.ts";
-import { DomUtils } from "../../utils/dom-utils.ts";
-import { CustomTable } from "./components/custom-table.tsx";
-import { DataSkip } from "../../constants/data-skip.ts";
-import { ClassName } from "../../constants/class-name.ts";
+import { CustomTableFn } from "./components/custom-table-fn.tsx";
+import { DomUtils, registerTranslation, t } from "../index.ts";
+import { en } from "./i18n/en.ts";
+import { pt } from "./i18n/pt.ts";
 
 export class SlashMenuTablePluginExtension extends Plugin implements SlashMenuPluginExtension {
-
-    private block: HTMLElement | null = null;
 
     sort: number = 9;
     range: Range | null = null;
@@ -19,22 +17,29 @@ export class SlashMenuTablePluginExtension extends Plugin implements SlashMenuPl
      */
     public readonly type = SlashMenuPluginExtensionType;
 
-    label: string = "Table";
+    label: string;
+
+    constructor() {
+        super();
+
+        registerTranslation("en", en);
+        registerTranslation("pt", pt);
+
+        this.label = t("table");
+    }
 
     onSelect(): void {
 
-        if (this.block) {
-            const element = DomUtils.insertElementAfter(this.block, <CustomTable class={ClassName.Block} data-skip={DataSkip.BlockInsertionNormalizer} contentEditable="false" />);
+        const currentBlock = DomUtils.findClosestAncestorOfSelectionByClass("block");
+
+        if (currentBlock) {
+            const element = DomUtils.insertElementAfter(currentBlock, <CustomTableFn />);
             const cell = element.querySelector("td");
             DomUtils.focusOnElement(cell);
         }
     }
 
-    onMounted(): void {
-        this.block = DomUtils.findClosestAncestorOfSelectionByClass(ClassName.Block);
-    }
-
-    override setup(_root: HTMLElement): void {
+    override setup(_root: HTMLElement, _plugins: Plugin[]): void {
         // No setup required for this extension plugin.
     }
 }
