@@ -14,5 +14,6 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno --version
+      - run: deno cache npm:vite
       - run: deno task test
       - run: deno task build

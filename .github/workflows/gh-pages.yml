@@ -29,6 +29,9 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: Cache Vite
+        run: deno cache npm:vite
+
       - name: Build demo
         run: deno run -A npm:vite build --config vite.config.demo.ts -- --base=/${{ github.event.repository.name }}/
 
