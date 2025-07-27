@@ -1,12 +1,7 @@
-#content {
+#contentArea {
     outline: none;
 }
 
-/* *:empty:not(:focus)::before {
-    content: attr(data-placeholder);
-    color: #9ca3af;
-
-} */
 
 
 .placeholder {
@@ -26,26 +21,6 @@
 .placeholder.empty::before {
     visibility: visible;
 }
-
-/* ::part(menu) {
-    display: block;
-    width: 350px;
-    background-color: antiquewhite;
-    padding: 10px;
-}
-
-::part(item) {
-    list-style: none;
-    margin-bottom: 10px;
-}
-
-::part(button) {
-    width: 100%;
-    box-sizing: border-box;
-} */
-
-
-
 
 .emoji-picker {
     margin: 0;
@@ -72,18 +47,6 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 table {
     border-collapse: collapse;
 }
@@ -97,7 +60,7 @@ td {
 }
 
 th {
-    
+
     font-weight: bold;
 }
 
@@ -105,4 +68,12 @@ td {
     min-width: 7.5rem;
     max-width: 15rem;
     height: 1rem;
+}
+
+.todo-list {
+    list-style: none;
+}
+
+.todo-list li span {
+    outline: none;
 }
