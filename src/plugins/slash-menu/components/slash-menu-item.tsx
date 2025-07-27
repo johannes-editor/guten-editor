@@ -12,6 +12,10 @@ export interface SlashMenuItemProps {
 
 export class SlashMenuItem extends Component<SlashMenuItemProps> {
 
+    override getTagName(): string {
+        return "x-slash-menu-item";
+    }
+
     render() {
         const className = this.props.selected ? "selected" : "";
         return <button
