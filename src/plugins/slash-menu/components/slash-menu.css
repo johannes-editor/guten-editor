@@ -2,6 +2,7 @@ slash-menu .slash-menu-wrapper {
     border: 1px solid #e2e2e2;
     border-radius: 10px;
     background: #fff;
+    background: red;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
     overflow: hidden;
     max-height: 18rem;
