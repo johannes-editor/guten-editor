@@ -1,17 +1,16 @@
 /** @jsx h */
 
-import { t } from "../../core/i18n/index.ts";
 import { h } from "../../jsx.ts"
 import { DefaultProps } from "../types.ts";
 
-export function Heading3Fn(props: DefaultProps) {
+export function Blockquote(props: DefaultProps) {
     return (
-        <h3
+        <blockquote
             className={`block placeholder ${!props.children && "empty"}`}
-            data-placeholder={t("heading_3")}
+            data-placeholder="To be or not to be"
             {...props}
         >
             {props.children ?? <br />}
-        </h3>
+        </blockquote>
     );
 }

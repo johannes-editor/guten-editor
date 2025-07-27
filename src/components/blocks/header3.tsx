@@ -4,14 +4,14 @@ import { t } from "../../core/i18n/index.ts";
 import { h } from "../../jsx.ts"
 import { DefaultProps } from "../types.ts";
 
-export function ParagraphFn(props: DefaultProps) {
+export function Heading3(props: DefaultProps) {
     return (
-        <p
+        <h3
             className={`block placeholder ${!props.children && "empty"}`}
-            data-placeholder={t("startTyping")}
+            data-placeholder={t("heading_3")}
             {...props}
         >
             {props.children ?? <br />}
-        </p>
+        </h3>
     );
 }

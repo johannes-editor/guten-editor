@@ -8,19 +8,20 @@ import { DomUtils } from "../../utils/dom-utils.ts";
 import { ClassName } from "../../constants/class-name.ts";
 import { SlashMenuItemData } from "./components/types.ts";
 import { appendElementOnOverlayArea } from "../../core/editor-engine/index.ts";
-import { ParagraphFn } from "../../components/blocks/paragraph-fn.tsx";
-import { Heading1Fn } from "../../components/blocks/header1-fn.tsx";
-import { Heading2Fn } from "../../components/blocks/header2-fn.tsx";
-import { Heading3Fn } from "../../components/blocks/header3-fn.tsx";
-import { Heading4Fn } from "../../components/blocks/header4-fn.tsx";
-import { Heading5Fn } from "../../components/blocks/header5-fn.tsx";
-import { BlockquoteFn } from "../../components/blocks/blockquote-fn.tsx";
-import { BulletedListFn } from "../../components/blocks/bulleted-list-fn.tsx";
-import { NumberedListFn } from "../../components/blocks/numbered-list-fn.tsx";
+import { Paragraph } from "../../components/blocks/paragraph.tsx";
+import { Heading1 } from "../../components/blocks/header1.tsx";
+import { Heading2 } from "../../components/blocks/header2.tsx";
+import { Heading3 } from "../../components/blocks/header3.tsx";
+import { Heading4 } from "../../components/blocks/header4.tsx";
+import { Heading5 } from "../../components/blocks/header5.tsx";
+import { Blockquote } from "../../components/blocks/blockquote.tsx";
+import { BulletedList } from "../../components/blocks/bulleted-list.tsx";
+import { NumberedList } from "../../components/blocks/numbered-list.tsx";
 import { registerTranslation, t } from "../../core/i18n/index.ts";
 
 import { en } from "./i18n/en.ts";
 import pt from "./i18n/pt.ts";
+import { defaultSlashMenuItems } from "./default-items.tsx";
 
 /**
  * String literal used as a type discriminator for SlashMenu extension plugins.
@@ -91,7 +92,7 @@ export class SlashMenuPlugin extends Plugin {
 
 
             const block = DomUtils.findClosestAncestorOfSelectionByClass(ClassName.Block);
-            const slashMenuItems = this.getBaseItems(block);
+            const slashMenuItems = defaultSlashMenuItems(block);
             slashMenuItems.push(...extensionItems);
 
             appendElementOnOverlayArea(<SlashMenuOverlay items={slashMenuItems} />);
@@ -102,94 +103,7 @@ export class SlashMenuPlugin extends Plugin {
         return document.getElementsByTagName(SlashMenuOverlay.getTagName()).length > 0;
     }
 
-    private getBaseItems(block: HTMLElement | null): SlashMenuItemData[] {
-        return [
-            {
-                sort: 1,
-                label: t("paragraph"),
-                synonyms: [t("paragraph"), t("text")],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <ParagraphFn />);
-                    DomUtils.focusOnElement(element);
-                }
-            },
-            {
-                sort: 2,
-                label: t("heading_1"),
-                synonyms: [t("title"), "h1"],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <Heading1Fn />);
-                    DomUtils.focusOnElement(element);
-                }
-            },
-            {
-                sort: 3,
-                label: t("heading_2"),
-                synonyms: [t("title"), "h2"],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <Heading2Fn />);
-                    DomUtils.focusOnElement(element);
-                }
-            },
-            {
-                sort: 4,
-                label: t("heading_3"),
-                synonyms: [t("title"), "h3"],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <Heading3Fn />);
-                    DomUtils.focusOnElement(element);
-                }
-            },
-            {
-                sort: 5,
-                label: t("heading_4"),
-                synonyms: [t("title"), "h4"],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <Heading4Fn />);
-                    DomUtils.focusOnElement(element);
-                }
-            },
-            {
-                sort: 6,
-                label: t("heading_5"),
-                synonyms: [t("title"), "h5"],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <Heading5Fn />);
-                    DomUtils.focusOnElement(element);
-                }
-            },
-            {
-                sort: 7,
-                label: t("quotation"),
-                synonyms: ["cite", "blockquote"],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <BlockquoteFn />)
-                    DomUtils.focusOnElement(element);
-                }
-            },
-            {
-                sort: 7,
-                label: t("bulleted_list"),
-                synonyms: [t("list"), t("bulleted_list")],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <BulletedListFn />)
-                    const item = element.querySelector("li");
-                    DomUtils.focusOnElement(item);
-                }
-            },
-            {
-                sort: 7,
-                label: t("numbered_list"),
-                synonyms: [t("list"), t("numbered"), t("ordered")],
-                onSelect: () => {
-                    const element = DomUtils.insertElementAfter(block, <NumberedListFn />)
-                    const item = element.querySelector("li");
-                    DomUtils.focusOnElement(item);
-                }
-            }
-
-        ];
-    }
+    
 }
 
 /**

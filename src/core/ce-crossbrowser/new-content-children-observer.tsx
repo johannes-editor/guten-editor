@@ -1,7 +1,7 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
-import { ParagraphFn } from "../../components/blocks/paragraph-fn.tsx";
+import { Paragraph } from "../../components/blocks/paragraph.tsx";
 import { DomUtils } from "../../utils/dom-utils.ts";
 
 /**
@@ -33,7 +33,7 @@ export class NewContentChildrenObserver {
 
                         try {
 
-                            const p = <ParagraphFn />;
+                            const p = <Paragraph />;
                             node.replaceWith(p);
                             DomUtils.focusOnElement(p);
                         } catch (e) {

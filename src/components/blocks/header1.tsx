@@ -4,14 +4,14 @@ import { t } from "../../core/i18n/index.ts";
 import { h } from "../../jsx.ts"
 import { DefaultProps } from "../types.ts";
 
-export function Heading5Fn(props: DefaultProps) {
+export function Heading1(props: DefaultProps) {
     return (
-        <h5
+        <h1
             className={`block placeholder ${!props.children && "empty"}`}
-            data-placeholder={t("heading_5")}
+            data-placeholder={t("heading_1")}
             {...props}
         >
             {props.children ?? <br />}
-        </h5>
+        </h1>
     );
 }
