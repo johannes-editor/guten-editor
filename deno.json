@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "lib": ["dom", "esnext"],
-    "strict": true,
-    "types": ["./src/jsx.d.ts"]
+    "strict": true
   },
   "tasks": {
     "dev": "deno run -A npm:vite demo",
-    "build": "deno cache npm:vite && deno run -A npm:vite build --config vite.config.demo.ts",
+    "build": "deno run -A npm:vite build demo",
     "test": "deno test -A"
   }
 }
