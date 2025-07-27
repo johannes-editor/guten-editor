@@ -3,7 +3,7 @@
 import { h } from "../../jsx.ts";
 import { ParagraphTrigger } from "../../components/paragraph-trigger/paragraph-trigger.tsx";
 import { BlockquoteEnterHandler } from "../ce-crossbrowser/blockquote-enter-handler.ts";
-import { NewContentChildrenObserver } from "../ce-crossbrowser/new-content-children-observer.ts";
+import { NewContentChildrenObserver } from "../ce-crossbrowser/new-content-children-observer.tsx";
 import { PlaceholderObserver } from "../ce-crossbrowser/placeholder-observer.ts";
 
 export class EditorManager {

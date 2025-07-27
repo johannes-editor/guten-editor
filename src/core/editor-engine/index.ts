@@ -1,14 +1,9 @@
-import { EditorManager } from "./editor-manager.ts";
-import { OverlayManager } from "../editor-engine/overlay-manager.ts";
-import { OverlayComponent } from "../../components/overlay-component.ts";
+import { EditorManager } from "./editor-manager.tsx";
 
 const editorManager = new EditorManager();
-const overlayManager = new OverlayManager();
 
 export const setRoot = (editorRoot: HTMLElement) => editorManager.setRoot(editorRoot);
-export const appendChildren = (element: Node) => editorManager.appendChildren(element);
+export const appendElementOnRootArea = (element: HTMLElement) => editorManager.appendElementOnEditorRoot(element);
+export const appendElementOnContentArea = (element: HTMLElement) => editorManager.appendElementOnContentArea(element);
+export const appendElementOnOverlayArea = (element: HTMLElement) => editorManager.appendElementOnOverlayArea(element);
 
-export const appendOverlay = (element: OverlayComponent) => editorManager.appendOverlay(element);
-
-export const push = (element: HTMLElement) => overlayManager.push(element);
-export const remove = (element: HTMLElement) => overlayManager.remove(element);
