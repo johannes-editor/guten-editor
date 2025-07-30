@@ -16,7 +16,8 @@ const pt: TranslationSchema = {
   numbered_list: 'Lista numerada',
   ordered: 'Ordenada',
   numbered: 'Numerada',
-  quotation: 'Citação'
+  quotation: 'Citação',
+  no_item_found: 'Nenhum item encontrado'
 };
 
 export default pt;
