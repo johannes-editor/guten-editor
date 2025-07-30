@@ -57,7 +57,9 @@ export function h(tag: any, props: Record<string, any> | null, ...children: any[
 }
 
 function appendChildren(parent: HTMLElement | DocumentFragment, children: any[]) {
-    for (const child of children.flat()) {
+    const flattenedChildren = Array.isArray(children) ? children.flat() : [];
+
+    for (const child of flattenedChildren) {
         if (child == null || typeof child === "boolean") continue;
         parent.append(child instanceof Node ? child : document.createTextNode(String(child)));
     }
