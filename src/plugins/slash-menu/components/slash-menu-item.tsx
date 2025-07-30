@@ -8,6 +8,7 @@ export interface SlashMenuItemProps {
     selected: boolean;
     onSelect: () => void;
     onMouseOver: (index: number) => void;
+    
 }
 
 export class SlashMenuItem extends Component<SlashMenuItemProps> {

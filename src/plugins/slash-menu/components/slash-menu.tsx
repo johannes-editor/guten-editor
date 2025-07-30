@@ -6,8 +6,8 @@ import { DomUtils } from "../../../utils/dom-utils.ts";
 import { SelectionUtils } from "../../../utils/selection-utils.ts";
 import { KeyboardKeys } from "../../../constants/keyboard-keys.ts";
 import { EventTypes } from "../../../constants/event-types.ts";
-import { ClassName } from "../../../constants/class-name.ts";
 import { SlashMenuItemData } from "./types.ts";
+import { t } from "../../index.ts";
 
 import styles from "./slash-menu.css?inline";
 
@@ -23,7 +23,7 @@ interface SlashMenuState {
 
 export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenuState> {
 
-    private block: HTMLElement | null;
+    private focusedBlock: HTMLElement | null;
     private range: Range | null;
     private keyboardNavTimeout: number | undefined;
     private keyboardNavigating: boolean = false;
@@ -41,7 +41,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     constructor() {
         super();
 
-        this.block = DomUtils.findClosestAncestorOfSelectionByClass(ClassName.Block);
+        this.focusedBlock = DomUtils.findClosestAncestorOfSelectionByClass("block");
         this.range = SelectionUtils.getCurrentSelectionRange();
         this.keyboardNavTimeout = undefined;
 
@@ -80,6 +80,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         }
 
         switch (event.key) {
+
             case KeyboardKeys.ArrowDown:
                 event.preventDefault();
                 this.setKeyboardNavigation();
@@ -108,6 +109,13 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                     if (item) {
                         this.handleOnSelect(item);
                     }
+                }
+                break;
+
+            case KeyboardKeys.Backspace:
+                {
+                    const items = this.getFilteredItems();
+                    items[this.state.selectedIndex];
                 }
                 break;
 
@@ -161,7 +169,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     }
 
     handleOnSelect(item: SlashMenuItemData) {
-        item.onSelect();
+        item.onSelect(this.focusedBlock!);
         this.remove(); // By default, remove the SlashMenu after executing onSelect
     }
 
@@ -189,8 +197,6 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                 menu2.scrollTop = this.previousScrollTop;
             }
         }
-
-        // this.ensureItemVisibility();
     }
 
     render() {
@@ -199,6 +205,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
 
         return (
             <div class="slash-menu-wrapper">
+
                 <ul role="menu" class="slash-menu">
                     {filtered.map((item, index) => (
                         <li role="menuitem">
@@ -212,6 +219,14 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                         </li>
                     ))}
                 </ul>
+
+                {/* Verifica se o filtro é muito restritivo e renderiza um aviso */}
+                {filtered.length === 0 && (
+                    <div class="no-items-found">
+                        {t("no_item_found")}
+                    </div>
+                )}
+
             </div>
         );
     }
@@ -240,8 +255,8 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             }
         }
 
-        if (!rect && this.block) {
-            rect = this.block.getBoundingClientRect();
+        if (!rect && this.focusedBlock) {
+            rect = this.focusedBlock.getBoundingClientRect();
         }
 
         if (!rect) return;
@@ -316,5 +331,6 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
 
     }
 
+    
 
 }

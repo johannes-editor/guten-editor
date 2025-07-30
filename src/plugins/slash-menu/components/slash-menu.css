@@ -40,3 +40,7 @@ x-slash-menu-item button {
 x-slash-menu-item button.selected {
     background-color: #f5f5f5;
 }
+
+slash-menu .no-items-found {
+    padding: 8px;
+}

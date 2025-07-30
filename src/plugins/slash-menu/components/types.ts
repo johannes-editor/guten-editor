@@ -1,6 +1,6 @@
 export interface SlashMenuItemData {
     sort: number;
     label: string;
-    onSelect: () => void;
+    onSelect: (focusedBlock: HTMLElement) => void;
     synonyms?: string[];
 }

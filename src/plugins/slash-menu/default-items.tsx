@@ -14,14 +14,14 @@ import { Blockquote } from "../../components/blocks/blockquote.tsx";
 import { BulletedList } from "../../components/blocks/bulleted-list.tsx";
 import { NumberedList } from "../../components/blocks/numbered-list.tsx";
 
-export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemData[] {
+export function defaultSlashMenuItems(): SlashMenuItemData[] {
     return [
         {
             sort: 10,
             label: t("paragraph"),
             synonyms: [t("paragraph"), t("text")],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <Paragraph />);
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = DomUtils.insertElementAfter(focusedBlock, <Paragraph />);
                 DomUtils.focusOnElement(element);
             }
         },
@@ -29,8 +29,8 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 20,
             label: t("heading_1"),
             synonyms: [t("title"), "h1"],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <Heading1 />);
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = DomUtils.insertElementAfter(focusedBlock, <Heading1 />);
                 DomUtils.focusOnElement(element);
             }
         },
@@ -38,8 +38,8 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 30,
             label: t("heading_2"),
             synonyms: [t("title"), "h2"],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <Heading2 />);
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = DomUtils.insertElementAfter(focusedBlock, <Heading2 />);
                 DomUtils.focusOnElement(element);
             }
         },
@@ -47,8 +47,8 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 40,
             label: t("heading_3"),
             synonyms: [t("title"), "h3"],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <Heading3 />);
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = DomUtils.insertElementAfter(focusedBlock, <Heading3 />);
                 DomUtils.focusOnElement(element);
             }
         },
@@ -56,8 +56,8 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 50,
             label: t("heading_4"),
             synonyms: [t("title"), "h4"],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <Heading4 />);
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = DomUtils.insertElementAfter(focusedBlock, <Heading4 />);
                 DomUtils.focusOnElement(element);
             }
         },
@@ -65,8 +65,8 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 60,
             label: t("heading_5"),
             synonyms: [t("title"), "h5"],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <Heading5 />);
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = DomUtils.insertElementAfter(focusedBlock, <Heading5 />);
                 DomUtils.focusOnElement(element);
             }
         },
@@ -74,8 +74,8 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 70,
             label: t("quotation"),
             synonyms: ["cite", "blockquote"],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <Blockquote />)
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = DomUtils.insertElementAfter(focusedBlock, <Blockquote />)
                 DomUtils.focusOnElement(element);
             }
         },
@@ -83,8 +83,9 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 80,
             label: t("bulleted_list"),
             synonyms: [t("list"), t("bulleted_list")],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <BulletedList />)
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = <BulletedList />;
+                focusedBlock.after(element);
                 const item = element.querySelector("li");
                 DomUtils.focusOnElement(item);
             }
@@ -93,8 +94,9 @@ export function defaultSlashMenuItems(block: HTMLElement | null): SlashMenuItemD
             sort: 90,
             label: t("numbered_list"),
             synonyms: [t("list"), t("numbered"), t("ordered")],
-            onSelect: () => {
-                const element = DomUtils.insertElementAfter(block, <NumberedList />)
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = <NumberedList />;
+                focusedBlock.after(element);
                 const item = element.querySelector("li");
                 DomUtils.focusOnElement(item);
             }
