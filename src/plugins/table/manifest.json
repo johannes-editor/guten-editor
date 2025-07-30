@@ -1,0 +1,12 @@
+{
+    "name": "Slash Menu Table Extension",
+    "author": "Alexandre Tavares",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./slash-menu-table-extension.tsx",
+            "class": "SlashMenuTablePluginExtension",
+            "active": true
+        }
+    ]
+}
