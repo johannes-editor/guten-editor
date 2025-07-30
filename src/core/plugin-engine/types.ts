@@ -1,11 +1,13 @@
-export interface PluginManifest {
-    name: string;
-    path: string;
-    class: string;
-    active: boolean;
+export type PluginEntry = {
+  path: string;
+  class: string;
+  active: boolean;
+};
 
-    version?: string;
-    author?: string;
-    description?: string;
-    license?: string;
-}
+export type PluginManifest = {
+  name: string;
+  author?: string;
+  version?: string;
+  description?: string;
+  entries: PluginEntry[];
+};

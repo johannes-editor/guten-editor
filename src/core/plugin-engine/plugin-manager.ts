@@ -1,7 +1,6 @@
+import { ExtensiblePlugin } from "./extensible-plugin.ts";
 import { Plugin } from "./plugin.ts";
-import type { PluginManifest } from "./types.ts";
-
-const REQUIRED_FIELDS = ["name", "path", "class", "active"] as const;
+import type { PluginEntry, PluginManifest } from "./types.ts";
 
 const manifests = import.meta.glob(
     "../../plugins/*/manifest.json",
@@ -17,17 +16,16 @@ export class PluginManager {
         const plugins = await this.fetchPlugins();
 
         for (const plugin of plugins) {
-            try {
-                plugin.setup(root, plugins);
-            } catch (err) {
-                console.error(
-                    `Failed to setup "${plugin.constructor.name}": ${err instanceof Error ? err.message : err
-                    }`,
-                );
+            plugin.setup(root, plugins);
+        }
+
+        for (const plugin of plugins) {
+            if (plugin instanceof ExtensiblePlugin) {
+                const extensions = plugin.findExtensions(plugins);
+                plugin.initialize(root, extensions);
             }
         }
     }
-
 
     private async fetchPlugins(): Promise<Plugin[]> {
         const loaded: Plugin[] = [];
@@ -35,48 +33,52 @@ export class PluginManager {
         for (const manifestPath in manifests) {
             const manifest = manifests[manifestPath].default;
 
-            if (!this.isValidManifest(manifest, manifestPath)) continue;
-            if (!manifest.active) continue;
-            const baseDir = manifestPath.replace("/manifest.json", "");
-            const sourceKey = `${baseDir}/${manifest.path.replace(/^\.?\//, "")}`;
-
-            const loader = pluginModules[sourceKey];
-            if (!loader) {
-                console.warn(`Source file not found or not bundled: ${sourceKey}`);
+            if (!Array.isArray(manifest.entries)) {
+                console.warn(`Manifest ${manifestPath} missing or invalid "entries" array`);
                 continue;
             }
 
-            try {
-                const mod = await loader();
-                const PluginClass = (mod as any)[manifest.class] as { new(): Plugin };
+            const baseDir = manifestPath.replace("/manifest.json", "");
 
-                if (!PluginClass) {
-                    console.warn(
-                        `Class "${manifest.class}" not exported by ${sourceKey}.`,
-                    );
+            for (const entry of manifest.entries) {
+                if (!this.isValidEntry(entry, manifestPath)) continue;
+                if (!entry.active) continue;
+
+                const sourceKey = `${baseDir}/${entry.path.replace(/^\.?\//, "")}`;
+                const loader = pluginModules[sourceKey];
+
+                if (!loader) {
+                    console.warn(`Source file not found or not bundled: ${sourceKey}`);
                     continue;
                 }
 
-                const instance = new PluginClass();
-                if (instance instanceof Plugin) loaded.push(instance);
-            } catch (err) {
-                console.warn(
-                    `Failed to load plugin at ${sourceKey}: ${err instanceof Error ? err.message : err
-                    }`,
-                );
+                try {
+                    const mod = await loader();
+                    // deno-lint-ignore no-explicit-any
+                    const PluginClass = (mod as any)[entry.class] as { new(): Plugin };
+
+                    if (!PluginClass) {
+                        console.warn(`Class "${entry.class}" not exported by ${sourceKey}.`);
+                        continue;
+                    }
+
+                    const instance = new PluginClass();
+                    if (instance instanceof Plugin) loaded.push(instance);
+                } catch (err) {
+                    console.warn(`Failed to load plugin at ${sourceKey}: ${err instanceof Error ? err.message : err}`);
+                }
             }
         }
+
         return loaded;
     }
 
-
-    private isValidManifest(
-        manifest: PluginManifest,
-        path: string,
-    ): manifest is PluginManifest {
-        for (const field of REQUIRED_FIELDS) {
-            if (!(field in manifest)) {
-                console.warn(`Manifest ${path} missing required field "${field}"`);
+    // deno-lint-ignore no-explicit-any
+    private isValidEntry(entry: any, path: string): entry is PluginEntry {
+        const required = ["path", "class", "active"];
+        for (const field of required) {
+            if (!(field in entry)) {
+                console.warn(`Manifest entry in ${path} missing required field "${field}"`);
                 return false;
             }
         }
