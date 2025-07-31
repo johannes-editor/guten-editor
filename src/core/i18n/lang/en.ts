@@ -17,7 +17,8 @@ const en: TranslationSchema = {
   ordered: 'Ordered',
   numbered: 'Numbered',
   quotation: 'Quotation',
-  no_item_found: 'No item found'
+  no_item_found: 'No item found',
+  table: 'Table',
 };
 
 export default en;
