@@ -1,0 +1,11 @@
+{
+    "name": "Formatting Toolbar",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "formatting-toolbar-plugin.tsx",
+            "class": "FormattingToolbarPlugin",
+            "active": true
+        }
+    ]
+}
