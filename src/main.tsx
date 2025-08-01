@@ -3,8 +3,8 @@ import { Fragment, h } from "./jsx.ts";
 import { setLocale, t } from "./core/i18n/index.ts";
 import { appendElementOnContentArea, setRoot } from "./core/editor-engine/index.ts";
 import { init } from "./core/plugin-engine/index.ts";
-import { Paragraph } from "./components/blocks/paragraph.tsx";
-import { Heading1 } from "./components/blocks/header1.tsx";
+import { ParagraphBlock } from "./components/blocks/paragraph.tsx";
+import { Heading1Block } from "./components/blocks/header1.tsx";
 
 /**
 * Initializes the text editor.
@@ -21,8 +21,8 @@ export async function initEditor(root: HTMLElement) {
     /** Load the basic editor layout */
     appendElementOnContentArea(
         <Fragment>
-            <Heading1 data-placeholder={t("untitled")} />
-            <Paragraph />
+            <Heading1Block data-placeholder={t("untitled")} />
+            <ParagraphBlock />
         </Fragment>
     );
 

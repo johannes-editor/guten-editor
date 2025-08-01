@@ -3,7 +3,7 @@
 import { h } from "../../jsx.ts";
 import { DefaultProps } from "../types.ts";
 
-export function BulletedList(props: DefaultProps) {
+export function BulletedListBlock(props: DefaultProps) {
     return (
         <ul
             className="block"

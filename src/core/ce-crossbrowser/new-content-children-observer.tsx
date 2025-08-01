@@ -1,8 +1,8 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
-import { Paragraph } from "../../components/blocks/paragraph.tsx";
-import { DomUtils } from "../../utils/dom-utils.ts";
+import { ParagraphBlock } from "../../components/blocks/paragraph.tsx";
+import { focusOnElement } from "../../utils/dom-utils.ts";
 
 /**
  * Observes the insertion of new blocks directly into the contentEditable DOM (e.g., when pressing Enter).
@@ -33,9 +33,9 @@ export class NewContentChildrenObserver {
 
                         try {
 
-                            const p = <Paragraph />;
+                            const p = <ParagraphBlock />;
                             node.replaceWith(p);
-                            DomUtils.focusOnElement(p);
+                            focusOnElement(p);
                         } catch (e) {
                             console.error("Error:", e);
                         }

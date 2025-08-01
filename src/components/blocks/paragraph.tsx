@@ -4,7 +4,7 @@ import { t } from "../../core/i18n/index.ts";
 import { h } from "../../jsx.ts"
 import { DefaultProps } from "../types.ts";
 
-export function Paragraph(props: DefaultProps) {
+export function ParagraphBlock(props: DefaultProps) {
     return (
         <p
             className={`block placeholder ${!props.children && "empty"}`}

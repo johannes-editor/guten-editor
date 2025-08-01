@@ -1,5 +1,5 @@
 import { ClassName } from "../../constants/class-name.ts";
-import { DomUtils } from "../../utils/dom-utils.ts";
+import { focusOnElement } from "../../utils/dom-utils.ts";
 
 export class BlockquoteEnterHandler {
     private isFirefox: boolean;
@@ -36,15 +36,15 @@ export class BlockquoteEnterHandler {
         const fragment = contentAfter.extractContents();
 
         const newParagraph = document.createElement("p");
-        newParagraph.classList.add(ClassName.Block);
-        newParagraph.classList.add(ClassName.Placeholder);
+        newParagraph.classList.add("block");
+        newParagraph.classList.add("placeholder");
         newParagraph.dataset.placeholder = "Start typing...";
         newParagraph.innerHTML = fragment.textContent?.trim() ? "" : "<br>";
         newParagraph.appendChild(fragment);
 
         blockquote.insertAdjacentElement("afterend", newParagraph);
 
-        DomUtils.focusOnElement(newParagraph);
+        focusOnElement(newParagraph);
     };
 
     private getClosestBlockquote(node: Node): HTMLElement | null {

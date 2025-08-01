@@ -3,7 +3,7 @@
 import { h } from "../../jsx.ts"
 import { DefaultProps } from "../types.ts";
 
-export function Blockquote(props: DefaultProps) {
+export function BlockquoteBlock(props: DefaultProps) {
     return (
         <blockquote
             className={`block placeholder ${!props.children && "empty"}`}

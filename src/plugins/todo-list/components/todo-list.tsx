@@ -1,11 +1,7 @@
 /** @jsx h */
-import { h } from "../../../jsx.ts";
-import { Component } from "../../../components/component.ts";
-import { ClassName } from "../../../constants/class-name.ts";
-import { DataSkip } from "../../../constants/data-skip.ts";
+
 import { TodoItem } from "./todo-item.tsx";
-import { DomUtils } from "../../../utils/dom-utils.ts";
-import { KeyboardKeys } from "../../../constants/keyboard-keys.ts";
+import { h, Component, focusOnElement, KeyboardKeys } from "../../index.ts";
 
 export class TodoList extends Component {
 
@@ -15,7 +11,7 @@ export class TodoList extends Component {
 
     override render(): HTMLElement {
         return (
-            <ul class={`${ClassName.Block} todo-list`} data-skip={DataSkip.BlockInsertionNormalizer} contentEditable="false">
+            <ul class="block todo-list" contentEditable="false">
                 <TodoItem />
             </ul>
         );
@@ -37,8 +33,7 @@ export class TodoList extends Component {
             ul.appendChild(element);
 
             const span = element.querySelector("span");
-            DomUtils.focusOnElement(span);
+            focusOnElement(span);
         }
     }
-
 }

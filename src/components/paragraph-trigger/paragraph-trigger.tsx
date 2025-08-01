@@ -4,8 +4,8 @@ import { h } from "../../jsx.ts";
 import { EventTypes } from "../../constants/event-types.ts";
 import { Component } from "../component.ts";
 import { appendElementOnContentArea } from "../../core/editor-engine/index.ts";
-import { Paragraph } from "../blocks/paragraph.tsx";
-import { DomUtils } from "../../utils/dom-utils.ts";
+import { ParagraphBlock } from "../blocks/paragraph.tsx";
+import { focusOnElement } from "../../utils/dom-utils.ts";
 
 export class ParagraphTrigger extends Component {
 
@@ -22,8 +22,8 @@ export class ParagraphTrigger extends Component {
 
     private readonly handleClick = () => {
 
-        const element = appendElementOnContentArea(<Paragraph />)
-        DomUtils.focusOnElement(element);
+        const element = appendElementOnContentArea(<ParagraphBlock />)
+        focusOnElement(element);
         ;
     };
 

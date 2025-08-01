@@ -4,7 +4,7 @@ import { t } from "../../core/i18n/index.ts";
 import { h } from "../../jsx.ts"
 import { DefaultProps } from "../types.ts";
 
-export function Heading5(props: DefaultProps) {
+export function Heading5Block(props: DefaultProps) {
     return (
         <h5
             className={`block placeholder ${!props.children && "empty"}`}
