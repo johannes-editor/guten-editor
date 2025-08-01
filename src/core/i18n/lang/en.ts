@@ -19,6 +19,7 @@ const en: TranslationSchema = {
   quotation: 'Quotation',
   no_item_found: 'No item found',
   table: 'Table',
+  todo_list: 'Todo list',
 };
 
 export default en;
