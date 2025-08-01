@@ -1,0 +1,1 @@
+export { SlashMenuExtensionPlugin } from "./slash-menu-plugin.tsx";

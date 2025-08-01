@@ -1,17 +1,14 @@
 /** @jsx h */
-import { h } from "../../jsx.ts";
-import { EventTypes } from "../../constants/event-types.ts";
-import { KeyboardKeys } from "../../constants/keyboard-keys.ts";
+
+import { h, Plugin, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, registerTranslation, appendElementOnOverlayArea } from "../index.ts";
+
 import { SlashMenuOverlay } from "./components/slash-menu.tsx";
-import { Plugin } from "../../core/plugin-engine/plugin.ts";
 import { SlashMenuItemData } from "./components/types.ts";
-import { appendElementOnOverlayArea } from "../../core/editor-engine/index.ts";
-import { registerTranslation, t } from "../../core/i18n/index.ts";
+
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
 import { defaultSlashMenuItems } from "./default-items.tsx";
-import { ExtensiblePlugin } from "../../core/plugin-engine/extensible-plugin.ts";
-import { PluginExtension } from "../../core/plugin-engine/plugin-extension.ts";
+
 
 /**
  * The SlashMenuPlugin is an EditorPlugin that integrates a SlashMenu into the editor interface.
@@ -81,9 +78,6 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
         return document.getElementsByTagName(SlashMenuOverlay.getTagName()).length > 0;
     }
 }
-
-PluginExtension
-
 
 export abstract class SlashMenuExtensionPlugin extends PluginExtension<SlashMenuPlugin> {
 

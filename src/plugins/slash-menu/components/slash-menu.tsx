@@ -1,13 +1,11 @@
 /** @jsx h */
-import { h } from "../../index.ts";
+import { h, t, EventTypes, KeyboardKeys, OverlayComponent } from "../../index.ts";
 import { SlashMenuItem } from "./slash-menu-item.tsx";
-import { OverlayComponent } from "../../../components/overlay/overlay-component.ts";
-import { DomUtils } from "../../../utils/dom-utils.ts";
+import { findClosestAncestorOfSelectionByClass } from "../../../utils/dom-utils.ts";
+
 import { SelectionUtils } from "../../../utils/selection-utils.ts";
-import { KeyboardKeys } from "../../../constants/keyboard-keys.ts";
-import { EventTypes } from "../../../constants/event-types.ts";
+
 import { SlashMenuItemData } from "./types.ts";
-import { t } from "../../index.ts";
 
 import styles from "./slash-menu.css?inline";
 
@@ -41,7 +39,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     constructor() {
         super();
 
-        this.focusedBlock = DomUtils.findClosestAncestorOfSelectionByClass("block");
+        this.focusedBlock = findClosestAncestorOfSelectionByClass("block");
         this.range = SelectionUtils.getCurrentSelectionRange();
         this.keyboardNavTimeout = undefined;
 
@@ -220,7 +218,6 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                     ))}
                 </ul>
 
-                {/* Verifica se o filtro é muito restritivo e renderiza um aviso */}
                 {filtered.length === 0 && (
                     <div class="no-items-found">
                         {t("no_item_found")}
