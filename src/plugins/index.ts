@@ -14,6 +14,9 @@ export { t, registerTranslation } from "../core/i18n/index.ts";
 export { focusOnElement } from "../utils/dom-utils.ts";
 export { debounce } from "../utils/utils.ts";
 
+/* selection utilities */
+export { hasSelection } from "../utils/selection-utils.ts";
+
 
 export { EventTypes } from "../constants/event-types.ts";
 export { KeyboardKeys } from "../constants/keyboard-keys.ts";

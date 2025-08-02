@@ -14,3 +14,8 @@ export class SelectionUtils {
         return null;
     }
 }
+
+export function hasSelection(): boolean {
+    const selection = globalThis.getSelection();
+    return (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") ?? false;
+}
