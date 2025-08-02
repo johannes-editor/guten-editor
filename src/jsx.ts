@@ -1,19 +1,6 @@
 import { Component } from "./components/component.ts";
 
-function applyAttributes(el: HTMLElement, props: Record<string, any>) {
-    for (const [key, value] of Object.entries(props)) {
-        if (key === 'className') {
-            el.setAttribute('class', value);
-        } else if (key.startsWith('on') && typeof value === 'function') {
-            el.addEventListener(key.slice(2).toLowerCase(), value);
-        } else if (key !== "children" && value != null) {
-            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-                el.setAttribute(key, String(value));
-            }
-        }
-    }
-}
-
+// deno-lint-ignore no-explicit-any
 export function h(tag: any, props: Record<string, any> | null, ...children: any[]) {
     if (typeof tag === 'function') {
         if (tag.prototype instanceof Component) {
@@ -27,7 +14,11 @@ export function h(tag: any, props: Record<string, any> | null, ...children: any[
 
             if (props) {
                 applyAttributes(el, props);
-                (el as any).props = props;
+                // deno-lint-ignore no-explicit-any
+                (el as any).props = {
+                    ...(props || {}),
+                    children,
+                };
             }
 
             appendChildren(el, children);
@@ -56,6 +47,15 @@ export function h(tag: any, props: Record<string, any> | null, ...children: any[
     return el;
 }
 
+
+// deno-lint-ignore no-explicit-any
+export function Fragment(props: { children?: any[] }) {
+    const frag = document.createDocumentFragment();
+    appendChildren(frag, props.children || []);
+    return frag;
+}
+
+// deno-lint-ignore no-explicit-any
 function appendChildren(parent: HTMLElement | DocumentFragment, children: any[]) {
     const flattenedChildren = Array.isArray(children) ? children.flat() : [];
 
@@ -65,8 +65,17 @@ function appendChildren(parent: HTMLElement | DocumentFragment, children: any[])
     }
 }
 
-export function Fragment(props: { children?: any[] }) {
-    const frag = document.createDocumentFragment();
-    appendChildren(frag, props.children || []);
-    return frag;
+
+function applyAttributes(el: HTMLElement, props: Record<string, any>) {
+    for (const [key, value] of Object.entries(props)) {
+        if (key === 'className') {
+            el.setAttribute('class', value);
+        } else if (key.startsWith('on') && typeof value === 'function') {
+            el.addEventListener(key.slice(2).toLowerCase(), value);
+        } else if (key !== "children" && value != null) {
+            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+                el.setAttribute(key, String(value));
+            }
+        }
+    }
 }
