@@ -1,58 +1,27 @@
 /** @jsx h */
 
-import { h, OverlayComponent } from "../../index.ts";
+import { Toolbar } from "../../../design-system/index.ts";
+import { hasSelection } from "../../../utils/selection-utils.ts";
+import { EventTypes } from "../../index.ts";
 
 interface FormattingToolbarProps {
     removeToolbarInstance: () => void;
 }
 
-export class FormattingToolbar extends OverlayComponent<FormattingToolbarProps> {
+export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
 
     override closeOnClickOutside: boolean = false;
 
-    static override getTagName(): string {
+    static override getTagName() {
         return "guten-formatting-toolbar";
     }
 
-    static override styles? = /*css*/ `
-        guten-formatting-toolbar ul{
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
-            background-color: white;
-            border: 1px solid black;
-            border-radius: 0.25rem;
-            padding: 0.5rem;
-        }
-        guten-formatting-toolbar li{
-            list-style: none;
-        }
-    `;
-
-    override render(): HTMLElement {
-        return (
-            <div>
-                <ul>
-                    <li><button type="button" onclick="document.execCommand('bold')" >Bold</button></li>
-                    <li><button type="button" onclick="document.execCommand('italic')">Italic</button></li>
-                    <li><button type="button" onclick="document.execCommand('strikeThrough')">Strikethrough</button></li>
-                    <li><button type="button" onclick="document.execCommand('underline')">Underline</button></li>
-                </ul>
-            </div>
-        );
-    }
-
     override onMount(): void {
-
-        // this.positionToolbarNearSelection();
-
         requestAnimationFrame(() => {
             this.positionToolbarNearSelection();
         });
 
-        this.registerEvent(document, "selectionchange", () => this.handleSelectionChange());
+        this.registerEvent(document, EventTypes.SelectionChange, () => this.handleSelectionChange());
     }
 
     override onUnmount(): void {
@@ -60,28 +29,13 @@ export class FormattingToolbar extends OverlayComponent<FormattingToolbarProps> 
     }
 
     handleSelectionChange = () => {
-        const selection = window.getSelection();
-
-        if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
+        if (!hasSelection()) {
             this.remove();
-            return;
         }
     }
 
-    // positionToolbarNearSelection(): void {
-    //     const selection = window.getSelection();
-    //     if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
-    //         return;
-    //     }
-
-    //     const range = selection.getRangeAt(0);
-    //     const rect = range.getBoundingClientRect(); // mais confiável
-
-    //     this.setPosition(rect);
-    // }
-
     positionToolbarNearSelection(): void {
-        const selection = window.getSelection();
+        const selection = globalThis.getSelection();
         if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
             return;
         }
@@ -93,8 +47,8 @@ export class FormattingToolbar extends OverlayComponent<FormattingToolbarProps> 
         const isBackward = this.isSelectionBackward(selection);
 
         const rect = isBackward
-            ? rects[0]                     
-            : rects[rects.length - 1];     
+            ? rects[0]
+            : rects[rects.length - 1];
 
         this.setPosition(rect);
     }
@@ -102,7 +56,7 @@ export class FormattingToolbar extends OverlayComponent<FormattingToolbarProps> 
     private isSelectionBackward(selection: Selection): boolean {
         const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
 
-        if (!anchorNode || !focusNode) return false; 
+        if (!anchorNode || !focusNode) return false;
 
         if (anchorNode === focusNode) {
             return focusOffset < anchorOffset;
@@ -116,14 +70,11 @@ export class FormattingToolbar extends OverlayComponent<FormattingToolbarProps> 
         const elementWidth = this.offsetWidth;
         const elementHeight = this.offsetHeight;
 
-        console.log("Toolbar offsetWidth:", elementWidth);
-        console.log("Selection rect:", rect);
+        let leftPosition = rect.left + globalThis.scrollX + (rect.width / 2) - (elementWidth / 2);
+        let topPosition = rect.top + globalThis.scrollY - elementHeight - 10;
 
-        let leftPosition = rect.left + window.scrollX + (rect.width / 2) - (elementWidth / 2);
-        let topPosition = rect.top + window.scrollY - elementHeight - 10;
-
-        if (leftPosition + elementWidth > window.innerWidth) {
-            leftPosition = window.innerWidth - elementWidth - 20;
+        if (leftPosition + elementWidth > globalThis.innerWidth) {
+            leftPosition = globalThis.innerWidth - elementWidth - 20;
         }
 
         if (leftPosition < 20) {
@@ -131,7 +82,7 @@ export class FormattingToolbar extends OverlayComponent<FormattingToolbarProps> 
         }
 
         if (topPosition < 0) {
-            topPosition = rect.bottom + window.scrollY + 10;
+            topPosition = rect.bottom + globalThis.scrollY + 10;
         }
 
         this.style.left = `${leftPosition}px`;

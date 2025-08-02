@@ -1,8 +1,7 @@
 /** @jsx h */
 
-import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce } from "../index.ts";
+import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce, hasSelection } from "../index.ts";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
-
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
 
@@ -10,12 +9,11 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
     override initialize(_root: HTMLElement, _extensions: FormattingToolbarExtensionPlugin[]): void {
 
-        document.addEventListener(EventTypes.MouseUp, debounce(() => this.handleMouseUp(), 100) as EventListener);
+        document.addEventListener(EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
 
         document.addEventListener(EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
-            console.log("Key up event:", event.key);
             if (event.key === KeyboardKeys.Shift) {
-                this.handleMouseUp();
+                this.handleSelection();
             }
         }, 100) as EventListener);
     }
@@ -24,13 +22,19 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         FormattingToolbarPlugin.toolbarInstance = null;
     }
 
-    private handleMouseUp(): void {
-        if (!FormattingToolbarPlugin.toolbarInstance) {
-            const selection = window.getSelection();
+    private handleSelection(): void {
+        if (!FormattingToolbarPlugin.toolbarInstance && hasSelection()) {
 
-            if (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") {
-                FormattingToolbarPlugin.toolbarInstance = appendElementOnOverlayArea(<FormattingToolbar removeToolbarInstance={this.removeToolbarInstance} />);
-            }
+            const formattingToolbar =
+                <FormattingToolbar removeToolbarInstance={this.removeToolbarInstance}>
+                    <li><button type="button" onClick={() => document.execCommand('bold')}>Bold</button></li>
+                    <li><button type="button" onClick={() => document.execCommand('italic')}>Italic</button></li>
+                    <li><button type="button" onClick={() => document.execCommand('strikeThrough')}>Strikethrough</button></li>
+                    <li><button type="button" onClick={() => document.execCommand('underline')}>Underline</button></li>
+                </FormattingToolbar>;
+
+            appendElementOnOverlayArea(formattingToolbar);
+            FormattingToolbarPlugin.toolbarInstance = formattingToolbar;
         }
     }
 }
