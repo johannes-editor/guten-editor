@@ -1,10 +1,15 @@
 /**
  * Default type for component properties.
- * Represents a generic object with string keys and unknown values.
+ * Represents a generic object with children.
  * 
  * @typedef {Record<string, unknown>} DefaultProps
  */
-export type DefaultProps = Record<string, unknown>;
+export interface DefaultProps {
+  // deno-lint-ignore no-explicit-any
+  children?: any;
+  // deno-lint-ignore no-explicit-any
+  [key: string]: any;
+}
 
 /**
  * Default type for component state.
