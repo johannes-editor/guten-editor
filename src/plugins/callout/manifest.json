@@ -1,10 +1,13 @@
 {
-  "name": "MyPlugin",
-  "path": "./callout-plugin.tsx",
-  "class": "CalloutPlugin",
-  "version": "1.0.0",
-  "author": "Your Name",
-  "description": "This is a plugin that does amazing things.",
-  "license": "MIT",
-  "active": false
+    "name": "MyPlugin",
+    "version": "1.0.0",
+    "author": "Your Name",
+    "description": "This is a plugin that does amazing things.",
+    "entries": [
+        {
+            "path": "./callout-plugin.tsx",
+            "class": "CalloutPlugin",
+            "active": true
+        }
+    ]
 }

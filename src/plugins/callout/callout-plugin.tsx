@@ -1,10 +1,25 @@
 /** @jsx h */
 import { h } from '../../jsx.ts';
-import { Plugin } from '../../core/plugin-engine/plugin.ts'
+import { SlashMenuExtensionPlugin } from "../slash-menu/index.ts";
+import { CalloutBlock } from "./components/callout-block.tsx";
+import { focusOnElement } from "../index.ts";
 
-export class CalloutPlugin extends Plugin {
+export class CalloutPlugin extends SlashMenuExtensionPlugin {
 
-    override setup(root: HTMLElement): void {
-        throw new Error("Method not implemented.");
+    override label: string;
+    override sort: number;
+
+    constructor() {
+        super();
+
+        this.label = "Callout";
+        this.sort = 10;
+    }
+
+    override onSelect(currentBlock: HTMLElement): void {
+        const callout = <CalloutBlock />;
+        currentBlock.after(callout);
+        const paragraph = callout.querySelector("p");
+        focusOnElement(paragraph);
     }
 }
