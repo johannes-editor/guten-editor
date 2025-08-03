@@ -15,7 +15,7 @@ export class Toolbar<P extends DefaultProps = DefaultProps, S = DefaultState> ex
             background-color: white;
             border: 1px solid black;
             border-radius: 0.25rem;
-            padding: 0.5rem;
+            padding: 0.25rem;
         }
 
         .guten-toolbar li{
