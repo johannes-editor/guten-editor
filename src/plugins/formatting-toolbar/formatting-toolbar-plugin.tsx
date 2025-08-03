@@ -87,6 +87,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                 tooltip: ext.tooltip,
                 onSelect: () => ext.onSelect(),
                 sort: ext.sort,
+                command: ext.command,
             }),
         );
 
