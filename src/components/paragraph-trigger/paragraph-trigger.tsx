@@ -3,7 +3,7 @@
 import { h } from "../../jsx.ts";
 import { EventTypes } from "../../constants/event-types.ts";
 import { Component } from "../component.ts";
-import { appendElementOnContentArea } from "../../core/editor-engine/index.ts";
+import { appendElementOnContentArea } from "../editor/index.tsx";
 import { ParagraphBlock } from "../blocks/paragraph.tsx";
 import { focusOnElement } from "../../utils/dom-utils.ts";
 

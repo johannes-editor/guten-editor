@@ -27,7 +27,7 @@ export { ExtensiblePlugin } from "../core/plugin-engine/extensible-plugin.ts";
 export { PluginExtension } from "../core/plugin-engine/plugin-extension.ts";
 
 /* editor utilities */
-export { appendElementOnOverlayArea } from "../core/editor-engine/index.ts";
+export { appendElementOnOverlayArea } from "../components/editor/index.tsx";
 
 
 
