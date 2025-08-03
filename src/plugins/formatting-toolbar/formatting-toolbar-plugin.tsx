@@ -81,7 +81,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
     ];
 
     private buildToolbarItems(): ToolbarEntry[] {
-        const fromExtensions: ToolbarEntry[] = this.extensionPlugins.map(
+        const itemsFromExtensions: ToolbarEntry[] = this.extensionPlugins.map(
             (ext) => ({
                 icon: ext.icon,
                 tooltip: ext.tooltip,
@@ -91,7 +91,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             }),
         );
 
-        return [...this.defaultItems, ...fromExtensions].sort(
+        return [...this.defaultItems, ...itemsFromExtensions].sort(
             (a, b) => a.sort - b.sort,
         );
     }
