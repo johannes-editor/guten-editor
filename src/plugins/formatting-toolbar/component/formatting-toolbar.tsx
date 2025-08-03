@@ -5,7 +5,7 @@ import { hasSelection } from "../../../utils/selection-utils.ts";
 import { EventTypes } from "../../index.ts";
 
 interface FormattingToolbarProps {
-    removeToolbarInstance: () => void;
+    removeInstance: () => void;
 }
 
 export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
@@ -25,7 +25,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
     }
 
     override onUnmount(): void {
-        this.props.removeToolbarInstance();
+        this.props.removeInstance();
     }
 
     handleSelectionChange = () => {
