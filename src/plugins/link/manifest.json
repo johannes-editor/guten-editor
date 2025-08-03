@@ -1,0 +1,13 @@
+{
+    "name": "Link",
+    "version": "1.0.0",
+    "author": "Alexandre Tavares",
+    "description": "This is a plugin that does amazing things.",
+    "entries": [
+        {
+            "path": "./formatting-toolbar-link-extension-plugin.tsx",
+            "class": "FormattingToolbarLinkExtensionPlugin",
+            "active": true
+        }
+    ]
+}
