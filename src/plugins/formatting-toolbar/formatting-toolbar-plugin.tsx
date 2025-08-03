@@ -1,13 +1,18 @@
 /** @jsx h */
 
+import { BoldIcon, ItalicIcon, StrikeThroughIcon, UnderlineIcon } from "../../design-system/components/icons.tsx";
 import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce, hasSelection } from "../index.ts";
+import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
 
     private static toolbarInstance: HTMLElement | null = null;
+    private extensionPlugins: FormattingToolbarExtensionPlugin[] = [];
 
-    override initialize(_root: HTMLElement, _extensions: FormattingToolbarExtensionPlugin[]): void {
+    override initialize(_root: HTMLElement, extensions: FormattingToolbarExtensionPlugin[]): void {
+
+        this.extensionPlugins = extensions ?? [];
 
         document.addEventListener(EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
 
@@ -18,7 +23,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         }, 100) as EventListener);
     }
 
-    removeToolbarInstance(): void {
+    removeInstance(): void {
         FormattingToolbarPlugin.toolbarInstance = null;
     }
 
@@ -26,16 +31,68 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         if (!FormattingToolbarPlugin.toolbarInstance && hasSelection()) {
 
             const formattingToolbar =
-                <FormattingToolbar removeToolbarInstance={this.removeToolbarInstance}>
-                    <li><button type="button" onClick={() => document.execCommand('bold')}>Bold</button></li>
-                    <li><button type="button" onClick={() => document.execCommand('italic')}>Italic</button></li>
-                    <li><button type="button" onClick={() => document.execCommand('strikeThrough')}>Strikethrough</button></li>
-                    <li><button type="button" onClick={() => document.execCommand('underline')}>Underline</button></li>
+                <FormattingToolbar removeInstance={this.removeInstance}>
+                    {this.buildToolbarItems().map(item => (
+                        <li>
+                            <FormattingToolbarItem
+                                icon={item.icon}
+                                tooltip={item.tooltip}
+                                onSelect={item.onSelect}
+                                command={item.command}
+                            />
+                        </li>
+                    ))}
                 </FormattingToolbar>;
 
             appendElementOnOverlayArea(formattingToolbar);
             FormattingToolbarPlugin.toolbarInstance = formattingToolbar;
         }
+    }
+
+    private readonly defaultItems: ToolbarEntry[] = [
+        {
+            icon: <BoldIcon />,
+            tooltip: "Bold",
+            onSelect: () => document.execCommand("bold"),
+            command: "bold",
+            sort: 10,
+        },
+        {
+            icon: <ItalicIcon />,
+            tooltip: "Italic",
+            onSelect: () => document.execCommand("italic"),
+            command: "italic",
+            sort: 20,
+        },
+        {
+            icon: <StrikeThroughIcon />,
+            tooltip: "Strikethrough",
+            onSelect: () => document.execCommand("strikeThrough"),
+            command: "strikeThrough",
+            sort: 30,
+        },
+        {
+            icon: <UnderlineIcon />,
+            tooltip: "Underline",
+            onSelect: () => document.execCommand("underline"),
+            command: "underline",
+            sort: 40,
+        },
+    ];
+
+    private buildToolbarItems(): ToolbarEntry[] {
+        const fromExtensions: ToolbarEntry[] = this.extensionPlugins.map(
+            (ext) => ({
+                icon: ext.icon,
+                tooltip: ext.tooltip,
+                onSelect: () => ext.onSelect(),
+                sort: ext.sort,
+            }),
+        );
+
+        return [...this.defaultItems, ...fromExtensions].sort(
+            (a, b) => a.sort - b.sort,
+        );
     }
 }
 
@@ -43,8 +100,17 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
 
     override readonly target = FormattingToolbarPlugin;
 
-    abstract readonly icon: string;
-    abstract readonly label: string;
+    abstract readonly icon: SVGElement;
+    abstract readonly tooltip: string;
     abstract readonly sort: number;
     abstract onSelect(): void;
+    command?: string;
 }
+
+type ToolbarEntry = {
+    icon: SVGElement;
+    tooltip: string;
+    sort: number;
+    onSelect: () => void;
+    command?: string;
+};
