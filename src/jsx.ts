@@ -1,5 +1,8 @@
 import { Component } from "./components/component.ts";
 
+const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+const SVG_ELEMENTS = new Set(["svg","path","circle","rect","line","polyline","polygon","g","text","defs","linearGradient","stop"]);
+
 // deno-lint-ignore no-explicit-any
 export function h(tag: any, props: Record<string, any> | null, ...children: any[]) {
     if (typeof tag === 'function') {
@@ -21,7 +24,7 @@ export function h(tag: any, props: Record<string, any> | null, ...children: any[
                 };
             }
 
-            appendChildren(el, children);
+            // appendChildren(el, children);
             return el;
         }
 
@@ -37,11 +40,14 @@ export function h(tag: any, props: Record<string, any> | null, ...children: any[
         return tag({ ...(props || {}), children: normalizedChildren });
     }
 
-    const el = document.createElement(tag);
+    const el = typeof tag === "string" && SVG_ELEMENTS.has(tag)
+        ? document.createElementNS(SVG_NAMESPACE, tag)
+        : document.createElement(tag);
 
     if (props) {
         applyAttributes(el, props);
     }
+    
 
     appendChildren(el, children);
     return el;
@@ -56,13 +62,15 @@ export function Fragment(props: { children?: any[] }) {
 }
 
 // deno-lint-ignore no-explicit-any
-function appendChildren(parent: HTMLElement | DocumentFragment, children: any[]) {
-    const flattenedChildren = Array.isArray(children) ? children.flat() : [];
+function appendChildren(parent: HTMLElement | DocumentFragment, kids: any) {
+  const flattenedChildren = (Array.isArray(kids) ? kids : [kids]).flat(Infinity);
 
-    for (const child of flattenedChildren) {
-        if (child == null || typeof child === "boolean") continue;
-        parent.append(child instanceof Node ? child : document.createTextNode(String(child)));
-    }
+  for (const child of flattenedChildren) {
+    if (child == null || typeof child === "boolean") continue;
+    parent.append(
+      child instanceof Node ? child : document.createTextNode(String(child)),
+    );
+  }
 }
 
 
