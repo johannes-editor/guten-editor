@@ -7,7 +7,16 @@ import { h } from "../../jsx.ts";
 import { Component } from "../../plugins/index.ts";
 import { ParagraphTrigger } from "../paragraph-trigger/paragraph-trigger.tsx";
 
+import tokens from "../../design-system/tokens.css?inline";
+import primitives from "../../design-system/primitives.css?inline";
+
 export class Editor extends Component {
+
+    static override getTagName(): string {
+        return "guten-editor";
+    }
+
+    static override styles = [tokens, primitives];
 
     private contentArea: HTMLElement | null = null;
     private overlayArea: HTMLElement | null = null;
