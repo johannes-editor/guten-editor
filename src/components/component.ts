@@ -71,20 +71,26 @@ export abstract class Component<P = DefaultProps, S = DefaultState> extends HTML
      */
     protected injectStyles() {
         if (Object.prototype.hasOwnProperty.call(this, "styles")) {
-            console.warn(
-                `${this.constructor.name} has 'styles' as an instance property, which will be ignored. ` +
-                "Define 'static styles' to apply styles to your component."
-            );
+            console.warn(`${this.constructor.name} tem 'styles' na instância; use static styles.`);
         }
 
         const ctor = this.constructor as typeof Component;
         const styles = ctor.styles;
-        if (styles && typeof styles === "string") {
-            const styleEl = document.createElement("style");
-            styleEl.textContent = styles;
-            this.appendChild(styleEl);
+        if (!styles) return;
+
+        const add = (css: string) => {
+            const s = document.createElement("style");
+            s.textContent = css;
+            this.appendChild(s);
+        };
+
+        if (typeof styles === "string") {
+            add(styles);
+        } else {
+            styles.forEach(add);
         }
     }
+
 
     /**
     * Renders the DOM structure of the component.
@@ -127,12 +133,12 @@ export abstract class Component<P = DefaultProps, S = DefaultState> extends HTML
      */
     abstract render(): HTMLElement;
 
-     /** Optional lifecycle method called after the component is mounted */
+    /** Optional lifecycle method called after the component is mounted */
     onMount?(): void;
 
     /** Optional lifecycle method called before the component is unmounted */
     onUnmount?(): void;
 
     /** Optional static property to define CSS styles for the component */
-    static styles?: string;
+    static styles?: string | string[];
 }
