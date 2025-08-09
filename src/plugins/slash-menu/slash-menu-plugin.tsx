@@ -19,7 +19,7 @@ import { defaultSlashMenuItems } from "./default-items.tsx";
  */
 export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> {
 
-    override initialize(_root: HTMLElement, extensions: SlashMenuExtensionPlugin[]): void {
+    override attachExtensions(extensions: SlashMenuExtensionPlugin[]): void {
 
         // extensions.map( e => e.setup(_root, extensions));
         const items: SlashMenuItemData[] = extensions.map((ext) => ({
@@ -53,7 +53,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
 
 
             // Insert "/" manually at caret position
-            const selection = window.getSelection();
+            const selection = globalThis.getSelection();
             if (selection && selection.rangeCount > 0) {
                 const range = selection.getRangeAt(0);
                 const slashNode = document.createTextNode("/");

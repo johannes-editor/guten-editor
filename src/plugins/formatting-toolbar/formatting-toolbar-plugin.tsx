@@ -10,7 +10,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
     private static toolbarInstance: HTMLElement | null = null;
     private extensionPlugins: FormattingToolbarExtensionPlugin[] = [];
 
-    override initialize(_root: HTMLElement, extensions: FormattingToolbarExtensionPlugin[]): void {
+    override attachExtensions(extensions: FormattingToolbarExtensionPlugin[]): void {
 
         this.extensionPlugins = extensions ?? [];
 

@@ -12,6 +12,6 @@ export abstract class ExtensiblePlugin<T extends PluginExtension<any>> extends P
         );
     }
     
-    public abstract initialize(root: HTMLElement, extensions: T[]): void;
+    public abstract attachExtensions(extensions: T[]): void;
     override setup(_root: HTMLElement, _plugins: Plugin[]): void { }
 }

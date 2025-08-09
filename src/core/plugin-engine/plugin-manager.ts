@@ -22,7 +22,7 @@ export class PluginManager {
         for (const plugin of plugins) {
             if (plugin instanceof ExtensiblePlugin) {
                 const extensions = plugin.findExtensions(plugins);
-                plugin.initialize(root, extensions);
+                plugin.attachExtensions(extensions);
             }
         }
     }
