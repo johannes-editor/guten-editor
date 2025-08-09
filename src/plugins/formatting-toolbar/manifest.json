@@ -6,6 +6,11 @@
             "path": "formatting-toolbar-plugin.tsx",
             "class": "FormattingToolbarPlugin",
             "active": true
+        },
+        {
+            "path": "command-formatting-extension-plugin.ts",
+            "class": "CommandFormattingExtensionPlugin",
+            "active": true
         }
     ]
 }

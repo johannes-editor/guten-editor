@@ -1,0 +1,11 @@
+{
+    "name": "Commands",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "command-plugin.ts",
+            "class": "CommandPlugin",
+            "active": true
+        }
+    ]
+}

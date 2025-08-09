@@ -1,7 +1,7 @@
 /** @jsx h */
 
 import { BoldIcon, ItalicIcon, StrikeThroughIcon, UnderlineIcon } from "../../design-system/components/icons.tsx";
-import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce, hasSelection } from "../index.ts";
+import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce, hasSelection, runCommand } from "../index.ts";
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 
@@ -38,7 +38,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                                 icon={item.icon}
                                 tooltip={item.tooltip}
                                 onSelect={item.onSelect}
-                                command={item.command}
+                                isActive={item.isActive}
                             />
                         </li>
                     ))}
@@ -53,29 +53,29 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         {
             icon: <BoldIcon />,
             tooltip: "Bold",
-            onSelect: () => document.execCommand("bold"),
-            command: "bold",
+            onSelect: () => runCommand("toggleBold"),
+            isActive: () => runCommand("stateBold"),
             sort: 10,
         },
         {
             icon: <ItalicIcon />,
             tooltip: "Italic",
-            onSelect: () => document.execCommand("italic"),
-            command: "italic",
+            onSelect: () => runCommand("toggleItalic"),
+            isActive: () => runCommand("stateItalic"),
             sort: 20,
         },
         {
             icon: <StrikeThroughIcon />,
             tooltip: "Strikethrough",
-            onSelect: () => document.execCommand("strikeThrough"),
-            command: "strikeThrough",
+            onSelect: () => runCommand("toggleStrike"),
+            isActive: () => runCommand("stateStrike"),
             sort: 30,
         },
         {
             icon: <UnderlineIcon />,
             tooltip: "Underline",
-            onSelect: () => document.execCommand("underline"),
-            command: "underline",
+            onSelect: () => runCommand("toggleUnderline"),
+            isActive: () => runCommand("stateUnderline"),
             sort: 40,
         },
     ];
@@ -86,8 +86,8 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                 icon: ext.icon,
                 tooltip: ext.tooltip,
                 onSelect: () => ext.onSelect(),
+                isActive: ext.isActive,
                 sort: ext.sort,
-                command: ext.command,
             }),
         );
 
@@ -105,7 +105,7 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
     abstract readonly tooltip: string;
     abstract readonly sort: number;
     abstract onSelect(): void;
-    command?: string;
+    isActive: () => boolean = () => { return false; };
 }
 
 type ToolbarEntry = {
@@ -113,5 +113,5 @@ type ToolbarEntry = {
     tooltip: string;
     sort: number;
     onSelect: () => void;
-    command?: string;
+    isActive: () => boolean;
 };

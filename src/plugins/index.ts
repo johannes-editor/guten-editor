@@ -29,5 +29,9 @@ export { PluginExtension } from "../core/plugin-engine/plugin-extension.ts";
 /* editor utilities */
 export { appendElementOnOverlayArea } from "../components/editor/index.tsx";
 
+/* command system */
+export type { Command, CommandContext } from "../core/command/command.ts";
+export { registerCommand, runCommand } from "../core/command/index.ts";
+
 
 

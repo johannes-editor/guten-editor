@@ -7,7 +7,7 @@ interface FormattingToolbarItemProps {
     icon?: HTMLElement;
     tooltip?: string;
     onSelect: () => void;
-    command?: string;
+    isActive: () => boolean;
 }
 
 export class FormattingToolbarItem extends ToolbarItem<FormattingToolbarItemProps> {
@@ -30,13 +30,12 @@ export class FormattingToolbarItem extends ToolbarItem<FormattingToolbarItemProp
     }
 
     handleSelectionChange() {
-        if (this.props.command) {
-            const active = document.queryCommandState(this.props.command);
-            if (active) {
+        requestAnimationFrame(() => {
+            if (this.props.isActive()) {
                 this.classList.add("active");
             } else {
                 this.classList.remove("active");
             }
-        }
+        });
     }
 }
