@@ -12,10 +12,7 @@ export class Toolbar<P extends DefaultProps = DefaultProps, S = DefaultState> ex
             display: flex;
             flex-direction: row;
             gap: 0.5rem;
-            background-color: white;
-            border: 1px solid black;
-            border-radius: 0.25rem;
-            padding: 0.25rem;
+            padding: 0;
         }
 
         .guten-toolbar li{
