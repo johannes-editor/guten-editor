@@ -15,7 +15,7 @@ export { focusOnElement } from "../utils/dom-utils.ts";
 export { debounce } from "../utils/utils.ts";
 
 /* selection utilities */
-export { hasSelection } from "../utils/selection-utils.ts";
+export { hasSelection, clearSelection } from "../utils/selection-utils.ts";
 
 
 export { EventTypes } from "../constants/event-types.ts";

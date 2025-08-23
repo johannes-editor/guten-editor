@@ -1,6 +1,5 @@
 export class SelectionUtils {
     static getCurrentSelectionRange(): Range | null {
-        // Verifica se existe 'getSelection' no globalThis
         const getSelection = typeof globalThis.getSelection === "function"
             ? globalThis.getSelection
             : null;
@@ -18,4 +17,12 @@ export class SelectionUtils {
 export function hasSelection(): boolean {
     const selection = globalThis.getSelection();
     return (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") ?? false;
+}
+
+export function clearSelection(): void {
+    const sel = globalThis.getSelection();
+
+    if (sel) {
+        sel.removeAllRanges();
+    }
 }
