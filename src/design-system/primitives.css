@@ -8,5 +8,22 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
-    padding: var(--space-xs) var(--space-sm);
+}
+
+.animate-overlay {
+    display: flex;
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+    transform-origin: top center;
+    transition:
+        opacity 160ms cubic-bezier(0.2, 0, 0, 1),
+        transform 160ms cubic-bezier(0.2, 0, 0, 1);
+    will-change: transform, opacity;
+    pointer-events: none;
+}
+
+.animate-overlay.show-overlay {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
 }

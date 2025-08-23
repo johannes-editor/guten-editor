@@ -1,6 +1,6 @@
 import { EventTypes } from "../../constants/event-types.ts";
 import { KeyboardKeys } from "../../constants/keyboard-keys.ts";
-import { CloseableOverlay } from "./types.ts";
+import { OverlayComponent } from "../../plugins/index.ts";
 
 /**
  * Manages a stack of overlays (e.g. modals, dialogs) and provides functionality
@@ -17,7 +17,7 @@ export class OverlayStack {
      */
     constructor() {
         document.addEventListener(EventTypes.KeyDown, (event) => this.handleKey(event));
-        document.addEventListener(EventTypes.Click, (event) => this.handleClick(event), true);
+        document.addEventListener(EventTypes.Click, (event) => this.handleClick(event));
     }
 
     /**
@@ -78,17 +78,8 @@ export class OverlayStack {
         if (!top) return;
 
         const clickedInside = top.contains(event.target as Node);
-        if (!clickedInside && this.canCloseOnClickOutside(top)) {
+        if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside2 ) {
             this.remove(top);
         }
     };
-
-    /**
-     * Determines if an overlay can be closed by clicking outside.
-     * @param element The overlay element to check.
-     * @returns True if the overlay can be closed on outside click, false otherwise.
-     */
-    private canCloseOnClickOutside(element: HTMLElement): boolean {
-        return (element as CloseableOverlay).closeOnClickOutside === true;
-    }
 }
