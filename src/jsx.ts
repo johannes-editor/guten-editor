@@ -1,7 +1,7 @@
 import { Component } from "./components/component.ts";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-const SVG_ELEMENTS = new Set(["svg","path","circle","rect","line","polyline","polygon","g","text","defs","linearGradient","stop"]);
+const SVG_ELEMENTS = new Set(["svg", "path", "circle", "rect", "line", "polyline", "polygon", "g", "text", "defs", "linearGradient", "stop"]);
 
 // deno-lint-ignore no-explicit-any
 export function h(tag: any, props: Record<string, any> | null, ...children: any[]) {
@@ -47,7 +47,7 @@ export function h(tag: any, props: Record<string, any> | null, ...children: any[
     if (props) {
         applyAttributes(el, props);
     }
-    
+
 
     appendChildren(el, children);
     return el;
@@ -63,20 +63,22 @@ export function Fragment(props: { children?: any[] }) {
 
 // deno-lint-ignore no-explicit-any
 function appendChildren(parent: HTMLElement | DocumentFragment, kids: any) {
-  const flattenedChildren = (Array.isArray(kids) ? kids : [kids]).flat(Infinity);
+    const flattenedChildren = (Array.isArray(kids) ? kids : [kids]).flat(Infinity);
 
-  for (const child of flattenedChildren) {
-    if (child == null || typeof child === "boolean") continue;
-    parent.append(
-      child instanceof Node ? child : document.createTextNode(String(child)),
-    );
-  }
+    for (const child of flattenedChildren) {
+        if (child == null || typeof child === "boolean") continue;
+        parent.append(
+            child instanceof Node ? child : document.createTextNode(String(child)),
+        );
+    }
 }
 
 
 function applyAttributes(el: HTMLElement, props: Record<string, any>) {
     for (const [key, value] of Object.entries(props)) {
-        if (key === 'className') {
+        if (key === 'ref' && typeof value === 'function') {
+            value(el);
+        } else if (key === 'className') {
             el.setAttribute('class', value);
         } else if (key.startsWith('on') && typeof value === 'function') {
             el.addEventListener(key.slice(2).toLowerCase(), value);
