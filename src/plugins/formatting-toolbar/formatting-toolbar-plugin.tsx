@@ -54,7 +54,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                                 tooltip={item.tooltip}
                                 onSelect={item.onSelect}
                                 isActive={item.isActive}
-                                refreshRange={() => ft?.refreshRange()}
+                                refreshSelection={() => ft?.refreshSelection()}
                             />
                         </li>
                     ))}

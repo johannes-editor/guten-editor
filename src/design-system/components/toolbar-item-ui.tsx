@@ -3,14 +3,14 @@ import { h } from "../../jsx.ts";
 import { Component } from "../../components/component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
 
-interface ToolbarItemProps extends DefaultProps {
+interface ToolbarItemUIProps extends DefaultProps {
     icon?: HTMLElement;
     tooltip?: string;
 }
 
-export class ToolbarItem<P extends ToolbarItemProps = DefaultProps, S = DefaultState> extends Component<ToolbarItemProps, DefaultState> {
+export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = DefaultState> extends Component<P, S> {
 
-    static override styles = /*css*/`
+    static override styles = this.extendStyles(/*css*/`
 
         .guten-toolbar-item button svg{
             display: block !important;
@@ -36,7 +36,7 @@ export class ToolbarItem<P extends ToolbarItemProps = DefaultProps, S = DefaultS
         .active button svg{
             color: var(--color-primary);
         }
-    `;
+    `);
 
     override connectedCallback(): void {
         super.connectedCallback();
@@ -50,7 +50,6 @@ export class ToolbarItem<P extends ToolbarItemProps = DefaultProps, S = DefaultS
             <button type="button" title={tooltip}>
                 {icon ?? children}
             </button>
-
         );
     }
 }

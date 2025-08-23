@@ -1,6 +1,6 @@
 /** @jsx h */
 
-import { ToolbarItem } from "../../../design-system/components/toolbar-item.tsx";
+import { ToolbarItemUI } from "../../../design-system/components/toolbar-item-ui.tsx";
 import { EventTypes, KeyboardKeys } from "../../index.ts";
 
 interface FormattingToolbarItemProps {
@@ -8,25 +8,29 @@ interface FormattingToolbarItemProps {
     tooltip?: string;
     onSelect: () => void;
     isActive: () => boolean;
+    refreshRange(): void;
 }
 
-export class FormattingToolbarItem extends ToolbarItem<FormattingToolbarItemProps> {
-
+export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemProps> {
 
     override onMount(): void {
         this.registerEvent(this, EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
-        this.registerEvent(this, EventTypes.KeyDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
+        this.registerEvent(this, EventTypes.KeyDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect), true);
 
         this.handleSelectionChange();
     }
 
     handleOnSelect(event: Event, onSelect: () => void) {
+        
         if (event instanceof KeyboardEvent) {
             if (event.key !== KeyboardKeys.Enter) return;
         }
+
         event.preventDefault();
         onSelect();
         this.handleSelectionChange();
+        this.props.refreshRange();
+
     }
 
     handleSelectionChange() {
