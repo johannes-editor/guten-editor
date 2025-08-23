@@ -1,0 +1,11 @@
+{
+    "name": "External Assets",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "external-assets-plugin.ts",
+            "class": "ExternalAssetsPlugin",
+            "active": true
+        }
+    ]
+}
