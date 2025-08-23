@@ -142,4 +142,16 @@ export abstract class Component<P = DefaultProps, S = DefaultState> extends HTML
 
     /** Optional static property to define CSS styles for the component */
     static styles?: string | string[];
+
+    protected static extendStyles(...extra: string[]): string[] {
+        const parentClass = Object.getPrototypeOf(this) as typeof Component;
+        const parentStyles = parentClass.styles
+            ? Array.isArray(parentClass.styles)
+                ? parentClass.styles
+                : [parentClass.styles]
+            : [];
+        return [...parentStyles, ...extra];
+    }
+
+    afterRender?(): void;
 }
