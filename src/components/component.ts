@@ -100,6 +100,7 @@ export abstract class Component<P = DefaultProps, S = DefaultState> extends HTML
         this.innerHTML = "";
         this.injectStyles();
         this.appendChild(this.render());
+        this.afterRender?.();
     }
 
     /**
