@@ -1,0 +1,14 @@
+::highlight(persist) {
+    background-color: var(--color-selection);
+    color: var(--color-selection-text);
+}
+
+::selection {
+    background-color: var(--color-selection);
+    color: var(--color-selection-text);
+}
+
+::-moz-selection {
+    background-color: var(--color-selection);
+    color: var(--color-selection-text);
+}

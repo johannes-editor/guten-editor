@@ -9,6 +9,7 @@ import { ParagraphTrigger } from "../paragraph-trigger/paragraph-trigger.tsx";
 
 import tokens from "../../design-system/tokens.css?inline";
 import primitives from "../../design-system/primitives.css?inline";
+import foundation from "../../design-system/foundation.css?inline";
 
 export class Editor extends Component {
 
@@ -16,7 +17,7 @@ export class Editor extends Component {
         return "guten-editor";
     }
 
-    static override styles = [tokens, primitives];
+    static override styles = [foundation, tokens, primitives];
 
     private contentArea: HTMLElement | null = null;
     private overlayArea: HTMLElement | null = null;
