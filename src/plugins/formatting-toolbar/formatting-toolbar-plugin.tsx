@@ -1,14 +1,26 @@
 /** @jsx h */
 
+import { provideContext } from "../../core/context/context.ts";
 import { BoldIcon, ItalicIcon, StrikeThroughIcon, UnderlineIcon } from "../../design-system/components/icons.tsx";
-import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce, hasSelection, runCommand } from "../index.ts";
+import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin } from "../index.ts";
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
+import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
 
-    private static toolbarInstance: HTMLElement | null = null;
+    private static toolbarInstance: FormattingToolbar | null = null;
     private extensionPlugins: FormattingToolbarExtensionPlugin[] = [];
+
+    override setup(_root: HTMLElement, _plugins: Plugin[]): void {
+        
+        provideContext(_root, FormattingToolbarCtx, {
+
+            lock: () => FormattingToolbarPlugin.toolbarInstance?.lockSelection(),
+            unlock: () => FormattingToolbarPlugin.toolbarInstance?.unlockSelection(),
+           
+        }, { scopeRoot: _root });
+    }
 
     override attachExtensions(extensions: FormattingToolbarExtensionPlugin[]): void {
 
@@ -28,10 +40,13 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
     }
 
     private handleSelection(): void {
+
+        let ft: FormattingToolbar | null = null;
+
         if (!FormattingToolbarPlugin.toolbarInstance && hasSelection()) {
 
             const formattingToolbar =
-                <FormattingToolbar removeInstance={this.removeInstance}>
+                <FormattingToolbar removeInstance={this.removeInstance} ref={(el: FormattingToolbar) => ft = el}>
                     {this.buildToolbarItems().map(item => (
                         <li>
                             <FormattingToolbarItem
@@ -39,6 +54,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                                 tooltip={item.tooltip}
                                 onSelect={item.onSelect}
                                 isActive={item.isActive}
+                                refreshRange={() => ft?.refreshRange()}
                             />
                         </li>
                     ))}
