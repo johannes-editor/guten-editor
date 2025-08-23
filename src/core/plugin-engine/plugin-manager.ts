@@ -1,4 +1,5 @@
 import { ExtensiblePlugin } from "./extensible-plugin.ts";
+import { PluginExtension } from "./plugin-extension.ts";
 import { Plugin } from "./plugin.ts";
 import type { PluginEntry, PluginManifest } from "./types.ts";
 
@@ -23,6 +24,23 @@ export class PluginManager {
             if (plugin instanceof ExtensiblePlugin) {
                 const extensions = plugin.findExtensions(plugins);
                 plugin.attachExtensions(extensions);
+            }
+        }
+
+        for (const plugin of plugins) {
+            if (plugin instanceof PluginExtension) {
+
+                const ParentCtor = plugin.target as unknown as new () => Plugin;
+                const parent = plugins.find((p) => p instanceof ParentCtor);
+
+                if (!parent) {
+                    console.warn(
+                        `[PluginExtension] Parent plugin not found for ${plugin.constructor.name} (target: ${(ParentCtor as any)?.name ?? "unknown"}). The extension will be skipped.`
+                    );
+                    continue;
+                }
+
+                plugin.setupExtension(parent);
             }
         }
     }
