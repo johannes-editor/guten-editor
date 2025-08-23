@@ -7,8 +7,6 @@ import { SelectionUtils } from "../../../utils/selection-utils.ts";
 
 import { SlashMenuItemData } from "./types.ts";
 
-import styles from "./slash-menu.css?inline";
-
 interface SlashMenuProps {
     items: SlashMenuItemData[];
 }
@@ -34,7 +32,61 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         return "slash-menu";
     }
 
-    static override styles = styles;
+    static override styles = this.extendStyles(/*css */`
+        
+        slash-menu .slash-menu-wrapper {
+            border-radius: 10px;
+            overflow: hidden;
+            max-height: 18rem;
+        }
+
+        .guten-menu{
+            opacity: 0;
+        }
+
+        .guten-menu ul{
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            max-height: 12rem;
+            padding: 0 .5rem;
+        }
+
+        .guten-menu li{
+            list-style: none;
+        }
+
+        .guten-menu .slash-menu li:first-child {
+            margin-top: 0.5rem;
+        }
+
+        .guten-menu .slash-menu li:last-child {
+            margin-bottom: 0.5rem;
+        }
+
+        .guten-menu button {
+            all: unset;
+            display: flex;
+            padding: .25rem 1rem;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .guten-menu button.selected {
+            background-color: #f5f5f5;
+        }
+
+        .guten-menu.no-items-found {
+            padding: 8px;
+        }
+
+    ` );
 
     constructor() {
         super();
@@ -48,6 +100,11 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             selectedIndex: 0,
             filter: ""
         };
+    }
+
+    override connectedCallback(): void {
+        this.classList.add("guten-menu", "card", "animate-overlay");
+        super.connectedCallback();
     }
 
     override onMount(): void {
@@ -328,6 +385,6 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
 
     }
 
-    
+
 
 }
