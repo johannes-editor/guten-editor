@@ -19,7 +19,9 @@ const pt: TranslationSchema = {
   quotation: 'Citação',
   no_item_found: 'Nenhum item encontrado',
   table: 'Tabela',
-  todo_list: 'Lista de tarefas'
+  todo_list: 'Lista de tarefas',
+  insert: 'Inserir',
+  paste_or_type_a_link: 'Cole ou digite um link…'
 };
 
 export default pt;

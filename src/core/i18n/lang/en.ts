@@ -20,6 +20,8 @@ const en: TranslationSchema = {
   no_item_found: 'No item found',
   table: 'Table',
   todo_list: 'Todo list',
+  insert: 'Insert',
+  paste_or_type_a_link: 'Paste or type a link...'
 };
 
 export default en;
