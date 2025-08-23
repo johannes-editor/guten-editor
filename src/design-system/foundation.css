@@ -12,3 +12,7 @@
     background-color: var(--color-selection);
     color: var(--color-selection-text);
 }
+
+.katex {
+    font-size: 1rem;
+}
