@@ -1,1 +1,1 @@
-export { Toolbar } from "./components/toolbar.tsx";
+export { ToolbarUI as Toolbar } from "./components/toolbar-ui.tsx";
