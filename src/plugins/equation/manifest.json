@@ -1,0 +1,26 @@
+{
+    "name": "Equation",
+    "version": "1.0.0",
+    "author": "Alexandre Tavares",
+    "description": "Adds equation authoring to the editor using KaTeX: toolbar button, equation popover, insertion commands, and KaTeX asset loading.",
+    "entries": [
+        {
+            "path": "./formatting-toolbar-equation-button-extension-plugin.tsx",
+            "class": "FormattingToolbarEquationButtonExtensionPlugin",
+            "active": true,
+            "description": "Adds the 'Insert Math (KaTeX)' button to the formatting toolbar; opens the equation popover."
+        },
+        {
+            "path": "./command-equation-extension-plugin.ts",
+            "class": "CommandEquationExtensionPlugin",
+            "active": true,
+            "description": "Registers equation-related commands: openEquationPopover and insertEquation."
+        },
+        {
+            "path": "./katex-assert-extension-plugin.ts",
+            "class": "KatexAssetsExtensionPlugin",
+            "active": true,
+            "description": "Declares and eagerly loads KaTeX CSS/JS assets at startup so equations can be rendered."
+        }
+    ]
+}
