@@ -5,7 +5,7 @@
     "description": "Adds hyperlink insertion to the editor: toolbar button, URL popover, and createLink command.",
     "entries": [
         {
-            "path": "./formatting-toolbar-Hyperlink-button-extension-plugin.tsx",
+            "path": "./formatting-toolbar-hyperlink-button-extension-plugin.tsx",
             "class": "FormattingToolbarHyperlinkButtonExtensionPlugin",
             "active": true,
             "description": "Adds the 'Insert Link' button to the formatting toolbar and opens the Link popover."
