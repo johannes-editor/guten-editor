@@ -1,4 +1,4 @@
-import { toKebabCase } from "../utils/utils.ts";
+import { strings } from "../utils/index.ts";
 import { DefaultProps, DefaultState } from "./types.ts";
 
 /**
@@ -108,7 +108,7 @@ export abstract class Component<P = DefaultProps, S = DefaultState> extends HTML
      * @returns {string} The tag name of the component.
      */
     static get tagName(): string {
-        return `x-${toKebabCase(this.name)}`;
+        return `x-${strings.toKebabCase(this.name)}`;
     }
 
     /**

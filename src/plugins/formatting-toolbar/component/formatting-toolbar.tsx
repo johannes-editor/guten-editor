@@ -1,8 +1,8 @@
 /** @jsx h */
 
 import { Toolbar } from "../../../design-system/index.ts";
-import { hasSelection, clearSelection } from "../../../utils/selection-utils.ts";
-import { EventTypes } from "../../index.ts";
+import { hasSelection, clearSelection } from "../../../utils/selection/selection-utils.ts";
+import { dom } from "../../index.ts";
 
 import style from "./style.css?inline"
 
@@ -30,7 +30,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
 
         });
 
-        this.registerEvent(document, EventTypes.SelectionChange, () => this.handleSelectionChange());
+        this.registerEvent(document, dom.EventTypes.SelectionChange, () => this.handleSelectionChange());
     }
 
     override onUnmount(): void {

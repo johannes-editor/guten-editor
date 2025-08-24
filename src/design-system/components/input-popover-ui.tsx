@@ -3,7 +3,9 @@
 import { h } from "../../jsx.ts";
 import { OverlayComponent } from "../../components/overlay/overlay-component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
-import { EventTypes, Fragment, KeyboardKeys, t } from "../../plugins/index.ts";
+import { Fragment, KeyboardKeys, t } from "../../plugins/index.ts";
+
+import { dom } from "../../utils/index.ts";
 
 export interface InputPopoverUIProps extends DefaultProps {
 
@@ -70,7 +72,7 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
         super.connectedCallback();
         this.setAttribute("class", "guten-input-popover card animate-overlay");
 
-        this.registerEvent(this.input, EventTypes.KeyDown, ((event: KeyboardEvent) => this.handleKeydown(event)) as EventListener);
+        this.registerEvent(this.input, dom.EventTypes.KeyDown, ((event: KeyboardEvent) => this.handleKeydown(event)) as EventListener);
     }
 
     override render(): HTMLElement {

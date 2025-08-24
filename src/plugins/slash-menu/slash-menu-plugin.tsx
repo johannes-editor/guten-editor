@@ -1,6 +1,6 @@
 /** @jsx h */
 
-import { h, Plugin, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, registerTranslation, appendElementOnOverlayArea } from "../index.ts";
+import { h, Plugin, ExtensiblePlugin, PluginExtension, registerTranslation, appendElementOnOverlayArea } from "../index.ts";
 
 import { SlashMenuOverlay } from "./components/slash-menu.tsx";
 import { SlashMenuItemData } from "./components/types.ts";
@@ -8,6 +8,8 @@ import { SlashMenuItemData } from "./components/types.ts";
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
 import { defaultSlashMenuItems } from "./default-items.tsx";
+
+import { dom, keyboard } from "../index.ts";
 
 
 /**
@@ -28,7 +30,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
             onSelect: (currentBlock: HTMLElement) => ext.onSelect(currentBlock),
         }));
 
-        document.addEventListener(EventTypes.KeyDown, (event) => this.handleKey(event, items));
+        document.addEventListener(dom.EventTypes.KeyDown, (event) => this.handleKey(event, items));
     }
 
     /**
@@ -45,7 +47,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
     }
 
     private readonly handleKey = (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
-        if (event.key === KeyboardKeys.Slash && !this.mounted()) {
+        if (event.key === keyboard.KeyboardKeys.Slash && !this.mounted()) {
 
             // Prevent Firefox from opening the "Quick Find" bar when pressing the "/" key
             event.preventDefault();
@@ -65,7 +67,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
                 range.setEndAfter(slashNode);
                 selection.removeAllRanges();
                 selection.addRange(range);
-            }           
+            }
 
             const slashMenuItems = defaultSlashMenuItems();
             slashMenuItems.push(...extensionItems);

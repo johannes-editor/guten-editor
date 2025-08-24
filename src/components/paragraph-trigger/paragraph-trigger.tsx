@@ -1,11 +1,11 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
-import { EventTypes } from "../../constants/event-types.ts";
 import { Component } from "../component.ts";
 import { appendElementOnContentArea } from "../editor/index.tsx";
 import { ParagraphBlock } from "../blocks/paragraph.tsx";
 import { focusOnElement } from "../../utils/dom-utils.ts";
+import { dom } from "../../utils/index.ts";
 
 export class ParagraphTrigger extends Component {
 
@@ -17,7 +17,7 @@ export class ParagraphTrigger extends Component {
     `;
 
     override onMount(): void {
-        this.registerEvent(this, EventTypes.Click, this.handleClick)
+        this.registerEvent(this, dom.EventTypes.Click, this.handleClick)
     }
 
     private readonly handleClick = () => {

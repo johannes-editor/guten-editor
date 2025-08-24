@@ -1,9 +1,9 @@
 /** @jsx h */
-import { h, t, EventTypes, KeyboardKeys, OverlayComponent } from "../../index.ts";
+import { dom, keyboard, h, t, OverlayComponent } from "../../index.ts";
 import { SlashMenuItem } from "./slash-menu-item.tsx";
 import { findClosestAncestorOfSelectionByClass } from "../../../utils/dom-utils.ts";
 
-import { SelectionUtils } from "../../../utils/selection-utils.ts";
+import { SelectionUtils } from "../../../utils/selection/selection-utils.ts";
 
 import { SlashMenuItemData } from "./types.ts";
 
@@ -108,8 +108,8 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     }
 
     override onMount(): void {
-        this.registerEvent(document, EventTypes.KeyDown, this.handleKey as EventListener);
-        this.registerEvent(this, EventTypes.MouseMove, this.handleMouse as EventListener)
+        this.registerEvent(document, dom.EventTypes.KeyDown, this.handleKey as EventListener);
+        this.registerEvent(this, dom.EventTypes.MouseMove, this.handleMouse as EventListener)
         this.setState({ items: this.props.items });
         this.positionMenu(this);
 
@@ -128,15 +128,15 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     private readonly handleKey = (event: KeyboardEvent) => {
         if (
             (event.key.length === 1 && !event.ctrlKey && !event.metaKey) ||
-            event.key === KeyboardKeys.Backspace ||
-            event.key === KeyboardKeys.Delete
+            event.key === keyboard.KeyboardKeys.Backspace ||
+            event.key === keyboard.KeyboardKeys.Delete
         ) {
             setTimeout(() => this.updateFilterFromEditor(), 0);
         }
 
         switch (event.key) {
 
-            case KeyboardKeys.ArrowDown:
+            case keyboard.KeyboardKeys.ArrowDown:
                 event.preventDefault();
                 this.setKeyboardNavigation();
                 this.setState({
@@ -146,7 +146,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                 this.ensureItemVisibility();
                 break;
 
-            case KeyboardKeys.ArrowUp:
+            case keyboard.KeyboardKeys.ArrowUp:
                 event.preventDefault();
                 this.setKeyboardNavigation();
                 this.setState({
@@ -156,7 +156,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                 this.ensureItemVisibility();
                 break;
 
-            case KeyboardKeys.Enter:
+            case keyboard.KeyboardKeys.Enter:
                 event.preventDefault();
                 {
                     const items = this.getFilteredItems();
@@ -167,14 +167,14 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                 }
                 break;
 
-            case KeyboardKeys.Backspace:
+            case keyboard.KeyboardKeys.Backspace:
                 {
                     const items = this.getFilteredItems();
                     items[this.state.selectedIndex];
                 }
                 break;
 
-            case KeyboardKeys.Escape:
+            case keyboard.KeyboardKeys.Escape:
                 // No need to handle the Escape key here.
                 // All elements inheriting from Overlay already handle Escape key presses.
                 // The OverlayManager takes care of stacked overlays: pressing Escape will always close the topmost overlay first (LIFO order).

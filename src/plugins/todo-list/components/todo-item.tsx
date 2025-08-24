@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h } from "../../../jsx.ts";
 import { Component } from "../../../components/component.ts";
-import { ClassName } from "../../../constants/class-name.ts";
+import { ClassName } from "../../../utils/dom/class-name.ts";
 
 export class TodoItem extends Component {
 

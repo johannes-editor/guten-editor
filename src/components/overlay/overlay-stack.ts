@@ -1,5 +1,4 @@
-import { EventTypes } from "../../constants/event-types.ts";
-import { KeyboardKeys } from "../../constants/keyboard-keys.ts";
+import { dom, keyboard } from "../../utils/index.ts";
 import { OverlayComponent } from "../../plugins/index.ts";
 
 /**
@@ -16,8 +15,8 @@ export class OverlayStack {
      * (to close on outside click) events.
      */
     constructor() {
-        document.addEventListener(EventTypes.KeyDown, (event) => this.handleKey(event));
-        document.addEventListener(EventTypes.Click, (event) => this.handleClick(event));
+        document.addEventListener(dom.EventTypes.KeyDown, (event) => this.handleKey(event));
+        document.addEventListener(dom.EventTypes.Click, (event) => this.handleClick(event));
     }
 
     /**
@@ -64,7 +63,7 @@ export class OverlayStack {
     * @param event The keydown event.
     */
     private readonly handleKey = (event: KeyboardEvent) => {
-        if (event.key === KeyboardKeys.Escape) {
+        if (event.key === keyboard.KeyboardKeys.Escape) {
             this.pop();
         }
     };
@@ -78,7 +77,7 @@ export class OverlayStack {
         if (!top) return;
 
         const clickedInside = top.contains(event.target as Node);
-        if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside2 ) {
+        if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside2) {
             this.remove(top);
         }
     };

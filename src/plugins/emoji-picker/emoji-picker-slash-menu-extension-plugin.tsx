@@ -4,7 +4,7 @@ import { h } from "../../jsx.ts";
 import { SlashMenuExtensionPlugin } from "../slash-menu/slash-menu-plugin.tsx";
 import { EmojiPickerOverlay } from "./components/emoji-picker-overlay.tsx";
 import { appendElementOnOverlayArea } from "../index.ts";
-import { SelectionUtils } from "../../utils/selection-utils.ts";
+import { SelectionUtils } from "../../utils/selection/selection-utils.ts";
 import { registerTranslation, t } from "../index.ts";
 
 import { en } from "./i18n/en.ts";

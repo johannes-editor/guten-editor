@@ -1,10 +1,9 @@
 /** @jsx h */
 /** @jsxFrag Fragment */
 
-import { Fragment, h } from "../../../jsx.ts";
+import { h } from "../../index.ts";
 import { OverlayComponent } from "../../../components/overlay/overlay-component.ts";
-import { EventTypes } from "../../../constants/event-types.ts";
-import { KeyboardKeys } from "../../../constants/keyboard-keys.ts";
+import { dom, keyboard } from "../../index.ts";
 
 interface EmojiPickerOverlayProps {
     range: Range;
@@ -42,29 +41,29 @@ export class EmojiPickerOverlay extends OverlayComponent<EmojiPickerOverlayProps
     }
 
     override onMount(): void {
-        this.registerEvent(document, EventTypes.KeyDown, this.handleKey as EventListener);
+        this.registerEvent(document, dom.EventTypes.KeyDown, this.handleKey as EventListener);
     }
 
     private readonly handleKey = (event: KeyboardEvent) => {
         switch (event.key) {
-            case KeyboardKeys.ArrowDown:
+            case keyboard.KeyboardKeys.ArrowDown:
                 event.preventDefault();
                 this.setState({
                     selectedIndex: (this.state.selectedIndex + 1) % this.state.emojis.length,
                 });
                 break;
-            case KeyboardKeys.ArrowUp:
+            case keyboard.KeyboardKeys.ArrowUp:
                 event.preventDefault();
                 this.setState({
                     selectedIndex: (this.state.selectedIndex - 1 + this.state.emojis.length) % this.state.emojis.length,
                 });
                 break;
-            case KeyboardKeys.Enter:
+            case keyboard.KeyboardKeys.Enter:
                 event.preventDefault();
                 const emoji = this.state.emojis[this.state.selectedIndex];
                 this.selectEmoji(emoji);
                 break;
-            case KeyboardKeys.Escape:
+            case keyboard.KeyboardKeys.Escape:
                 break;
         }
     };

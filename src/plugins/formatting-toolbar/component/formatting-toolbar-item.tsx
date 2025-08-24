@@ -1,7 +1,7 @@
 /** @jsx h */
 
 import { ToolbarItemUI } from "../../../design-system/components/toolbar-item-ui.tsx";
-import { EventTypes, KeyboardKeys } from "../../index.ts";
+import { dom, keyboard } from "../../index.ts";
 
 interface FormattingToolbarItemProps {
     icon?: HTMLElement;
@@ -14,8 +14,8 @@ interface FormattingToolbarItemProps {
 export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemProps> {
 
     override onMount(): void {
-        this.registerEvent(this, EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
-        this.registerEvent(this, EventTypes.KeyDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect), true);
+        this.registerEvent(this, dom.EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
+        this.registerEvent(this, dom.EventTypes.KeyDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect), true);
 
         this.handleSelectionChange();
     }
@@ -23,7 +23,7 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
     handleOnSelect(event: Event, onSelect: () => void) {
         
         if (event instanceof KeyboardEvent) {
-            if (event.key !== KeyboardKeys.Enter) return;
+            if (event.key !== keyboard.KeyboardKeys.Enter) return;
         }
 
         event.preventDefault();

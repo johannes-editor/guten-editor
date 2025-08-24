@@ -2,10 +2,12 @@
 
 import { provideContext } from "../../core/context/context.ts";
 import { BoldIcon, ItalicIcon, StrikeThroughIcon, UnderlineIcon } from "../../design-system/components/icons.tsx";
-import { h, ExtensiblePlugin, PluginExtension, EventTypes, KeyboardKeys, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin } from "../index.ts";
+import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin } from "../index.ts";
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
+
+import { dom, keyboard } from "../index.ts";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
 
@@ -26,10 +28,10 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
         this.extensionPlugins = extensions ?? [];
 
-        document.addEventListener(EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
+        document.addEventListener(dom.EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
 
-        document.addEventListener(EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
-            if (event.key === KeyboardKeys.Shift) {
+        document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
+            if (event.key === keyboard.KeyboardKeys.Shift) {
                 this.handleSelection();
             }
         }, 100) as EventListener);
