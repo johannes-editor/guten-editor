@@ -26,7 +26,7 @@ import { Command, CommandContext } from "../../../core/command/command.ts";
  */
 export const InsertEquation: Command = {
     id: "insertEquation",
-    execute(context: CommandContext): boolean {
+    execute(context: CommandContext<InsertEquationPayload>): boolean {
 
         requestAnimationFrame(() => {
 
@@ -34,7 +34,7 @@ export const InsertEquation: Command = {
 
             console.log("katex:", katex);
 
-            const latex: string = context.latex ?? '';
+            const latex: string = context.content?.latex ?? '';
             const displayMode: boolean = Boolean((context as any).displayMode);
 
             if (!latex) {
@@ -97,8 +97,8 @@ export const InsertEquation: Command = {
 
         });
 
-
-
         return true;
     }
 };
+
+export type InsertEquationPayload = { latex: string, displayMode: boolean }

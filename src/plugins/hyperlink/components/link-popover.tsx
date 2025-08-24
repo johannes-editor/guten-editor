@@ -12,7 +12,7 @@ import { runCommand } from "../../index.ts";
  * - On mount, wires a SelectionController from {@link FormattingToolbarCtx}
  *   to lock/unlock the selection while the popover is open.
  * - On insert, restores the selection, closes itself, and runs `createLink`
- *   with the provided URL.
+ *   with the provided `href` via the command content payload.
  */
 export class LinkPopover extends InputPopover<InputPopoverProps> {
 
@@ -30,11 +30,17 @@ export class LinkPopover extends InputPopover<InputPopoverProps> {
 
             (this.props as InputPopoverProps).selectionController = selectionCtrl;
         }
+
+        requestAnimationFrame(() => {
+            this.input.focus();
+            // move caret to the end
+            this.input.setSelectionRange(this.input.value.length, this.input.value.length);
+        });
     }
 
-    /** Reads the URL and issues the `createLink` command. */
+    /** Reads the `href` and issues the `createLink` command with `content: { href }`. */
     handleInsert(): void {
-        const url = this.input.value.trim() ?? '';
+        const href = this.input.value.trim() ?? '';
 
         // Restore selection before applying the link.
         useContext(this, FormattingToolbarCtx)?.unlock?.();
@@ -43,14 +49,9 @@ export class LinkPopover extends InputPopover<InputPopoverProps> {
 
         requestAnimationFrame(() => {
 
-            if (!url) {
-                return;
-            }
+            if (!href) return;
 
-            //
-            //TODO validation
-            // try { new URL(url); } catch { alert('URL inválida: ' + url); return; }
-            runCommand('createLink', { url, target: this.props.formattingToolbar });
+            runCommand('createLink', { content: { href } });
         });
     }
 }

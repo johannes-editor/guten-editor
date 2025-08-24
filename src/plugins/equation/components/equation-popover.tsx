@@ -32,6 +32,12 @@ export class EquationPopover extends InputPopover<InputPopoverProps> {
 
             (this.props as InputPopoverProps).selectionController = selectionCtrl;
         }
+
+        requestAnimationFrame(() => {
+            this.input.focus();
+            // opcional: move o caret pro fim
+            this.input.setSelectionRange(this.input.value.length, this.input.value.length);
+        });
     }
 
     /** Checkbox handler: toggles display mode. */
@@ -53,8 +59,10 @@ export class EquationPopover extends InputPopover<InputPopoverProps> {
 
         requestAnimationFrame(() => {
             runCommand("insertEquation", {
-                latex,
-                displayMode: this.displayMode,
+                content: {
+                    latex: latex,
+                    displayMode: this.displayMode
+                }
             });
         });
     }

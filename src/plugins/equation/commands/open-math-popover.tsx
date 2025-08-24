@@ -13,7 +13,7 @@ import { EquationPopover } from "../components/equation-popover.tsx";
  */
 export const OpenEquationPopover: Command = {
     id: "openEquationPopover",
-
+    shortcut: { chord: "Mod+Shift+E", description: "Insert/edit equation", preventDefault: true },
     execute(): boolean {
         appendElementOnOverlayArea(
             <EquationPopover
