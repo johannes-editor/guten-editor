@@ -3,6 +3,8 @@
 import { BlockquoteEnterHandler } from "../../core/ce-crossbrowser/blockquote-enter-handler.ts";
 import { NewContentChildrenObserver } from "../../core/ce-crossbrowser/new-content-children-observer.tsx";
 import { PlaceholderObserver } from "../../core/ce-crossbrowser/placeholder-observer.ts";
+import { DocumentModel } from "../../core/model/document-model.ts";
+import { Transaction, TransactionManager } from "../../core/model/transaction.ts";
 import { h } from "../../jsx.ts";
 import { Component } from "../../plugins/index.ts";
 import { ParagraphTrigger } from "../paragraph-trigger/paragraph-trigger.tsx";
@@ -21,6 +23,9 @@ export class Editor extends Component {
 
     private contentArea: HTMLElement | null = null;
     private overlayArea: HTMLElement | null = null;
+
+    private model: DocumentModel = new DocumentModel();
+    private transactionManager: TransactionManager = new TransactionManager();
 
     private newContentChildrenObserver: NewContentChildrenObserver | null = null;
     private blockquoteEnterHandler: BlockquoteEnterHandler | null = null;
@@ -43,6 +48,11 @@ export class Editor extends Component {
         if (this.contentArea) {
 
             console.log("Editor initialized with content area:", this.contentArea);
+            this.model.fromDOM(this.contentArea);
+            this.contentArea.addEventListener("input", () => {
+                this.model.fromDOM(this.contentArea!);
+            });
+
             this.newContentChildrenObserver = new NewContentChildrenObserver(this.contentArea);
             this.blockquoteEnterHandler = new BlockquoteEnterHandler(this.contentArea);
             this.placeholderObserver = new PlaceholderObserver(this.contentArea);
@@ -58,6 +68,10 @@ export class Editor extends Component {
 
         this.contentArea = document.getElementById("contentArea")!;
         this.overlayArea = document.getElementById("overlayArea")!;
+
+        if (this.contentArea) {
+            this.model.fromDOM(this.contentArea);
+        }
     }
 
     public appendElementOnEditorRoot(element: HTMLElement) {
@@ -76,5 +90,14 @@ export class Editor extends Component {
         this.overlayArea?.appendChild(element);
 
         return element;
+    }
+
+    /**
+     * Apply a transaction to the document model and update the DOM.
+     */
+    public applyTransaction(tx: Transaction) {
+        if (!this.contentArea) return;
+        this.transactionManager.apply(tx, this.model);
+        this.model.render(this.contentArea);
     }
 }
