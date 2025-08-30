@@ -14,7 +14,7 @@ import foundation from "../../design-system/foundation.css?inline";
 export class Editor extends Component {
 
     static override getTagName(): string {
-        return "guten-editor";
+        return "x-guten-editor";
     }
 
     static override styles = [foundation, tokens, primitives];
