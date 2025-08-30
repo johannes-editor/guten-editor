@@ -9,6 +9,10 @@ import { dom } from "../../utils/index.ts";
 
 export class ParagraphTrigger extends Component {
 
+    static override getTagName(): string {
+        return "x-p-trigger";
+    }
+
     static override styles = /*css*/ `
         #paragraphTriggerArea {
             height: 3rem;
