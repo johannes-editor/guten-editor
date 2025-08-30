@@ -75,11 +75,34 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
     .guten-tooltip .shortcut {
         color: grey;
         font-size: var(--font-size-xs);
+        align-items: center;
+        line-height: 1;
     }
 
-    .guten-tooltip .keycap {
+    .guten-tooltip .keycap{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        vertical-align: middle;
         font-size: var(--font-size-xs);
+        font-family: var(--font-family);
     }
+
+    .guten-tooltip .keycap[data-symbol="true"]{
+        transform: scale(var(--keycap-symbol-scale, 1));
+        transform-origin: center;
+    }
+
+/* fallback de fontes com bons glifos (linux/mac) */
+// :root{
+//   --guten-symbol-fontstack: -apple-system, "SF Pro Text", "Helvetica Neue",
+//                             "Segoe UI Symbol", "Noto Sans Symbols 2",
+//                             ui-sans-serif, system-ui, sans-serif;
+// }
+// .guten-tooltip .keycap[data-symbol="true"]{
+//   font-family: var(--guten-symbol-fontstack);
+// }
 
   `);
 
@@ -134,9 +157,9 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
     private renderKeycap(part: string) {
         switch (part) {
             case keyboard.ChordModifiers.Shift:
-                return <kbd class="keycap" aria-label="Shift">⇧</kbd>;
+                return <kbd class="keycap" data-symbol="true" aria-label="Shift">⇧</kbd>;
             case keyboard.ChordModifiers.Meta:
-                return <kbd class="keycap" aria-label="Command">⌘</kbd>;
+                return <kbd class="keycap" data-symbol="true" aria-label="Command">⌘</kbd>;
             case keyboard.ChordModifiers.Ctrl:
                 return <kbd class="keycap" aria-label="Control">Ctrl</kbd>;
             case keyboard.ChordModifiers.Alt:
