@@ -1,8 +1,9 @@
 import { Command, CommandContext } from "../../../core/command/command.ts";
+import { toggleInlineTag } from "./toggle-inline.ts";
 
 export const ToggleBold: Command = {
   id: "toggleBold",
-  execute(_context?: CommandContext) {
-    return document.execCommand("bold");
+  execute(context?: CommandContext) {
+    return toggleInlineTag("b", context);
   }
 };

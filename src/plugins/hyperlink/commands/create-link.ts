@@ -2,35 +2,34 @@ import { Command, CommandContext } from "../../../core/command/command.ts";
 
 /**
  * Command: creates a hyperlink from the current selection.
- *
- * Requirements:
- * - `context.content.href` must be a non-empty string.
- *
- * Implementation notes:
- * - Uses `document.execCommand("createLink", false, href)` to wrap the selection.
- * - The operation runs in the next animation frame to ensure selection focus.
- *
- * @returns {boolean} True once the operation is queued; false if input is invalid.
+ * Requires a non-empty `href` in the context content.
  */
 export const CreateLink: Command = {
-    id: "createLink",
+  id: "createLink",
 
-    execute(context: CommandContext<CreateLinkPayload>) {
-
-        const href = context?.content?.href?.trim();
-
-        requestAnimationFrame(() => {
-
-            if (!href) {
-                console.warn("href is required to create a link.");
-                return false;
-            }
-
-            document.execCommand("createLink", false, href);
-        });
-
-        return true;
+  execute(context: CommandContext<CreateLinkPayload>) {
+    const href = context?.content?.href?.trim();
+    if (!href) {
+      console.warn("href is required to create a link.");
+      return false;
     }
+
+    const selection = context.selection || window.getSelection();
+    if (!selection || selection.rangeCount === 0) return false;
+    const range = selection.getRangeAt(0);
+    if (range.collapsed) return false;
+
+    const anchor = document.createElement("a");
+    anchor.href = href;
+    try {
+      range.surroundContents(anchor);
+    } catch {
+      return false;
+    }
+
+    context.root?.dispatchEvent(new Event("input", { bubbles: true }));
+    return true;
+  }
 };
 
 export type CreateLinkPayload = { href: string };
