@@ -56,7 +56,7 @@ export class CommandPlugin extends ExtensiblePlugin<CommandExtensionPlugin> {
         const chord = keyboard.normalizeChord(def.chord);
         const arr = this.bindings.get(chord) ?? [];
         arr.push({ cmdId, def });
-        arr.sort((a, b) => (b.def.priority ?? 0) - (a.def.priority ?? 0)); // maior prioridade primeiro
+        arr.sort((a, b) => (b.def.priority ?? 0) - (a.def.priority ?? 0));
         this.bindings.set(chord, arr);
     }
 

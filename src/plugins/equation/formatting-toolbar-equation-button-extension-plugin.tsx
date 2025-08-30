@@ -1,7 +1,7 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
-import { runCommand } from "../index.ts";
+import { runCommand, t } from "../index.ts";
 import { FormattingToolbarExtensionPlugin } from "../formatting-toolbar/formatting-toolbar-plugin.tsx";
 import { EquationIcon } from "../../design-system/components/icons.tsx";
 
@@ -14,7 +14,9 @@ export class FormattingToolbarEquationButtonExtensionPlugin extends FormattingTo
     readonly icon: SVGElement = <EquationIcon />;
 
     /** Tooltip shown on hover. */
-    readonly tooltip: string = "Insert Math (KaTeX)";
+    readonly label: string = t("equation_katex");
+
+    readonly shortcut: string = "Mod+Shift+E";
 
     /** Sort order within the toolbar (higher = later). */
     readonly sort: number = 60;

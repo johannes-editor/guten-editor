@@ -2,18 +2,20 @@
 import { h } from "../../jsx.ts";
 import { Component } from "../../components/component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
+import { Tooltip } from "./tooltip.tsx";
 
 interface ToolbarItemUIProps extends DefaultProps {
     icon?: HTMLElement;
-    tooltip?: string;
+    label?: string;
+    shortcut?: string;
 }
 
 export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = DefaultState> extends Component<P, S> {
 
     static override styles = this.extendStyles(/*css*/`
-
-        .guten-toolbar-item button svg{
-            display: block !important;
+        .guten-toolbar-item {
+            position: relative;
+            display: inline-flex;
         }
 
         .guten-toolbar-item button {
@@ -23,6 +25,7 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
         }
 
         .guten-toolbar-item button svg {
+            display: block !important;
             width: var(--icon-size-xl) !important;
             height: var(--icon-size-xl) !important;
         }
@@ -36,6 +39,12 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
         .active button svg{
             color: var(--color-primary);
         }
+
+        .guten-toolbar-item:hover .tooltip {
+            opacity: 1;
+            transition-delay: 0.5s;
+            display: flex;
+        }
     `);
 
     override connectedCallback(): void {
@@ -44,12 +53,20 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
     }
 
     override render(): HTMLElement {
-        const { icon, tooltip, children } = this.props;
-        return (
+        const { icon, label, shortcut, children } = this.props as ToolbarItemUIProps;
 
-            <button type="button" title={tooltip}>
-                {icon ?? children}
-            </button>
+        return (
+            <div>
+                <Tooltip
+                    text={label}
+                    shortcut={shortcut}
+                    placement="top"
+                    offset={8} >
+                    <button type="button">
+                        {icon ?? children}
+                    </button>
+                </Tooltip>
+            </div>
         );
     }
 }

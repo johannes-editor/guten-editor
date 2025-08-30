@@ -2,7 +2,7 @@
 
 import { provideContext } from "../../core/context/context.ts";
 import { BoldIcon, ItalicIcon, StrikeThroughIcon, UnderlineIcon } from "../../design-system/components/icons.tsx";
-import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin } from "../index.ts";
+import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin, t } from "../index.ts";
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
@@ -53,10 +53,11 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                         <li>
                             <FormattingToolbarItem
                                 icon={item.icon}
-                                tooltip={item.tooltip}
+                                label={item.label}
+                                shortcut={item.shortcut}
                                 onSelect={item.onSelect}
                                 isActive={item.isActive}
-                                refreshSelection={() => ft?.refreshSelection()}
+                                refreshSelection={() => ft?.refreshSelection()}                                
                             />
                         </li>
                     ))}
@@ -70,28 +71,32 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
     private readonly defaultItems: ToolbarEntry[] = [
         {
             icon: <BoldIcon />,
-            tooltip: "Bold",
+            label: t("bold"),
+            shortcut: "Mod+B",
             onSelect: () => runCommand("toggleBold"),
             isActive: () => runCommand("stateBold"),
             sort: 10,
         },
         {
             icon: <ItalicIcon />,
-            tooltip: "Italic",
+            label: t("italic"),
+            shortcut: "Mod+I",
             onSelect: () => runCommand("toggleItalic"),
             isActive: () => runCommand("stateItalic"),
             sort: 20,
         },
         {
             icon: <StrikeThroughIcon />,
-            tooltip: "Strikethrough",
+            label: t("strikethrough"),
+            shortcut: "Mod+Shift+X",
             onSelect: () => runCommand("toggleStrike"),
             isActive: () => runCommand("stateStrike"),
             sort: 30,
         },
         {
             icon: <UnderlineIcon />,
-            tooltip: "Underline",
+            label: t("underline"),
+            shortcut: "Mod+U",
             onSelect: () => runCommand("toggleUnderline"),
             isActive: () => runCommand("stateUnderline"),
             sort: 40,
@@ -102,7 +107,8 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         const itemsFromExtensions: ToolbarEntry[] = this.extensionPlugins.map(
             (ext) => ({
                 icon: ext.icon,
-                tooltip: ext.tooltip,
+                label: ext.label,
+                shortcut: ext.shortcut,
                 onSelect: () => ext.onSelect(),
                 isActive: ext.isActive,
                 sort: ext.sort,
@@ -120,7 +126,8 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
     override readonly target = FormattingToolbarPlugin;
 
     abstract readonly icon: SVGElement;
-    abstract readonly tooltip: string;
+    abstract readonly label: string;
+    abstract readonly shortcut: string;
     abstract readonly sort: number;
     abstract onSelect(): void;
     isActive: () => boolean = () => { return false; };
@@ -128,7 +135,8 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
 
 type ToolbarEntry = {
     icon: SVGElement;
-    tooltip: string;
+    label: string;
+    shortcut: string;
     sort: number;
     onSelect: () => void;
     isActive: () => boolean;
