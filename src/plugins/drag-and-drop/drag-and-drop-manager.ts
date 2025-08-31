@@ -1,4 +1,6 @@
 import { EventTypes } from "../../utils/dom/events.ts";
+import { h, runCommand } from "../index.ts";
+import { Tooltip } from "../../design-system/components/tooltip.tsx";
 
 export class DragAndDropManager {
     private mutationObserver: MutationObserver | null = null;
@@ -51,8 +53,7 @@ export class DragAndDropManager {
     }
 
     private createHandle() {
-        this.handle = document.createElement('div');
-        const handle = this.handle;
+        const handle = document.createElement('div');
         handle.className = 'drag-handle';
         handle.textContent = '⋮⋮';
         handle.style.position = 'absolute';
@@ -67,8 +68,10 @@ export class DragAndDropManager {
         handle.style.borderRadius = '4px';
         handle.style.cursor = 'grab';
         handle.style.pointerEvents = 'auto';
-        handle.title = 'Drag to move. Right-click for options.';
-        this.layer?.appendChild(handle);
+
+        const tooltip = h(Tooltip, { text: 'Drag to move block', shortcut: 'Mod+Shift+O' }, handle) as HTMLElement;
+        this.layer?.appendChild(tooltip);
+        this.handle = handle;
     }
 
     private updateTargets() {
@@ -105,12 +108,8 @@ export class DragAndDropManager {
 
     private onHandleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
-        if (!this.currentTarget || !this.handle) return;
-        const event = new CustomEvent('block-contextmenu', {
-            detail: { block: this.currentTarget },
-            bubbles: true,
-        });
-        this.handle.dispatchEvent(event);
+        if (!this.currentTarget) return;
+        runCommand('openBlockOptions', { content: { block: this.currentTarget } });
     };
 
     private startHideTimer() {

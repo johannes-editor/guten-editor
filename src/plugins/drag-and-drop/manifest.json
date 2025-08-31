@@ -6,6 +6,11 @@
             "path": "./drag-and-drop-plugin.ts",
             "class": "DragAndDropPlugin",
             "active": true
+        },
+        {
+            "path": "./block-options-command-plugin.ts",
+            "class": "BlockOptionsCommandPlugin",
+            "active": true
         }
     ]
 }
