@@ -139,11 +139,25 @@ export class DragAndDropManager {
 
     private updateHandlePosition() {
         if (!this.currentTarget || !this.handle) return;
-        const rect = this.currentTarget.getBoundingClientRect();
-        const top = rect.top;
-        const left = rect.left - this.handle.offsetWidth - 8;
+        const textRect = this.getFirstLineRect(this.currentTarget);
+        const blockRect = this.currentTarget.getBoundingClientRect();
+        const rect = textRect ?? blockRect;
+        const top = rect.top + rect.height / 2 - this.handle.offsetHeight / 2;
+        const left = blockRect.left - this.handle.offsetWidth - 8;
         this.handle.style.top = `${top}px`;
         this.handle.style.left = `${left}px`;
+    }
+
+    private getFirstLineRect(el: HTMLElement): DOMRect | null {
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        const node = walker.nextNode();
+        if (!node || !node.textContent) return null;
+        const range = document.createRange();
+        range.setStart(node, 0);
+        range.setEnd(node, Math.min(1, node.textContent.length));
+        const rect = range.getBoundingClientRect();
+        range.detach?.();
+        return rect.height ? rect : null;
     }
 
     private onPointerDown = (e: PointerEvent) => {
