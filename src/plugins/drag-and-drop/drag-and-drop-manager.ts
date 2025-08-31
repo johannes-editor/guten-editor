@@ -120,6 +120,7 @@ export class DragAndDropManager {
         e.preventDefault();
         if (!this.currentTarget || !this.handleWrap) return;
         const rect = this.handleWrap.getBoundingClientRect();
+        this.hideHandle();
         runCommand('openBlockOptions', { content: { block: this.currentTarget, rect } });
     };
 
@@ -171,7 +172,7 @@ export class DragAndDropManager {
     }
 
     private onPointerDown = (e: PointerEvent) => {
-        if (!this.currentTarget) return;
+        if (e.button !== 0 || !this.currentTarget) return;
         e.preventDefault();
         this.currentDrag = this.currentTarget;
         this.createPlaceholder();
