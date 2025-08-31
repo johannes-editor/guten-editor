@@ -7,6 +7,7 @@ export class DragAndDropManager {
     private handle: HTMLElement | null = null;
     private hideTimer: number | null = null;
     private placeholder: HTMLElement | null = null;
+    private layer: HTMLElement | null = null;
 
     constructor(private content: HTMLElement, private overlay: HTMLElement) { }
 
@@ -34,21 +35,19 @@ export class DragAndDropManager {
         this.handle?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
         this.handle?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
         this.handle?.remove();
+        this.layer?.remove();
+        this.layer = null;
     }
 
     private setupOverlayArea() {
-        const container = this.overlay.parentElement as HTMLElement;
-        if (container) {
-            container.style.position = "relative";
-        }
-        const style = this.overlay.style;
-        style.position = "absolute";
-        style.top = "0";
-        style.left = "0";
-        style.right = "0";
-        style.bottom = "0";
-        style.pointerEvents = "none";
-        style.overflow = "visible";
+        this.layer = document.createElement('div');
+        const layer = this.layer;
+        layer.style.position = 'fixed';
+        layer.style.top = '0';
+        layer.style.left = '0';
+        layer.style.pointerEvents = 'none';
+        layer.style.overflow = 'visible';
+        this.overlay.appendChild(layer);
     }
 
     private createHandle() {
@@ -69,7 +68,7 @@ export class DragAndDropManager {
         handle.style.cursor = 'grab';
         handle.style.pointerEvents = 'auto';
         handle.title = 'Drag to move. Right-click for options.';
-        this.overlay.appendChild(handle);
+        this.layer?.appendChild(handle);
     }
 
     private updateTargets() {
@@ -140,10 +139,9 @@ export class DragAndDropManager {
 
     private updateHandlePosition() {
         if (!this.currentTarget || !this.handle) return;
-        const contentRect = this.content.getBoundingClientRect();
         const rect = this.currentTarget.getBoundingClientRect();
-        const top = rect.top - contentRect.top;
-        const left = rect.left - contentRect.left - this.handle.offsetWidth - 8;
+        const top = rect.top;
+        const left = rect.left - this.handle.offsetWidth - 8;
         this.handle.style.top = `${top}px`;
         this.handle.style.left = `${left}px`;
     }
