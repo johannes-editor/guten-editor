@@ -6,6 +6,7 @@ export class DragAndDropManager {
     private mutationObserver: MutationObserver | null = null;
     private currentDrag: HTMLElement | null = null;
     private currentTarget: HTMLElement | null = null;
+    private handleWrap: HTMLElement | null = null;
     private handle: HTMLElement | null = null;
     private hideTimer: number | null = null;
     private placeholder: HTMLElement | null = null;
@@ -22,8 +23,8 @@ export class DragAndDropManager {
         window.addEventListener(EventTypes.Scroll, () => this.updateHandlePosition());
         window.addEventListener(EventTypes.Resize, () => this.updateHandlePosition());
         this.handle?.addEventListener(EventTypes.PointerDown, (e) => this.onPointerDown(e as PointerEvent));
-        this.handle?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.handle?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
+        this.handleWrap?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
+        this.handleWrap?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
         this.handle?.addEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
     }
 
@@ -33,10 +34,12 @@ export class DragAndDropManager {
         document.removeEventListener(EventTypes.PointerMove, this.onPointerMove);
         document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
         this.handle?.removeEventListener(EventTypes.PointerDown, this.onPointerDown);
-        this.handle?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.handle?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
+        this.handleWrap?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
+        this.handleWrap?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
         this.handle?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
-        this.handle?.remove();
+        this.handleWrap?.remove();
+        this.handleWrap = null;
+        this.handle = null;
         this.layer?.remove();
         this.layer = null;
     }
@@ -56,10 +59,9 @@ export class DragAndDropManager {
         const handle = document.createElement('div');
         handle.className = 'drag-handle';
         handle.textContent = '⋮⋮';
-        handle.style.position = 'absolute';
         handle.style.width = '16px';
         handle.style.height = '16px';
-        handle.style.display = 'none';
+        handle.style.display = 'flex';
         handle.style.alignItems = 'center';
         handle.style.justifyContent = 'center';
         handle.style.fontSize = '12px';
@@ -67,11 +69,19 @@ export class DragAndDropManager {
         handle.style.border = '1px solid #ccc';
         handle.style.borderRadius = '4px';
         handle.style.cursor = 'grab';
-        handle.style.pointerEvents = 'auto';
 
-        const tooltip = h(Tooltip, { text: 'Drag to move block', shortcut: 'Mod+Shift+O' }, handle) as HTMLElement;
-        this.layer?.appendChild(tooltip);
+        const wrap = h(
+            Tooltip,
+            { text: 'Drag to move block', shortcut: 'Mod+Shift+O', placement: 'right' },
+            handle,
+        ) as HTMLElement;
+        wrap.style.position = 'absolute';
+        wrap.style.display = 'none';
+        wrap.style.pointerEvents = 'auto';
+
+        this.layer?.appendChild(wrap);
         this.handle = handle;
+        this.handleWrap = wrap;
     }
 
     private updateTargets() {
@@ -108,8 +118,9 @@ export class DragAndDropManager {
 
     private onHandleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
-        if (!this.currentTarget) return;
-        runCommand('openBlockOptions', { content: { block: this.currentTarget } });
+        if (!this.currentTarget || !this.handleWrap) return;
+        const rect = this.handleWrap.getBoundingClientRect();
+        runCommand('openBlockOptions', { content: { block: this.currentTarget, rect } });
     };
 
     private startHideTimer() {
@@ -125,26 +136,26 @@ export class DragAndDropManager {
     }
 
     private showHandle() {
-        if (!this.currentTarget || !this.handle) return;
-        this.handle.style.display = 'flex';
+        if (!this.currentTarget || !this.handleWrap) return;
+        this.handleWrap.style.display = 'block';
         this.updateHandlePosition();
     }
 
     private hideHandle() {
-        if (!this.handle) return;
-        this.handle.style.display = 'none';
+        if (!this.handleWrap) return;
+        this.handleWrap.style.display = 'none';
         this.currentTarget = null;
     }
 
     private updateHandlePosition() {
-        if (!this.currentTarget || !this.handle) return;
+        if (!this.currentTarget || !this.handle || !this.handleWrap) return;
         const textRect = this.getFirstLineRect(this.currentTarget);
         const blockRect = this.currentTarget.getBoundingClientRect();
         const rect = textRect ?? blockRect;
         const top = rect.top + rect.height / 2 - this.handle.offsetHeight / 2;
         const left = blockRect.left - this.handle.offsetWidth - 8;
-        this.handle.style.top = `${top}px`;
-        this.handle.style.left = `${left}px`;
+        this.handleWrap.style.top = `${top}px`;
+        this.handleWrap.style.left = `${left}px`;
     }
 
     private getFirstLineRect(el: HTMLElement): DOMRect | null {
