@@ -26,7 +26,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         requestAnimationFrame(() => {
             this.positionToolbarNearSelection();
 
-            this.selectionRange = window.getSelection()?.getRangeAt(0).cloneRange() ?? null;
+            this.selectionRange = globalThis.getSelection()?.getRangeAt(0).cloneRange() ?? null;
 
         });
 

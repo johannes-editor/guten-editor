@@ -29,7 +29,10 @@ export class NewContentChildrenObserver {
                     for (const node of Array.from(mutation.addedNodes)) {
                         if (!(node instanceof HTMLElement)) continue;
 
-                        if (node.classList.contains("block")) continue;
+                        if (
+                            node.classList.contains("block") ||
+                            node.classList.contains("drag-placeholder")
+                        ) continue;
 
                         try {
 

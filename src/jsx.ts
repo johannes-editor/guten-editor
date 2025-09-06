@@ -5,52 +5,48 @@ const SVG_ELEMENTS = new Set(["svg", "path", "circle", "rect", "line", "polyline
 
 // deno-lint-ignore no-explicit-any
 export function h(tag: any, props: Record<string, any> | null, ...children: any[]) {
-    if (typeof tag === 'function') {
-        if (tag.prototype instanceof Component) {
-            const tagName = tag.getTagName();
+  let normalizedChildren: any;
+  if (children.length === 0) normalizedChildren = undefined;
+  else if (children.length === 1) normalizedChildren = children[0];
+  else normalizedChildren = children;
 
-            if (!customElements.get(tagName)) {
-                customElements.define(tagName, tag);
-            }
+  if (typeof tag === 'function') {
 
-            const el = document.createElement(tagName) as HTMLElement;
+    if (tag.prototype instanceof Component) {
+      const tagName = tag.getTagName();
 
-            if (props) {
-                applyAttributes(el, props);
-                // deno-lint-ignore no-explicit-any
-                (el as any).props = {
-                    ...(props || {}),
-                    children,
-                };
-            }
+      if (!customElements.get(tagName)) {
+        customElements.define(tagName, tag);
+      }
 
-            // appendChildren(el, children);
-            return el;
-        }
+      const el = document.createElement(tagName) as HTMLElement;
 
-        let normalizedChildren;
-        if (children.length === 0) {
-            normalizedChildren = undefined;
-        } else if (children.length === 1) {
-            normalizedChildren = children[0];
-        } else {
-            normalizedChildren = children;
-        }
-
-        return tag({ ...(props || {}), children: normalizedChildren });
-    }
-
-    const el = typeof tag === "string" && SVG_ELEMENTS.has(tag)
-        ? document.createElementNS(SVG_NAMESPACE, tag)
-        : document.createElement(tag);
-
-    if (props) {
+      if (props) {
         applyAttributes(el, props);
+      }
+
+      (el as any).props = {
+        ...(props ?? {}),
+        children: normalizedChildren,
+      };
+
+      return el;
     }
 
+    return tag({ ...(props ?? {}), children: normalizedChildren });
+  }
 
-    appendChildren(el, children);
-    return el;
+
+  const el = typeof tag === "string" && SVG_ELEMENTS.has(tag)
+    ? document.createElementNS(SVG_NAMESPACE, tag)
+    : document.createElement(tag);
+
+  if (props) {
+    applyAttributes(el, props);
+  }
+
+  appendChildren(el, children);
+  return el;
 }
 
 
