@@ -8,7 +8,13 @@
     --color-border: #d0d0d0;
     --color-overlay: rgba(0, 0, 0, 0.5);
 
+
+    --blockquote-border-color: #2b2b2d;
+
     /* Primary brand color */
+
+    --color-callout: #fee5b2;
+
     --color-primary: #007aff;
     --color-primary-hover: #005be1;
 

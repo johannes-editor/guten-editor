@@ -1,3 +1,22 @@
+.callout {
+    background: var(--color-callout);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+blockquote {
+    border-left: 4px solid var(--blockquote-border-color);
+    padding-left: var(--space-md);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-left: 0;
+}
+
+blockquote::before {
+    padding-left: var(--space-md);
+}
+
 .surface {
     background: var(--color-surface);
     border: 1px solid var(--color-border);

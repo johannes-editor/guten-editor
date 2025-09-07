@@ -14,9 +14,45 @@ export class SelectionUtils {
     }
 }
 
-export function hasSelection(): boolean {
-    const selection = globalThis.getSelection();
-    return (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") ?? false;
+// export function hasSelection(): boolean {
+//     const selection = globalThis.getSelection();
+//     return (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") ?? false;
+// }
+
+
+export function hasSelection(
+    container: HTMLElement = document.getElementById('contentArea')!
+): boolean {
+    if (!container) return false;
+
+    const root = container.getRootNode() as Document | ShadowRoot;
+    const getSel = (root as any).getSelection?.bind(root) ?? document.getSelection.bind(document);
+    const sel: Selection | null = getSel();
+
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return false;
+    if (!container.contains(sel.anchorNode) || !container.contains(sel.focusNode)) return false;
+
+    const text = sel.toString().replace(/[\s\u00A0\u200B]+/g, '');
+    if (text.length > 0) return true;
+
+    const range = sel.getRangeAt(0);
+    const walker = document.createTreeWalker(
+        range.commonAncestorContainer,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode(node: Node) {
+                if (!container.contains(node)) return NodeFilter.FILTER_REJECT;
+                const r = document.createRange();
+                r.selectNodeContents(node);
+                const intersects =
+                    range.compareBoundaryPoints(Range.END_TO_START, r) < 0 &&
+                    range.compareBoundaryPoints(Range.START_TO_END, r) > 0;
+                const hasRealText = /\S/.test((node.nodeValue || '').replace(/[\u00A0\u200B]/g, ''));
+                return intersects && hasRealText ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+            }
+        } as any
+    );
+    return !!walker.nextNode();
 }
 
 export function clearSelection(): void {
