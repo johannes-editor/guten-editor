@@ -27,3 +27,45 @@
     transform: scale(1) translateY(0);
     pointer-events: auto;
 }
+
+.block-removing {
+    transition:
+        height 200ms ease,
+        margin 200ms ease,
+        padding 200ms ease,
+        opacity 150ms ease,
+        transform 200ms ease;
+
+    will-change: height, margin, padding, opacity, transform;
+}
+
+.dup-block-ring {
+    position: relative;
+    outline: var(--thickness-md) solid rgba(var(--ring-color-rgb) / 0);
+    border-radius: var(--space-sm);
+    animation: dup-outline-pop var(--animation-duration-too-too-slow) ease-out both;
+}
+
+
+@keyframes dup-outline-pop {
+    0% {
+        transform: scale(0.992);
+        outline-color: rgba(var(--ring-color-rgb) / 0);
+    }
+
+    40% {
+        transform: scale(1.004);
+        outline-color: rgba(var(--ring-color-rgb) / 0.9);
+    }
+
+    100% {
+        transform: scale(1);
+        outline-color: rgba(var(--ring-color-rgb) / 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dup-block-ring {
+        animation-duration: 0.01ms;
+    }
+}

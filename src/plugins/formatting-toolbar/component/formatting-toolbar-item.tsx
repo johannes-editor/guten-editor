@@ -8,7 +8,7 @@ interface FormattingToolbarItemProps {
     tooltip?: string;
     onSelect: () => void;
     isActive: () => boolean;
-    refreshRange(): void;
+    refreshSelection(): void;
 }
 
 export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemProps> {
@@ -29,7 +29,7 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
         event.preventDefault();
         onSelect();
         this.handleSelectionChange();
-        this.props.refreshRange();
+        this.props.refreshSelection();
 
     }
 

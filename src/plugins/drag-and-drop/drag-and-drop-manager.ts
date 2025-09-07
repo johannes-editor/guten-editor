@@ -118,8 +118,9 @@ export class DragAndDropManager {
         e.preventDefault();
         if (!this.currentTarget || !this.handleWrap) return;
         const rect = this.handleWrap.getBoundingClientRect();
+        const block = this.currentTarget;
         this.hideHandle();
-        runCommand('openBlockOptions', { content: { block: this.currentTarget, rect } });
+        runCommand('openBlockOptions', { content: { block, rect } });
     };
 
     private startHideTimer() {

@@ -2,14 +2,16 @@
 import { h } from "../../jsx.ts";
 import { Component } from "../../components/component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
+import { dom, keyboard } from "../../utils/index.ts";
 
 export interface MenuItemUIProps extends DefaultProps {
     icon?: HTMLElement;
     label?: string;
     shortcut?: string;
+    onSelect: () => void;
 }
 
-export class MenuItemUI<P extends MenuItemUIProps = DefaultProps, S = DefaultState> extends Component<P, S> {
+export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
 
     static override styles = this.extendStyles(/*css*/`
         .guten-menu-item {
@@ -64,6 +66,12 @@ export class MenuItemUI<P extends MenuItemUIProps = DefaultProps, S = DefaultSta
         
     `);
 
+    override connectedCallback(): void {
+        super.connectedCallback();
+
+        this.registerEvent(this, dom.EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
+    }
+
     override render(): HTMLElement {
         const { icon, label } = this.props as MenuItemUIProps;
 
@@ -74,5 +82,16 @@ export class MenuItemUI<P extends MenuItemUIProps = DefaultProps, S = DefaultSta
                 </button>
             </div>
         );
+    }
+
+    handleOnSelect(event: Event, onSelect: () => void) {
+
+        if (event instanceof KeyboardEvent) {
+            if (event.key !== keyboard.KeyboardKeys.Enter) return;
+        }
+
+        event.preventDefault();
+
+        onSelect();
     }
 }

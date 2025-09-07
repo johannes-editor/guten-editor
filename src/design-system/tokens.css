@@ -22,6 +22,8 @@
 
     --focus-ring-color: #005fcc;
 
+    --ring-color-rgb: 59 130 246;
+
     --tooltip-bg: #292929;
     --tooltip-text: #ffffff;
 
@@ -80,6 +82,17 @@
     --z-tooltip: 1300;
 
 
+    /* === thickness === */
+    --thickness-sm: 1px;
+    --thickness-md: 2px;
+    --thickness-lg: 4px;
+
+    /* === animation duration === */
+    --animation-duration-fast: 150ms;
+    --animation-duration-medium: 250ms;
+    --animation-duration-slow: 400ms;
+    --animation-duration-too-slow: 600ms;
+    --animation-duration-too-too-slow: 900ms;
 
 
     --keycap-symbol-scale: 1;
