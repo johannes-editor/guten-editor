@@ -5,6 +5,9 @@ export class EventTypes {
     static readonly MouseDown = 'mousedown';
     static readonly MouseUp = 'mouseup';
     static readonly MouseMove = 'mousemove';
+    static readonly PointerDown = 'pointerdown';
+    static readonly PointerMove = 'pointermove';
+    static readonly PointerUp = 'pointerup';
     static readonly Click = 'click';
     static readonly DblClick = 'dblclick';
     static readonly ContextMenu = 'contextmenu';
@@ -16,9 +19,12 @@ export class EventTypes {
     static readonly Scroll = 'scroll';
     static readonly Resize = 'resize';
     static readonly Drag = 'drag';
+    static readonly DragOver = 'dragover';
     static readonly Drop = 'drop';
     static readonly DragStart = 'dragstart';
     static readonly DragEnd = 'dragend';
     static readonly Mouseover = 'mouseover';
+    static readonly MouseEnter = 'mouseenter';
+    static readonly MouseLeave = 'mouseleave';
     static readonly SelectionChange = 'selectionchange';
 }

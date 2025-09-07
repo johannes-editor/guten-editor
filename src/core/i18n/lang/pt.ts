@@ -29,7 +29,13 @@ const pt: TranslationSchema = {
     table: 'Tabela',
     todo_list: 'Lista de tarefas',
     insert: 'Inserir',
-    paste_or_type_a_link: 'Cole ou digite um link…'
+    paste_or_type_a_link: 'Cole ou digite um link…',
+
+    duplicate: 'Duplicate',
+    move_up: 'Move up',
+    move_down: 'Move down',
+    comment: 'Comment',
+    delete: 'Delete',
 };
 
 export default pt;
