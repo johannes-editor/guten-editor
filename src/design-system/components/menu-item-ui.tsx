@@ -30,7 +30,9 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
             display: block;
         }
 
-        .guten-menu-item button:hover {
+        .guten-menu-item button:hover,
+        .guten-menu-item button.selected,
+        .guten-menu-item button:focus {
             background-color: var(--color-surface-muted);
             cursor: pointer;
             border-radius: var(--radius-sm);
