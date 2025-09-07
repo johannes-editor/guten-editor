@@ -15,6 +15,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
     override closeOnClickOutside: boolean = false;
     private selectionRange: Range | null = null;
     private locked: boolean = false;
+    private isBackwardSelection: boolean = false;
 
     static override styles = this.extendStyles(style);
 
@@ -31,6 +32,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         });
 
         this.registerEvent(document, dom.EventTypes.SelectionChange, () => this.handleSelectionChange());
+        this.registerEvent(globalThis, dom.EventTypes.Scroll, () => this.positionToolbarNearSelection());
     }
 
     override onUnmount(): void {
@@ -43,24 +45,49 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         this.remove();
     }
 
+    // positionToolbarNearSelection(): void {
+    //     const selection = globalThis.getSelection();
+    //     if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
+    //         return;
+    //     }
+
+    //     const range = selection.getRangeAt(0);
+    //     const rects = range.getClientRects();
+    //     if (rects.length === 0) return;
+
+    //     const isBackward = this.isSelectionBackward(selection);
+
+    //     const rect = isBackward
+    //         ? rects[0]
+    //         : rects[rects.length - 1];
+
+    //     this.setPosition(rect);
+    // }
+
     positionToolbarNearSelection(): void {
         const selection = globalThis.getSelection();
-        if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
-            return;
+        let range: Range | null = null;
+
+        if (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") {
+            range = selection.getRangeAt(0);
+            this.isBackwardSelection = this.isSelectionBackward(selection);
+        } else if (this.selectionRange) {
+            range = this.selectionRange;
         }
 
-        const range = selection.getRangeAt(0);
+        if (!range) return;
+
         const rects = range.getClientRects();
         if (rects.length === 0) return;
 
-        const isBackward = this.isSelectionBackward(selection);
-
-        const rect = isBackward
+        const rect = this.isBackwardSelection
             ? rects[0]
             : rects[rects.length - 1];
 
         this.setPosition(rect);
     }
+
+
 
     private isSelectionBackward(selection: Selection): boolean {
         const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
@@ -143,5 +170,6 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         const sel = globalThis.getSelection();
         if (!sel?.rangeCount) return;
         this.selectionRange = sel.getRangeAt(sel.rangeCount - 1).cloneRange();
+        this.isBackwardSelection = this.isSelectionBackward(sel);
     }
 }
