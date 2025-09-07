@@ -79,8 +79,8 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         const elementWidth = this.offsetWidth;
         const elementHeight = this.offsetHeight;
 
-        let leftPosition = rect.left + globalThis.scrollX + (rect.width / 2) - (elementWidth / 2);
-        let topPosition = rect.top + globalThis.scrollY - elementHeight - 10;
+        let leftPosition = rect.left + (rect.width / 2) - (elementWidth / 2);
+        let topPosition = rect.top - elementHeight - 10;
 
         if (leftPosition + elementWidth > globalThis.innerWidth) {
             leftPosition = globalThis.innerWidth - elementWidth - 20;
@@ -91,7 +91,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         }
 
         if (topPosition < 0) {
-            topPosition = rect.bottom + globalThis.scrollY + 10;
+            topPosition = rect.bottom + 10;
         }
 
         this.style.left = `${leftPosition}px`;

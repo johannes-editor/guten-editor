@@ -55,8 +55,8 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
         const elementWidth = this.offsetWidth;
         const elementHeight = this.offsetHeight;
 
-        let leftPosition = rect.left + globalThis.scrollX + (rect.width / 2) - (elementWidth / 2);
-        let topPosition = rect.top + globalThis.scrollY - elementHeight - 100;
+        let leftPosition = rect.left + (rect.width / 2) - (elementWidth / 2);
+        let topPosition = rect.bottom + 10;
 
         if (leftPosition + elementWidth > globalThis.innerWidth) {
             leftPosition = globalThis.innerWidth - elementWidth - 20;
@@ -66,12 +66,11 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
             leftPosition = 20;
         }
 
-        if (topPosition < 0) {
-            topPosition = rect.bottom + globalThis.scrollY + 10;
+        if (topPosition + elementHeight > globalThis.innerHeight) {
+            topPosition = rect.top - elementHeight - 10;
         }
 
         this.style.left = `${leftPosition}px`;
         this.style.top = `${topPosition}px`;
     }
-
 }

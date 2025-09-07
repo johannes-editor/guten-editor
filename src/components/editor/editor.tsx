@@ -40,6 +40,16 @@ export class Editor extends Component {
         this.contentArea = document.getElementById("contentArea")!;
         this.overlayArea = document.getElementById("overlayArea")!;
 
+        if (this.overlayArea) {
+            this.overlayArea.style.position = "fixed";
+            this.overlayArea.style.top = "0";
+            this.overlayArea.style.left = "0";
+            this.overlayArea.style.width = "0";
+            this.overlayArea.style.height = "0";
+            this.overlayArea.style.overflow = "visible";
+            this.overlayArea.style.pointerEvents = "none";
+        }
+
         if (this.contentArea) {
 
             console.log("Editor initialized with content area:", this.contentArea);
@@ -58,6 +68,16 @@ export class Editor extends Component {
 
         this.contentArea = document.getElementById("contentArea")!;
         this.overlayArea = document.getElementById("overlayArea")!;
+
+        if (this.overlayArea) {
+            this.overlayArea.style.position = "fixed";
+            this.overlayArea.style.top = "0";
+            this.overlayArea.style.left = "0";
+            this.overlayArea.style.width = "0";
+            this.overlayArea.style.height = "0";
+            this.overlayArea.style.overflow = "visible";
+            this.overlayArea.style.pointerEvents = "none";
+        }
     }
 
     public appendElementOnEditorRoot(element: HTMLElement) {
