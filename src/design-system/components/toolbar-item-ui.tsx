@@ -22,6 +22,7 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
             all: unset;
             padding: var(--space-xs);
             font-size: var(--font-size);
+            color: var(--color-ui-text);
         }
 
         .guten-toolbar-item button svg {
