@@ -265,6 +265,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                     {filtered.map((item, index) => (
                         <li role="menuitem">
                             <SlashMenuItem
+                                icon={item.icon}
                                 label={item.label}
                                 onSelect={() => this.handleOnSelect(item)}
                                 selected={index === this.state.selectedIndex}

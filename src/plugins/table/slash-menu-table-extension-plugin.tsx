@@ -1,18 +1,22 @@
 /** @jsx h */
 
+import { GridIcon } from "../../design-system/components/icons.tsx";
 import { h, t, focusOnElement, } from "../index.ts";
 import { SlashMenuExtensionPlugin } from "../slash-menu/index.ts";
 import { TableBlock } from "./components/table-block.tsx";
 
 export class SlashMenuTableExtensionPlugin extends SlashMenuExtensionPlugin {
 
-    sort: number;
+    icon: SVGElement;
     label: string;
+    sort: number;
 
     constructor() {
+
         super();
-        this.sort = 9;
         this.label = t("table");
+        this.icon = <GridIcon />;
+        this.sort = 99;
     }
 
     onSelect(focusedBlock: HTMLElement): void {

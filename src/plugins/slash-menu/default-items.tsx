@@ -11,12 +11,14 @@ import { Heading5Block } from "../../components/blocks/header5.tsx";
 import { BlockquoteBlock } from "../../components/blocks/blockquote.tsx";
 import { BulletedListBlock } from "../../components/blocks/bulleted-list.tsx";
 import { NumberedListBlock } from "../../components/blocks/numbered-list.tsx";
+import { FontIcon, Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon } from "../../design-system/components/icons.tsx";
 
 export function defaultSlashMenuItems(): SlashMenuItemData[] {
     return [
         {
+            icon: <FontIcon />,
             sort: 10,
-            label: t("paragraph"),
+            label: t("text"),
             synonyms: [t("paragraph"), t("text")],
             onSelect: (focusedBlock: HTMLElement) => {
                 const element = <ParagraphBlock />;
@@ -25,6 +27,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             }
         },
         {
+            icon: <Heading1Icon />,
             sort: 20,
             label: t("heading_1"),
             synonyms: [t("title"), "h1"],
@@ -35,6 +38,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             }
         },
         {
+            icon: <Heading2Icon />,
             sort: 30,
             label: t("heading_2"),
             synonyms: [t("title"), "h2"],
@@ -45,37 +49,8 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             }
         },
         {
+            icon: <QuotationIcon />,
             sort: 40,
-            label: t("heading_3"),
-            synonyms: [t("title"), "h3"],
-            onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading3Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
-            }
-        },
-        {
-            sort: 50,
-            label: t("heading_4"),
-            synonyms: [t("title"), "h4"],
-            onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading4Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
-            }
-        },
-        {
-            sort: 60,
-            label: t("heading_5"),
-            synonyms: [t("title"), "h5"],
-            onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading5Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
-            }
-        },
-        {
-            sort: 70,
             label: t("quotation"),
             synonyms: ["cite", "blockquote"],
             onSelect: (focusedBlock: HTMLElement) => {
@@ -85,7 +60,8 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             }
         },
         {
-            sort: 80,
+            icon: <AwesomeListUlIcon />,
+            sort: 50,
             label: t("bulleted_list"),
             synonyms: [t("list"), t("bulleted_list")],
             onSelect: (focusedBlock: HTMLElement) => {
@@ -96,7 +72,8 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             }
         },
         {
-            sort: 90,
+            icon: <AwesomeListOlIcon />,
+            sort: 60,
             label: t("numbered_list"),
             synonyms: [t("list"), t("numbered"), t("ordered")],
             onSelect: (focusedBlock: HTMLElement) => {
@@ -104,6 +81,39 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
                 focusedBlock.after(element);
                 const item = element.querySelector("li");
                 focusOnElement(item);
+            }
+        },
+        {
+            icon: <Heading3Icon />,
+            sort: 70,
+            label: t("heading_3"),
+            synonyms: [t("title"), "h3"],
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = <Heading3Block />;
+                focusedBlock.after(element);
+                focusOnElement(element);
+            }
+        },
+        {
+            icon: <Heading4Icon />,
+            sort: 80,
+            label: t("heading_4"),
+            synonyms: [t("title"), "h4"],
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = <Heading4Block />;
+                focusedBlock.after(element);
+                focusOnElement(element);
+            }
+        },
+        {
+            icon: <Heading5Icon />,
+            sort: 90,
+            label: t("heading_5"),
+            synonyms: [t("title"), "h5"],
+            onSelect: (focusedBlock: HTMLElement) => {
+                const element = <Heading5Block />;
+                focusedBlock.after(element);
+                focusOnElement(element);
             }
         }
     ];

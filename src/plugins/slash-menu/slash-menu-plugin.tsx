@@ -25,6 +25,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
 
         // extensions.map( e => e.setup(_root, extensions));
         const items: SlashMenuItemData[] = extensions.map((ext) => ({
+            icon: ext.icon,
             label: ext.label,
             sort: ext.sort,
             onSelect: (currentBlock: HTMLElement) => ext.onSelect(currentBlock),
@@ -84,7 +85,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
 export abstract class SlashMenuExtensionPlugin extends PluginExtension<SlashMenuPlugin> {
 
     override readonly target = SlashMenuPlugin;
-
+    abstract readonly icon: SVGElement;
     abstract readonly label: string;
     abstract readonly sort: number;
     abstract onSelect(currentBlock: HTMLElement): void;

@@ -2,7 +2,7 @@
 import { h, appendElementOnOverlayArea, t, runCommand } from "../../index.ts";
 import { Command, CommandContext } from "../../../core/command/command.ts";
 import { BlockOptions } from "../components/block-options.tsx";
-import { ArrowDownIcon, ArrowUpIcon, ChatLeftIcon, CopyIcon, TrashIcon } from "../../../design-system/components/icons.tsx";
+import { ArrowDownIcon, ArrowUpIcon, BiFiles, TrashIcon } from "../../../design-system/components/icons.tsx";
 import { BlockOptionsItem } from "../components/block-options-item.tsx";
 
 export const OpenBlockOptions: Command = {
@@ -15,7 +15,7 @@ export const OpenBlockOptions: Command = {
 
         const el = appendElementOnOverlayArea(
             <BlockOptions >
-                <BlockOptionsItem icon={<CopyIcon />} label={t("duplicate")} onSelect={() => runCommand("duplicateBlock", {
+                <BlockOptionsItem icon={<BiFiles />} label={t("duplicate")} onSelect={() => runCommand("duplicateBlock", {
                     content: { block: context.content?.block, blockOptions: blockOptions }
                 })} />
 

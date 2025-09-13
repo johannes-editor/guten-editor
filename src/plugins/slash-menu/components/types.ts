@@ -1,6 +1,7 @@
 export interface SlashMenuItemData {
-    sort: number;
+    icon: SVGElement;
     label: string;
+    sort: number;
     onSelect: (focusedBlock: HTMLElement) => void;
     synonyms?: string[];
 }

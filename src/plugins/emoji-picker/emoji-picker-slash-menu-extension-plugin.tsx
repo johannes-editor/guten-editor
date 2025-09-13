@@ -9,11 +9,13 @@ import { registerTranslation, t } from "../index.ts";
 
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
+import { EmojiIcon } from "../../design-system/components/icons.tsx";
 
 export class EmojiPickerSlashMenuExtensionPlugin extends SlashMenuExtensionPlugin {
 
-    sort: number = 3;
+    icon: SVGElement = <EmojiIcon />;
     label: string = "";
+    sort: number = 99;
 
     onSelect(): void {
         const range = SelectionUtils.getCurrentSelectionRange();
