@@ -28,6 +28,8 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
 
         .guten-menu-item button svg {
             display: block;
+            width: var(--icon-size-sm);
+            height: var(--icon-size-sm);
         }
 
         .guten-menu-item button:hover,
@@ -48,15 +50,14 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
             display: flex;
         }
 
-        .guten-menu-item button{
+        .guten-menu-item button {
             display: flex;
             flex-direction: row;
-            gap: var(--space-sm);
-
+            gap: var(--space-custom-10);
+            color: var(--color-ui-text);
             white-space: nowrap;
             width: 100%;
-            padding: var(--space-xs) var(--space-sm);
-
+            padding: var(--space-xs) var(--space-md);
             flex: 1;
             white-space: nowrap;
             box-sizing: border-box;

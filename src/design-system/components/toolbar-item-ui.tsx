@@ -13,6 +13,7 @@ interface ToolbarItemUIProps extends DefaultProps {
 export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = DefaultState> extends Component<P, S> {
 
     static override styles = this.extendStyles(/*css*/`
+        
         .guten-toolbar-item {
             position: relative;
             display: inline-flex;
@@ -26,9 +27,9 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
         }
 
         .guten-toolbar-item button svg {
-            display: block !important;
-            width: var(--icon-size-xl) !important;
-            height: var(--icon-size-xl) !important;
+            display: block;
+            width: var(--icon-size-sm);
+            height: var(--icon-size-sm);
         }
 
         .guten-toolbar-item button:hover {
