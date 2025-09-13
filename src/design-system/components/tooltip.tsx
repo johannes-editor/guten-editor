@@ -147,7 +147,7 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
                         data-open={open ? "true" : "false"}
                     >
                         {text}
-                        {shortcutEl}
+                        {/* {shortcutEl} */}
                     </span>
                 )}
             </span>
