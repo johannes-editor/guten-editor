@@ -1,0 +1,12 @@
+{
+    "name": "Image",
+    "author": "Alexandre Tavares",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./slash-menu-image-extension-plugin.tsx",
+            "class": "SlashMenuImageExtensionPlugin",
+            "active": true
+        }
+    ]
+}

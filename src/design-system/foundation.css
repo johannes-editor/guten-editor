@@ -2,6 +2,17 @@
     padding-left: 2rem;
 }
 
+.unselectable {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 ::highlight(persist) {
     background-color: var(--color-selection);
     color: var(--color-selection-text);

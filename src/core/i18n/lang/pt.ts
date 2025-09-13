@@ -36,6 +36,12 @@ const pt: TranslationSchema = {
     move_down: 'Move down',
     comment: 'Comment',
     delete: 'Delete',
+
+    image: 'Imagem',
+    photo: 'Foto',
+    picture: 'Figura',
+    img: 'img',
+    insert_image: 'Inserir imagem',
 };
 
 export default pt;
