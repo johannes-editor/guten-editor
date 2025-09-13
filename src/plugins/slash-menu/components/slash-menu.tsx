@@ -55,6 +55,8 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             overflow-y: auto;
             max-height: 12rem;
             padding: 0 .5rem;
+
+            width: max-content;
         }
 
         .guten-menu li{
