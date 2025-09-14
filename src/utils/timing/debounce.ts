@@ -16,3 +16,12 @@ export function debounce(func: Function, wait: number): Function {
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
 }
+
+
+export function waitFrames(n = 2): Promise<void> {
+  return new Promise<void>(resolve => {
+    const step = (i: number) =>
+      requestAnimationFrame(() => (i > 1 ? step(i - 1) : resolve()));
+    step(n);
+  });
+}

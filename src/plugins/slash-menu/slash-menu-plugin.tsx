@@ -9,7 +9,7 @@ import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
 import { defaultSlashMenuItems } from "./default-items.tsx";
 
-import { dom, keyboard } from "../index.ts";
+import { dom, keyboard, timing } from "../index.ts";
 
 
 /**
@@ -47,33 +47,38 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
         registerTranslation("pt", pt);
     }
 
-    private readonly handleKey = (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
+    private readonly handleKey = async (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
         if (event.key === keyboard.KeyboardKeys.Slash && !this.mounted()) {
 
-            // Prevent Firefox from opening the "Quick Find" bar when pressing the "/" key
             event.preventDefault();
             event.stopImmediatePropagation();
 
+            await timing.waitFrames(2);
 
-            // Insert "/" manually at caret position
             const selection = globalThis.getSelection();
             if (selection && selection.rangeCount > 0) {
                 const range = selection.getRangeAt(0);
-                const slashNode = document.createTextNode("/");
 
+                const slashNode = document.createTextNode("/");
                 range.insertNode(slashNode);
 
-                // Move caret after the inserted slash
                 range.setStartAfter(slashNode);
                 range.setEndAfter(slashNode);
                 selection.removeAllRanges();
                 selection.addRange(range);
+
+                await timing.waitFrames(2);
+
+                const slashMenuItems = defaultSlashMenuItems();
+                slashMenuItems.push(...extensionItems);
+
+                appendElementOnOverlayArea(
+                    <SlashMenuOverlay
+                        items={slashMenuItems}
+                        anchorNode={slashNode}
+                    />
+                );
             }
-
-            const slashMenuItems = defaultSlashMenuItems();
-            slashMenuItems.push(...extensionItems);
-
-            appendElementOnOverlayArea(<SlashMenuOverlay items={slashMenuItems} />);
         }
     }
 

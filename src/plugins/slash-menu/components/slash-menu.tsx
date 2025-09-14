@@ -9,6 +9,7 @@ import { SlashMenuItemData } from "./types.ts";
 
 interface SlashMenuProps {
     items: SlashMenuItemData[];
+    anchorNode: Node;
 }
 
 interface SlashMenuState {
@@ -292,45 +293,79 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         this.keyboardNavigating = true;
 
         clearTimeout(this.keyboardNavTimeout);
-        this.keyboardNavTimeout = window.setTimeout(() => {
+        this.keyboardNavTimeout = globalThis.setTimeout(() => {
             this.keyboardNavigating = false;
         }, 500);
     }
 
-    private positionMenu(element: HTMLElement) {
-        let rect: DOMRect | null = null;
+    private getAnchorRect(): DOMRect | null {
+        const a = this.props.anchorNode;
+        if (!a || !a.parentNode) return null;
 
-        if (this.range) {
-            rect = this.range.getBoundingClientRect();
+        const r = document.createRange();
 
-            if (rect.width === 0 || rect.height === 0) {
-                const tempSpan = document.createElement("span");
-                tempSpan.textContent = "\u200B";
-                this.range.insertNode(tempSpan);
-                rect = tempSpan.getBoundingClientRect();
-                tempSpan.remove();
-            }
+        if (a instanceof Text) {
+            r.setStart(a, 0);
+            r.setEnd(a, Math.min(1, a.length));
+        } else {
+            r.selectNode(a);
         }
 
-        if (!rect && this.focusedBlock) {
-            rect = this.focusedBlock.getBoundingClientRect();
-        }
-
-        if (!rect) return;
-
-        const menuHeight = element.getBoundingClientRect().height;
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const showAbove = spaceBelow < menuHeight && rect.top > menuHeight;
-
-        const top = showAbove
-            ? rect.top - menuHeight
-            : rect.bottom;
-
-        this.style.position = 'absolute';
-        this.style.left = `${rect.left}px`;
-        this.style.top = `${top}px`;
+        const rects = r.getClientRects();
+        if (rects.length > 0) return rects[0];
+        return r.getBoundingClientRect();
     }
 
+    private positionMenu(element: HTMLElement) {
+        
+        const rect =
+            this.getAnchorRect();
+            
+        if (!rect) return;
+
+        const gap = 2;
+
+        const parent = (this as unknown as HTMLElement).offsetParent as HTMLElement | null;
+        const pad = parent
+            ? (() => {
+                const pr = parent.getBoundingClientRect();
+                const left = pr.left + parent.clientLeft;
+                const top = pr.top + parent.clientTop;
+                const right = left + parent.clientWidth;
+                const bottom = top + parent.clientHeight;
+                return { left, top, right, bottom };
+            })()
+            : { left: 0, top: 0, right: globalThis.innerWidth, bottom: globalThis.innerHeight };
+
+        this.style.position = 'absolute';
+
+        const { width: menuWidth, height: menuHeight } = element.getBoundingClientRect();
+
+        const spaceBelow = globalThis.innerHeight - rect.bottom;
+        const showAbove = spaceBelow < menuHeight && rect.top > menuHeight;
+
+        if (showAbove) {
+            this.style.bottom = `${pad.bottom - (rect.top - gap)}px`;
+            this.style.top = '';
+        } else {
+            this.style.top = `${(rect.bottom + gap) - pad.top}px`;
+            this.style.bottom = '';
+        }
+
+        
+        const spaceRight = globalThis.innerWidth - rect.right;
+        const spaceLeft = rect.left;
+        const showRight = spaceRight >= menuWidth || spaceRight >= spaceLeft;
+
+        if (showRight) {
+            
+            this.style.left = `${(rect.right + gap) - pad.left}px`;
+            this.style.right = '';
+        } else {
+            this.style.right = `${pad.right - (rect.left - gap)}px`;
+            this.style.left = '';
+        }
+    }
 
     private ensureItemVisibility() {
 
