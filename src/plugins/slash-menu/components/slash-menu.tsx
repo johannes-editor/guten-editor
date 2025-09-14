@@ -323,11 +323,11 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         const showAbove = spaceBelow < menuHeight && rect.top > menuHeight;
 
         const top = showAbove
-            ? rect.top + window.scrollY - menuHeight
-            : rect.bottom + window.scrollY;
+            ? rect.top - menuHeight
+            : rect.bottom;
 
         this.style.position = 'absolute';
-        this.style.left = `${rect.left + window.scrollX}px`;
+        this.style.left = `${rect.left}px`;
         this.style.top = `${top}px`;
     }
 
