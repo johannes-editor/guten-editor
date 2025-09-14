@@ -207,29 +207,29 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
 
     updateFilterFromEditor() {
         const filter = this.getCurrentSlashCommandFilter();
+        if (filter === null) {
+            this.remove();
+            return;
+        }
         this.setState({ filter, selectedIndex: 0 });
     }
 
-    getCurrentSlashCommandFilter(): string {
+    getCurrentSlashCommandFilter(): string | null {
         const selection = globalThis.getSelection();
-        if (!selection || !selection.anchorNode) return "";
-        const node = selection.anchorNode;
-        let text = node.textContent || "";
-        let caretPos = selection.anchorOffset;
+        if (!selection || selection.rangeCount === 0) return null;
 
-        if (node.nodeType !== Node.TEXT_NODE && node.childNodes.length) {
-            Array.from(node.childNodes).forEach(child => {
-                if (child.nodeType === Node.TEXT_NODE) {
-                    text = child.textContent || "";
-                }
-            });
-            caretPos = text.length;
+        const range = selection.getRangeAt(0).cloneRange();
+        try {
+            range.setStart(range.startContainer, 0);
+        } catch {
+            return null;
         }
+        const text = range.toString();
 
-        const slashIndex = text.lastIndexOf('/', caretPos - 1);
-        if (slashIndex === -1) return "";
+        const slashIndex = text.lastIndexOf("/");
+        if (slashIndex === -1) return null;
 
-        return text.slice(slashIndex + 1, caretPos).trim();
+        return text.slice(slashIndex + 1).trim();
     }
 
     getFilteredItems(): SlashMenuItemData[] {
