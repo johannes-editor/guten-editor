@@ -185,19 +185,38 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         }
     };
 
+    private removeSlashCommand() {
+        if (!this.range) return;
+
+        const current = SelectionUtils.getCurrentSelectionRange();
+        const selection = globalThis.getSelection();
+        if (!current || !selection) return;
+
+        const removeRange = this.range.cloneRange();
+        try {
+            removeRange.setStart(removeRange.startContainer, Math.max(0, removeRange.startOffset - 1));
+        } catch {
+            return;
+        }
+        removeRange.setEnd(current.endContainer, current.endOffset);
+        removeRange.deleteContents();
+        removeRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(removeRange);
+    }
+
     updateFilterFromEditor() {
         const filter = this.getCurrentSlashCommandFilter();
         this.setState({ filter, selectedIndex: 0 });
     }
 
     getCurrentSlashCommandFilter(): string {
-        const selection = window.getSelection();
+        const selection = globalThis.getSelection();
         if (!selection || !selection.anchorNode) return "";
         const node = selection.anchorNode;
         let text = node.textContent || "";
         let caretPos = selection.anchorOffset;
 
-        // Edge case
         if (node.nodeType !== Node.TEXT_NODE && node.childNodes.length) {
             Array.from(node.childNodes).forEach(child => {
                 if (child.nodeType === Node.TEXT_NODE) {
@@ -227,8 +246,21 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     }
 
     handleOnSelect(item: SlashMenuItemData) {
-        item.onSelect(this.focusedBlock!);
-        this.remove(); // By default, remove the SlashMenu after executing onSelect
+        this.removeSlashCommand();
+
+        const block = this.focusedBlock!;
+        item.onSelect(block);
+
+        const shouldRemoveBlock =
+            !block.textContent?.trim() &&
+            (block.childElementCount === 0 ||
+                (block.childElementCount === 1 && block.firstElementChild?.tagName === "BR"));
+
+        if (shouldRemoveBlock) {
+            block.remove();
+        }
+
+        this.remove();
     }
 
     setSelectedIndex(index: number) {
@@ -317,10 +349,10 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     }
 
     private positionMenu(element: HTMLElement) {
-        
+
         const rect =
             this.getAnchorRect();
-            
+
         if (!rect) return;
 
         const gap = 2;
@@ -352,13 +384,13 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             this.style.bottom = '';
         }
 
-        
+
         const spaceRight = globalThis.innerWidth - rect.right;
         const spaceLeft = rect.left;
         const showRight = spaceRight >= menuWidth || spaceRight >= spaceLeft;
 
         if (showRight) {
-            
+
             this.style.left = `${(rect.right + gap) - pad.left}px`;
             this.style.right = '';
         } else {
