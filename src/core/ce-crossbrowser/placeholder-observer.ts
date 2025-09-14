@@ -28,7 +28,8 @@ export class PlaceholderObserver {
 
     private updateEmptyClass() {
         document.querySelectorAll<HTMLElement>('.placeholder').forEach((element) => {
-            if (element.innerHTML.trim() === "<br>" || element.innerHTML.trim() === "") {
+            const text = element.textContent?.replace(/\u00A0/g, '').trim() ?? '';
+            if (text === '') {
                 element.classList.add('empty');
             } else {
                 element.classList.remove('empty');
