@@ -16,6 +16,9 @@ import { runCommand } from "../../index.ts";
  */
 export class LinkPopover extends InputPopover<InputPopoverProps> {
 
+
+    private existingAnchor: HTMLAnchorElement | null = null;
+
     /** Inject selection lock/unlock from the formatting toolbar (if available). */
     override onMount(): void {
 
@@ -29,6 +32,15 @@ export class LinkPopover extends InputPopover<InputPopoverProps> {
             };
 
             (this.props as InputPopoverProps).selectionController = selectionCtrl;
+        }
+
+        const selection = globalThis.getSelection();
+        if (selection?.anchorNode) {
+            const anchor = (selection.anchorNode instanceof Element ? selection.anchorNode : selection.anchorNode.parentElement)?.closest("a") as HTMLAnchorElement | null;
+            if (anchor) {
+                this.existingAnchor = anchor;
+                this.input.value = anchor.getAttribute("href") ?? "";
+            }
         }
 
         requestAnimationFrame(() => {
@@ -48,10 +60,11 @@ export class LinkPopover extends InputPopover<InputPopoverProps> {
         this.remove();
 
         requestAnimationFrame(() => {
-
-            if (!href) return;
-
-            runCommand('createLink', { content: { href } });
+            if (href) {
+                runCommand('createLink', { content: { href } });
+            } else if (this.existingAnchor) {
+                runCommand('removeLink');
+            }
         });
     }
 }
