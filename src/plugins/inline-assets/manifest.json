@@ -1,0 +1,12 @@
+{
+    "name": "Inline Assets",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "./inline-assets-plugin.ts",
+            "class": "InlineAssetsPlugin",
+            "active": true,
+            "description": "Registers inline CSS/JS assets and injects them once."
+        }
+    ]
+}
