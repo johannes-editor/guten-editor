@@ -39,8 +39,8 @@ export class SlashMenuItem extends Component<SlashMenuItemProps> {
 
         .guten-menu-item-x button svg {
             display: block;
-            width: var(--icon-size-sm);
-            height: var(--icon-size-sm);
+            width: var(--icon-size-md);
+            height: var(--icon-size-md);
         }
 
     ` );
