@@ -1,0 +1,17 @@
+{
+    "name": "Emoji Picker",
+    "author": "Alexandre Tavares",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./slash-menu-emoji-extension.tsx",
+            "class": "SlashMenuEmojiExtension",
+            "active": true
+        },
+        {
+            "path": "./command-emoji-extension.ts",
+            "class": "CommandEmojiExtension",
+            "active": true
+        }
+    ]
+}

@@ -2,8 +2,6 @@
     outline: none;
 }
 
-
-
 .placeholder {
     position: relative;
 }
@@ -21,31 +19,6 @@
 .placeholder.empty::before {
     visibility: visible;
 }
-
-.emoji-picker {
-    margin: 0;
-    padding: 4px;
-    list-style: none;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
-    max-height: 200px;
-    overflow-y: auto;
-    min-width: 180px;
-    width: 300px;
-}
-
-.emoji-picker li {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.emoji-picker button.selected {
-    background: #e6e6e6;
-    border-radius: 6px;
-}
-
 
 table {
     border-collapse: collapse;
