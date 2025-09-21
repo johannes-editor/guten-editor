@@ -5,8 +5,6 @@ import { DefaultProps, OverlayComponent } from "../../plugins/index.ts";
 
 export class ToolbarUI<P extends DefaultProps = DefaultProps, S = DefaultState> extends OverlayComponent<P, S> {
 
-    override allowOverlayOnTop = true;
-
     static override styles = this.extendStyles(/*css*/`
         .guten-toolbar ul{
             padding: 0;

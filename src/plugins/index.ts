@@ -4,7 +4,7 @@ export { h, Fragment } from "../jsx.ts";
 /* components */
 export { Component } from "../components/component.ts";
 export { OverlayComponent } from "../components/overlay/overlay-component.ts";
-export { OverlayOpenStrategy } from "../components/overlay/types.ts";
+export type { OverlayStackOptions } from "../components/overlay/types.ts";
 export type { DefaultProps } from "../components/types.ts";
 
 /* i18n */

@@ -1,14 +1,19 @@
 import { dom, keyboard } from "../../utils/index.ts";
-import { OverlayOpenStrategy, OverlayStackAware, OverlayStackOptions } from "./types.ts";
+import { OverlayStackAware, OverlayStackOptions } from "./types.ts";
 
 interface OverlayEntry {
     element: HTMLElement;
-    options: Required<OverlayStackOptions>;
+    options: OverlayStackBehaviour;
 }
 
-const DEFAULT_OPTIONS: Required<OverlayStackOptions> = {
-    allowOverlayOnTop: false,
-    openStrategy: OverlayOpenStrategy.CloseDisallowed,
+type OverlayStackBehaviour = {
+    canOverlay: boolean;
+    overlayTargets: string[];
+};
+
+const DEFAULT_OPTIONS: OverlayStackBehaviour = {
+    canOverlay: false,
+    overlayTargets: [],
 };
 
 function isOverlayStackAware(element: HTMLElement): element is HTMLElement & OverlayStackAware {
@@ -38,14 +43,14 @@ export class OverlayStack {
      * @param element The overlay element to add to the stack.
      */
     public push(element: HTMLElement) {
-        const entry: OverlayEntry = {
+        const options = this.resolveOptions(element);
+
+        this.prepareStackFor(options);
+
+        this.stack.push({
             element,
-            options: this.resolveOptions(element),
-        };
-
-        this.prepareStackFor(entry.options.openStrategy);
-
-        this.stack.push(entry);
+            options,
+        });
     }
 
     /**
@@ -117,37 +122,55 @@ export class OverlayStack {
         return false;
     }
 
-    private resolveOptions(element: HTMLElement): Required<OverlayStackOptions> {
+    private resolveOptions(element: HTMLElement): OverlayStackBehaviour {
         if (isOverlayStackAware(element)) {
             const options = element.getOverlayStackOptions?.();
             if (options) {
-                return { ...DEFAULT_OPTIONS, ...options };
+                return {
+                    canOverlay: options.canOverlay ?? DEFAULT_OPTIONS.canOverlay,
+                    overlayTargets: this.normalizeOverlayTargets(options.overlayTargets),
+                };
             }
         }
 
-        return DEFAULT_OPTIONS;
+        return { ...DEFAULT_OPTIONS, overlayTargets: [...DEFAULT_OPTIONS.overlayTargets] };
+    }
+
+    private normalizeOverlayTargets(targets: OverlayStackOptions["overlayTargets"]): string[] {
+        if (!targets?.length) {
+            return [];
+        }
+
+        const unique = new Set<string>();
+        for (const target of targets) {
+            const trimmed = target?.trim();
+            if (!trimmed) continue;
+            unique.add(trimmed);
+        }
+
+        return Array.from(unique);
     }
 
     private peekEntry(): OverlayEntry | undefined {
         return this.stack[this.stack.length - 1];
     }
 
-    private prepareStackFor(strategy: OverlayOpenStrategy) {
-        if (strategy === OverlayOpenStrategy.ClearStack) {
+    private prepareStackFor(options: OverlayStackBehaviour) {
+        if (!options.canOverlay) {
             this.clear();
             return;
         }
 
-        if (strategy === OverlayOpenStrategy.KeepStack) {
+        if (!options.overlayTargets.length) {
+            this.clear();
             return;
         }
 
-        // OverlayOpenStrategy.CloseDisallowed (default)
         while (this.stack.length > 0) {
             const topEntry = this.peekEntry();
             if (!topEntry) return;
 
-            if (topEntry.options.allowOverlayOnTop) {
+            if (this.canRemainOnStack(options.overlayTargets, topEntry.element)) {
                 return;
             }
 
@@ -159,5 +182,31 @@ export class OverlayStack {
         while (this.stack.length > 0) {
             this.pop();
         }
+    }
+
+    private canRemainOnStack(targets: readonly string[], element: HTMLElement): boolean {
+        for (const target of targets) {
+            const selector = target.trim();
+            if (!selector) continue;
+
+            if (selector === "*") {
+                return true;
+            }
+
+            if (element.tagName.toLowerCase() === selector.toLowerCase()) {
+                return true;
+            }
+
+            try {
+                if (element.matches(selector)) {
+                    return true;
+                }
+            } catch {
+                // Ignore invalid selectors and continue.
+                continue;
+            }
+        }
+
+        return false;
     }
 }

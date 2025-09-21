@@ -1,5 +1,5 @@
 /** @jsx h */
-import { dom, keyboard, h, t, OverlayComponent, OverlayOpenStrategy } from "../../index.ts";
+import { dom, keyboard, h, t, OverlayComponent } from "../../index.ts";
 import { SlashMenuItem } from "./slash-menu-item.tsx";
 import { findClosestAncestorOfSelectionByClass } from "../../../utils/dom-utils.ts";
 
@@ -19,8 +19,6 @@ interface SlashMenuState {
 }
 
 export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenuState> {
-
-    override openStrategy = OverlayOpenStrategy.ClearStack;
 
     private focusedBlock: HTMLElement | null;
     private range: Range | null;

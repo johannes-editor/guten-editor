@@ -1,8 +1,8 @@
 /** @jsx h */
-
 import { InputPopover, InputPopoverProps, SelectionController } from "../../../components/input-popover/input-popover.ts";
 import { useContext } from "../../../core/context/context.ts";
 import { FormattingToolbarCtx } from "../../formatting-toolbar/formatting-toolbar-context.ts";
+import { FormattingToolbar } from "../../formatting-toolbar/component/formatting-toolbar.tsx";
 import { runCommand } from "../../index.ts";
 
 /**
@@ -16,6 +16,8 @@ import { runCommand } from "../../index.ts";
  */
 export class LinkPopover extends InputPopover<InputPopoverProps> {
 
+    override canOverlay = true;
+    override overlayTargets = [FormattingToolbar.getTagName()];
 
     private existingAnchor: HTMLAnchorElement | null = null;
 
