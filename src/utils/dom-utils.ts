@@ -1,7 +1,7 @@
 
 
 export function findClosestAncestorOfSelectionByClass(className: string): HTMLElement | null {
-    const selection = window.getSelection();
+    const selection = globalThis.getSelection();
 
     if (!selection || selection.rangeCount === 0) {
         return null;
@@ -43,7 +43,7 @@ export function focusNextBlock(currentBlock: HTMLElement | null) {
         next.focus();
 
         const range = document.createRange();
-        const selection = window.getSelection();
+        const selection = globalThis.getSelection();
 
         const firstTextNode = getFirstTextNode(next);
         if (firstTextNode) {
@@ -61,16 +61,27 @@ export function focusNextBlock(currentBlock: HTMLElement | null) {
 export function focusOnElement(currentBlock: HTMLElement | null) {
     if (!currentBlock) return;
 
+    const selection = globalThis.getSelection();
     currentBlock.focus();
 
+    if (selection?.rangeCount) {
+        const currentRange = selection.getRangeAt(0);
+
+        if (
+            currentBlock.contains(currentRange.startContainer) &&
+            hasCollapsedEditableCaret(currentRange, currentBlock)
+        ) {
+            return;
+        }
+    }
+
     const range = document.createRange();
-    const selection = window.getSelection();
 
     const firstTextNode = getFirstTextNode(currentBlock);
     if (firstTextNode) {
         range.setStart(firstTextNode, 0);
     } else {
-        range.setStart(currentBlock, 0);
+        range.setStart(currentBlock, currentBlock.childNodes.length);
     }
 
     range.collapse(true);
@@ -82,12 +93,69 @@ export function focusOnElement(currentBlock: HTMLElement | null) {
 export function getFirstTextNode(element: HTMLElement): Text | null {
     const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
         acceptNode: (node) => {
-            if (node.textContent?.trim().length) {
-                return NodeFilter.FILTER_ACCEPT;
+            if (!node.textContent?.trim().length) {
+                return NodeFilter.FILTER_SKIP;
             }
-            return NodeFilter.FILTER_SKIP;
+
+            if (!isEditableNode(node)) {
+                return NodeFilter.FILTER_SKIP;
+            }
+
+            return NodeFilter.FILTER_ACCEPT;
         }
     });
 
     return walker.nextNode() as Text | null;
+}
+
+function isEditableNode(node: Node): boolean {
+    let current: Node | null = node;
+
+    while (current) {
+        if (current instanceof HTMLElement) {
+            const editable = current.getAttribute("contenteditable");
+
+            if (editable === "false") {
+                return false;
+            }
+        }
+
+        current = current.parentNode;
+    }
+
+    return true;
+}
+
+
+function hasCollapsedEditableCaret(range: Range, root: HTMLElement): boolean {
+    if (!range.collapsed) {
+        return false;
+    }
+
+    if (!root.contains(range.startContainer)) {
+        return false;
+    }
+
+    const container = range.startContainer;
+
+    if (container.nodeType === Node.TEXT_NODE) {
+        return isEditableNode(container);
+    }
+
+    if (container.nodeType === Node.ELEMENT_NODE) {
+        if (!isEditableNode(container)) {
+            return false;
+        }
+
+        const element = container as Element;
+        const childAfter = element.childNodes.item(range.startOffset);
+
+        if (childAfter && !isEditableNode(childAfter)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
 }
