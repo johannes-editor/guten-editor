@@ -3,7 +3,7 @@
 import { h } from "../../jsx.ts";
 import { SlashMenuExtensionPlugin } from "../slash-menu/slash-menu-plugin.tsx";
 import { EmojiPicker } from "./components/emoji-picker.tsx";
-import { appendElementOnOverlayArea, focusOnElement, timing } from "../index.ts";
+import { appendElementOnOverlayArea, focusOnElement } from "../index.ts";
 import { SelectionUtils } from "../../utils/selection/selection-utils.ts";
 import { registerTranslation, t } from "../index.ts";
 
@@ -18,11 +18,10 @@ export class SlashMenuEmojiExtension extends SlashMenuExtensionPlugin {
     label: string = "";
     sort: number = 99;
 
-    async onSelect(focusedBlock: HTMLElement): Promise<void> {
-        const element: HTMLElement = <EmojiPlaceholder />;
-
+    onSelect(focusedBlock: HTMLElement): void {
+        const placeholder: HTMLElement = <EmojiPlaceholder />;
+    
         let range = SelectionUtils.getCurrentSelectionRange();
-
         if (!range || !focusedBlock.contains(range.startContainer)) {
             range = document.createRange();
             range.selectNodeContents(focusedBlock);
@@ -31,30 +30,22 @@ export class SlashMenuEmojiExtension extends SlashMenuExtensionPlugin {
             range.collapse(false);
         }
 
-        range.insertNode(element);
+        range.insertNode(placeholder);
 
-        if (!element.nextSibling) {
-            element.parentNode?.insertBefore(document.createTextNode("\u200B"), element.nextSibling);
-        }
+        const after = document.createTextNode("\u200B");
+        placeholder.parentNode?.insertBefore(after, placeholder.nextSibling);
 
-        const sel = window.getSelection();
-        range.setStartAfter(element);
-        range.setEndAfter(element);
+        const sel = globalThis.getSelection();
+        const caretRange = document.createRange();
+        caretRange.setStart(after, 1);
+        caretRange.collapse(true);
         sel?.removeAllRanges();
-        sel?.addRange(range);
+        sel?.addRange(caretRange);
 
+        focusOnElement(focusedBlock);
 
-        await timing.waitFrames(2);
-
-        range = SelectionUtils.getCurrentSelectionRange();
-
-        if (!range) {
-            return;
-        }
-
-        focusOnElement(element);
         appendElementOnOverlayArea(
-            <EmojiPicker range={range.cloneRange()} placeholder={element} />
+            <EmojiPicker range={caretRange.cloneRange()} placeholder={placeholder} />
         );
     }
 

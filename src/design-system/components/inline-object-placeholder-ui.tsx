@@ -1,11 +1,11 @@
 /** @jsx h */
 
 import { Component } from "../../components/component.ts";
-import { Fragment, h } from "../../jsx.ts";
+import { h } from "../../jsx.ts";
+import { dom } from "../../utils/index.ts";
 
 export abstract class InlineObjectPlaceholderUI extends Component {
 
-    icon: SVGElement;
     label: string;
 
     static override styles = this.extendStyles(/*css */`
@@ -18,24 +18,12 @@ export abstract class InlineObjectPlaceholderUI extends Component {
             background: var(--placeholder-bg);
             border-radius: var(--radius-sm);
             padding: 0 4px;
-            font-size: 1rem;
-
-            svg {
-                position: relative;
-                top: 2px;
-                height: .875rem;
-                width: .875rem;
-                display: inline-block;
-                margin: auto 0;
-            }
         }
-
     ` );
 
-    constructor(icon: SVGElement, label: string) {
+    constructor(label: string) {
         super();
 
-        this.icon = icon;
         this.label = label;
     }
 
@@ -44,14 +32,14 @@ export abstract class InlineObjectPlaceholderUI extends Component {
         this.setAttribute("contenteditable", "false");
         this.classList.add("inline-object-placeholder", "unselectable", "pointer");
 
-        this.registerEvent(this, "click", () => this.onClick());
+        this.registerEvent(this, dom.EventTypes.Click, () => this.onClick());
     }
 
     override render(): HTMLElement {
         return (
-            <Fragment>
-                {this.icon} {this.label}
-            </Fragment>
+            <span>
+                {this.label}
+            </span>
         );
     }
 
