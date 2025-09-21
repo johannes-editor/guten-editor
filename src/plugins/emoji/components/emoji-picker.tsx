@@ -25,12 +25,12 @@ interface EmojiPickerOverlayState {
 
 export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, EmojiPickerOverlayState> {
     static override get tagName() {
-        return "emoji-picker-overlay";
+        return "guten-emoji-picker";
     }
 
     static override styles = this.extendStyles(/*css*/`
-        :host {
-            display: block;
+        guten-emoji-picker {
+            opacity: 0;
         }
         .emoji-wrap {
             min-width: 220px;
@@ -185,7 +185,7 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
                 }
             }
 
-            const sel = window.getSelection();
+            const sel = globalThis.getSelection();
             if (sel) {
                 const after = document.createRange();
                 after.setStart(emojiNode, emojiNode.data.length);
@@ -255,7 +255,7 @@ function insertIntoRangeAtCaret(content: string, r: Range) {
     r.deleteContents();
     r.insertNode(node);
 
-    const sel = window.getSelection();
+    const sel = globalThis.getSelection();
     if (sel) {
         const after = document.createRange();
         after.setStartAfter(node);
