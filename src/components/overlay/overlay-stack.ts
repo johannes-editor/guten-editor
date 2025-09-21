@@ -1,5 +1,19 @@
 import { dom, keyboard } from "../../utils/index.ts";
-import { OverlayComponent } from "../../plugins/index.ts";
+import { OverlayOpenStrategy, OverlayStackAware, OverlayStackOptions } from "./types.ts";
+
+interface OverlayEntry {
+    element: HTMLElement;
+    options: Required<OverlayStackOptions>;
+}
+
+const DEFAULT_OPTIONS: Required<OverlayStackOptions> = {
+    allowOverlayOnTop: false,
+    openStrategy: OverlayOpenStrategy.CloseDisallowed,
+};
+
+function isOverlayStackAware(element: HTMLElement): element is HTMLElement & OverlayStackAware {
+    return typeof (element as OverlayStackAware).getOverlayStackOptions === "function";
+}
 
 /**
  * Manages a stack of overlays (e.g. modals, dialogs) and provides functionality
@@ -8,7 +22,7 @@ import { OverlayComponent } from "../../plugins/index.ts";
  */
 export class OverlayStack {
 
-    private stack: HTMLElement[] = [];
+    private stack: OverlayEntry[] = [];
 
     /**
      * Registers event listeners for keydown (to close with Escape key) and click
@@ -24,7 +38,14 @@ export class OverlayStack {
      * @param element The overlay element to add to the stack.
      */
     public push(element: HTMLElement) {
-        this.stack.push(element);
+        const entry: OverlayEntry = {
+            element,
+            options: this.resolveOptions(element),
+        };
+
+        this.prepareStackFor(entry.options.openStrategy);
+
+        this.stack.push(entry);
     }
 
     /**
@@ -32,17 +53,17 @@ export class OverlayStack {
      * @returns The topmost overlay element or undefined if the stack is empty.
      */
     public peek(): HTMLElement | undefined {
-        return this.stack[this.stack.length - 1];
+        return this.peekEntry()?.element;
     }
 
     /**
      * Pops and removes the topmost overlay element from the stack.
      */
     public pop() {
-        const element = this.stack.pop();
+        const entry = this.stack.pop();
 
-        if (element) {
-            element.remove();
+        if (entry) {
+            entry.element.remove();
         }
     }
 
@@ -51,10 +72,10 @@ export class OverlayStack {
      * @param element The overlay element to remove.
      */
     public remove(element: HTMLElement) {
-        const idx = this.stack.lastIndexOf(element);
+        const idx = this.stack.map((entry) => entry.element).lastIndexOf(element);
         if (idx !== -1) {
-            this.stack.splice(idx, 1);
-            element.remove();
+            const [entry] = this.stack.splice(idx, 1);
+            entry.element.remove();
         }
     }
 
@@ -77,8 +98,66 @@ export class OverlayStack {
         if (!top) return;
 
         const clickedInside = top.contains(event.target as Node);
-        if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside2) {
+        if (!clickedInside && this.canCloseOnOutside(top)) {
             this.remove(top);
         }
     };
+
+    private canCloseOnOutside(element: HTMLElement): boolean {
+        const overlay = element as OverlayStackAware;
+
+        if (typeof overlay.canCloseOnClickOutside2 === "boolean") {
+            return overlay.canCloseOnClickOutside2;
+        }
+
+        if (typeof overlay.closeOnClickOutside === "boolean") {
+            return overlay.closeOnClickOutside;
+        }
+
+        return false;
+    }
+
+    private resolveOptions(element: HTMLElement): Required<OverlayStackOptions> {
+        if (isOverlayStackAware(element)) {
+            const options = element.getOverlayStackOptions?.();
+            if (options) {
+                return { ...DEFAULT_OPTIONS, ...options };
+            }
+        }
+
+        return DEFAULT_OPTIONS;
+    }
+
+    private peekEntry(): OverlayEntry | undefined {
+        return this.stack[this.stack.length - 1];
+    }
+
+    private prepareStackFor(strategy: OverlayOpenStrategy) {
+        if (strategy === OverlayOpenStrategy.ClearStack) {
+            this.clear();
+            return;
+        }
+
+        if (strategy === OverlayOpenStrategy.KeepStack) {
+            return;
+        }
+
+        // OverlayOpenStrategy.CloseDisallowed (default)
+        while (this.stack.length > 0) {
+            const topEntry = this.peekEntry();
+            if (!topEntry) return;
+
+            if (topEntry.options.allowOverlayOnTop) {
+                return;
+            }
+
+            this.pop();
+        }
+    }
+
+    private clear() {
+        while (this.stack.length > 0) {
+            this.pop();
+        }
+    }
 }

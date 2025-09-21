@@ -1,7 +1,7 @@
 import { Component } from "../component.ts";
 import { DefaultProps, DefaultState } from "../types.ts";
 import { pushOverlay, removeOverlay } from "./index.ts";
-import { CloseableOverlay } from "./types.ts";
+import { CloseableOverlay, OverlayOpenStrategy, OverlayStackAware, OverlayStackOptions } from "./types.ts";
 
 /**
  * Base class for UI overlays (e.g. modals, dropdowns).
@@ -11,12 +11,18 @@ import { CloseableOverlay } from "./types.ts";
  * @template S State type
  */
 
-export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> extends Component<P, S> implements CloseableOverlay {
+export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> extends Component<P, S> implements CloseableOverlay, OverlayStackAware {
 
     zIndex: number = 1000;
 
     /** If true, removes the overlay when clicking outside (default: true) */
     closeOnClickOutside: boolean = true;
+
+    /** When true, allows other overlays to be stacked on top of this one. */
+    allowOverlayOnTop: boolean = false;
+
+    /** Strategy applied when this overlay is opened. */
+    openStrategy: OverlayOpenStrategy = OverlayOpenStrategy.CloseDisallowed;
 
     // Internal flag to ignore the first outside click after rendering
     private listenClickOutside: boolean = false;
@@ -45,6 +51,13 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
 
     get canCloseOnClickOutside2(): boolean {
         return this.closeOnClickOutside === true && this.listenClickOutside === true;
+    }
+
+    getOverlayStackOptions(): OverlayStackOptions {
+        return {
+            allowOverlayOnTop: this.allowOverlayOnTop,
+            openStrategy: this.openStrategy,
+        };
     }
 
     override remove(): void {
