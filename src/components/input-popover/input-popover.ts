@@ -45,18 +45,28 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
 
     private getDOMRect(): DOMRect | null {
         const selection = globalThis.getSelection();
-        if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
-            return null;
-        }
+        if (!selection || selection.rangeCount === 0) return null;
 
         const range = selection.getRangeAt(0);
-        const rects = range.getClientRects();
-        if (rects.length === 0) return null;
 
-        return rects[0];
+        const rects = range.getClientRects();
+        if (rects.length > 0) return rects[0];
+
+        const br = range.getBoundingClientRect?.();
+        if (br && (br.width || br.height)) return br as DOMRect;
+
+        const el = (range.startContainer instanceof Element
+            ? range.startContainer
+            : range.startContainer?.parentElement) as Element | null;
+
+        if (el) {
+            const r = el.getBoundingClientRect();
+            if (r && (r.width || r.height)) return r as DOMRect;
+        }
+        return null;
     }
 
-    private setPosition(rect: DOMRect): void {
+    public setPosition(rect: DOMRect): void {
         const elementWidth = this.offsetWidth;
         const elementHeight = this.offsetHeight;
 

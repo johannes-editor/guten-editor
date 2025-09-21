@@ -4,6 +4,15 @@ import { runCommand } from "../../index.ts";
 import { InputPopover, InputPopoverProps, SelectionController } from "../../../components/input-popover/input-popover.ts";
 import { useContext } from "../../../core/context/context.ts";
 import { FormattingToolbarCtx } from "../../formatting-toolbar/formatting-toolbar-context.ts";
+import { EquationPlaceholder } from "./equation-placeholder.tsx";
+import { EquationInline } from "./equation-inline.tsx";
+
+
+export interface EquationPopoverProps extends InputPopoverProps {
+    targetEquation?: HTMLElement | null;
+    initialLatex?: string;
+    initialDisplayMode?: boolean;
+}
 
 /**
  * UI popover for entering an equation (LaTeX) and inserting it via KaTeX.
@@ -15,7 +24,7 @@ import { FormattingToolbarCtx } from "../../formatting-toolbar/formatting-toolba
  * - On insert, closes the popover, unlocks selection, and runs the
  *   `insertEquation` command with `{ latex, displayMode }`.
  */
-export class EquationPopover extends InputPopover<InputPopoverProps> {
+export class EquationPopover extends InputPopover<EquationPopoverProps> {
 
     /** Whether to render as display (block) math. */
     private displayMode = false;
@@ -30,48 +39,53 @@ export class EquationPopover extends InputPopover<InputPopoverProps> {
                 lock: () => formattingToolbar.lock(),
                 unlock: () => formattingToolbar.unlock(),
             };
-            (this.props as InputPopoverProps).selectionController = selectionCtrl;
+            this.props.selectionController = selectionCtrl;
         }
 
-        const sel = globalThis.getSelection();
-        const range = sel?.rangeCount ? sel.getRangeAt(0) : null;
+        this.targetEquation = this.props.targetEquation ?? null;
 
-        const startNode = (range?.startContainer ?? sel?.anchorNode) as Node | null;
-        const startEl = startNode instanceof Element ? startNode : startNode?.parentElement ?? null;
+        if (typeof this.props.initialDisplayMode === "boolean") {
+            this.displayMode = this.props.initialDisplayMode;
+        }
 
-        const mathLike = startEl?.closest('[data-latex], .math-inline, .math-block, .katex, .katex-display') as HTMLElement | null;
+        if (typeof this.props.initialLatex === "string") {
+            this.input.value = this.props.initialLatex;
+        }
 
-        const eqWrapper =
-            (mathLike?.closest('[data-latex], .math-inline, .math-block') as HTMLElement | null) ?? mathLike ?? null;
+        if (!this.targetEquation) {
+            this.targetEquation = this.findEquationFromSelection();
+        }
 
-        if (eqWrapper) {
-            this.targetEquation = eqWrapper;
-
-            let latex =
-                eqWrapper.getAttribute('data-latex')?.trim() ??
-                '';
-
-            if (!latex) {
-                const ann = eqWrapper.querySelector('annotation[encoding="application/x-tex"]') as HTMLElement | null;
-                latex = ann?.textContent?.trim() ?? '';
+        if (typeof this.props.initialDisplayMode !== "boolean") {
+            const inferred = this.inferDisplayMode(this.targetEquation);
+            if (typeof inferred === "boolean") {
+                this.displayMode = inferred;
             }
+        }
 
-            this.input.value = latex;
-            this.displayMode =
-                eqWrapper.classList.contains('math-block') ||
-                mathLike?.classList.contains('katex-display') === true;
-        } else {
-            const text = sel?.toString();
-            if (text) this.input.value = text;
+        const openingOnPlaceholder =
+            !!this.targetEquation && this.targetEquation.matches(EquationPlaceholder.getTagName());
+
+        if (this.input.value.trim() === "") {
+            const latexFromTarget = this.extractLatexFromTarget(this.targetEquation);
+            if (latexFromTarget) {
+                this.input.value = latexFromTarget;
+            } else if (!openingOnPlaceholder) {
+                const text = this.getSelectionTextExcludingPlaceholder();
+                if (text) this.input.value = text;
+            }
         }
 
         requestAnimationFrame(() => {
             this.input.focus();
             this.input.setSelectionRange(this.input.value.length, this.input.value.length);
         });
+
     }
 
-
+    override setPosition(rect: DOMRect): void {
+      this.positionToAnchor(this.props.targetEquation!);
+    }
 
     /** Checkbox handler: toggles display mode. */
     private handleToggle = (ev: Event) => {
@@ -95,7 +109,8 @@ export class EquationPopover extends InputPopover<InputPopoverProps> {
                 runCommand("insertEquation", {
                     content: {
                         latex: latex,
-                        displayMode: this.displayMode
+                        displayMode: this.displayMode,
+                        targetEquation: this.targetEquation ?? undefined,
                     }
                 });
             } else if (this.targetEquation) {
@@ -105,5 +120,132 @@ export class EquationPopover extends InputPopover<InputPopoverProps> {
                 if (sel && sel.rangeCount > 0) sel.getRangeAt(0).deleteContents();
             }
         });
+    }
+
+    private findEquationFromSelection(): HTMLElement | null {
+        const nodes = this.collectCandidateNodes();
+
+        for (const node of nodes) {
+            const placeholder = this.closestFromNode(node, EquationPlaceholder.getTagName());
+            if (placeholder) return placeholder;
+        }
+
+        for (const node of nodes) {
+            const inline = this.closestFromNode(node, EquationInline.getTagName());
+            if (inline) return inline;
+        }
+
+        const mathSelector = '[data-latex], .math-inline, .math-block, .katex, .katex-display';
+
+        for (const node of nodes) {
+            const mathLike = this.closestFromNode(node, mathSelector);
+            if (mathLike) {
+                const eqWrapper = mathLike.closest('[data-latex], .math-inline, .math-block') as HTMLElement | null;
+                return eqWrapper ?? mathLike;
+            }
+        }
+
+        const sel = globalThis.getSelection();
+        const range = sel?.rangeCount ? sel.getRangeAt(0) : null;
+        if (range && range.startContainer instanceof Element) {
+            const candidate = range.startContainer.childNodes.item(range.startOffset);
+            if (candidate instanceof HTMLElement && candidate.matches(mathSelector)) {
+                const eqWrapper = candidate.closest('[data-latex], .math-inline, .math-block') as HTMLElement | null;
+                return eqWrapper ?? candidate;
+            }
+        }
+
+        return null;
+    }
+
+    private collectCandidateNodes(): Node[] {
+        const sel = globalThis.getSelection();
+        if (!sel) return [];
+
+        const nodes: Node[] = [];
+        const push = (node: Node | null | undefined) => {
+            if (node && !nodes.includes(node)) nodes.push(node);
+        };
+
+        push(sel.anchorNode);
+        push(sel.focusNode);
+
+        if (sel.rangeCount > 0) {
+            const range = sel.getRangeAt(0);
+            push(range.startContainer);
+            push(range.endContainer);
+        }
+
+        return nodes;
+    }
+
+    private closestFromNode(node: Node, selector: string): HTMLElement | null {
+        const el = node instanceof Element ? node : node.parentElement;
+        return el?.closest(selector) as HTMLElement | null;
+    }
+
+    private extractLatexFromTarget(target: HTMLElement | null): string {
+        if (!target) return '';
+
+        if (target.matches(EquationPlaceholder.getTagName())) {
+            return '';
+        }
+
+        if (target.matches(EquationInline.getTagName())) {
+            return target.getAttribute('data-latex')?.trim() ?? '';
+        }
+
+        const latexAttr = target.getAttribute('data-latex')?.trim();
+        if (latexAttr) return latexAttr;
+
+        const ann = target.querySelector('annotation[encoding="application/x-tex"]') as HTMLElement | null;
+        return ann?.textContent?.trim() ?? '';
+    }
+
+    private inferDisplayMode(target: HTMLElement | null): boolean | undefined {
+        if (!target) return undefined;
+
+        if (target.matches(EquationPlaceholder.getTagName())) {
+            const placeholderMode = target.getAttribute('data-display-mode') ?? target.dataset.displayMode;
+            if (placeholderMode === 'block') return true;
+            if (placeholderMode === 'inline') return false;
+            return false;
+        }
+
+        if (target.matches(EquationInline.getTagName())) {
+            const inlineMode = target.getAttribute('data-display-mode') ?? target.dataset.displayMode;
+            if (inlineMode === 'block') return true;
+            if (inlineMode === 'inline') return false;
+        }
+
+        if (target.classList.contains('math-block') || target.classList.contains('katex-display')) {
+            return true;
+        }
+
+        if (target.classList.contains('math-inline')) {
+            return false;
+        }
+
+        return undefined;
+    }
+
+    private getSelectionTextExcludingPlaceholder(): string {
+        const sel = globalThis.getSelection();
+        if (!sel || sel.rangeCount === 0) return '';
+
+        if (this.findPlaceholderFromSelection()) {
+            return '';
+        }
+
+        return sel.toString();
+    }
+
+    private findPlaceholderFromSelection(): HTMLElement | null {
+        const nodes = this.collectCandidateNodes();
+        for (const node of nodes) {
+            const placeholder = this.closestFromNode(node, EquationPlaceholder.getTagName());
+            if (placeholder) return placeholder;
+        }
+        return null;
     }
 }

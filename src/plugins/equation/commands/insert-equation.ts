@@ -2,6 +2,9 @@
 // With Vite+Deno you can import from npm:
 
 import { Command, CommandContext } from "../../../core/command/command.ts";
+import { h } from "../../../jsx.ts";
+import { EquationInline } from "../components/equation-inline.tsx";
+import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
 
 /**
  * Command: renders LaTeX with KaTeX and inserts it at the current selection.
@@ -10,7 +13,7 @@ import { Command, CommandContext } from "../../../core/command/command.ts";
  * - Requires a `latex` string in the command context.
  * - Optional `displayMode` (block math when true, inline otherwise).
  * - Uses `window.katex.renderToString()` to generate HTML.
- * - Inserts a non-editable wrapper (`<div.math-block>` or `<span.math-inline>`).
+ * - Wraps the output with {@link EquationInline}, which keeps metadata and reopens the editor when clicked.
  * - Moves the caret after the inserted node; if block, inserts a `<br>` to allow continued typing.
  *
  * Fails fast (returns false) when:
@@ -31,21 +34,18 @@ export const InsertEquation: Command = {
         requestAnimationFrame(() => {
 
             const katex = (globalThis as any).katex;
+            if (!katex || typeof katex.renderToString !== "function") {
+                console.error("KaTeX is not available. Ensure the assets are loaded before inserting equations.");
+                return;
+            }
 
-            console.log("katex:", katex);
-
-            const latex: string = context.content?.latex ?? '';
-            const displayMode: boolean = Boolean((context as any).displayMode);
+            const latex: string = (context.content?.latex ?? '').trim();
+            const displayMode: boolean = Boolean(context.content?.displayMode);
 
             if (!latex) {
                 console.warn("LaTeX is required to insert math.");
-                return false;
+                return;
             }
-
-            const sel = context.selection ?? globalThis.getSelection();
-            if (!sel || sel.rangeCount === 0) return false;
-
-            const range = sel.getRangeAt(0);
 
             // Render KaTeX -> HTML
             let html = "";
@@ -57,48 +57,83 @@ export const InsertEquation: Command = {
                 });
             } catch (err) {
                 console.error("KaTeX render error:", err);
-                return false;
+                return;
             }
 
-            // Create wrapper node
-            const tag = displayMode ? "div" : "span";
-            const el = document.createElement(tag);
-            el.className = displayMode ? "math-block" : "math-inline";
-            el.setAttribute("data-latex", latex);
-            el.setAttribute("contenteditable", "false");
-            el.innerHTML = html;
+            const equationNode = h(EquationInline, {
+                latex,
+                displayMode,
+                html,
+            }) as HTMLElement;
 
-            // const zwsBefore = document.createTextNode("\u200B");
-            // const zwsAfter = document.createTextNode("\u200B");
+            const target = context.content?.targetEquation ?? null;
+            if (target instanceof HTMLElement) {
+                const inlineHost = target.matches(EquationInline.getTagName())
+                    ? target
+                    : target.closest(EquationInline.getTagName());
 
-            // const frag = document.createDocumentFragment();
-            // frag.append(zwsBefore, el, zwsAfter);
-
-
-            requestAnimationFrame(() => {
-                // Insert at current selection/caret
-                range.deleteContents();
-                // range.insertNode(frag);
-                range.insertNode(el);
-
-                // Move caret after inserted node
-                range.setStartAfter(el);
-                range.setEndAfter(el);
-                sel.removeAllRanges();
-                sel.addRange(range);
-
-                // For display math, ensure there's space to continue typing
-                if (displayMode) {
-                    const br = document.createElement("br");
-                    el.parentElement?.insertBefore(br, el.nextSibling);
+                if (inlineHost) {
+                    inlineHost.replaceWith(equationNode);
+                    moveCaretAfter(equationNode, displayMode);
+                    return;
                 }
 
-            });
+                const placeholderHost = target.matches(EquationPlaceholder.getTagName())
+                    ? target
+                    : target.closest(EquationPlaceholder.getTagName());
 
+                if (placeholderHost) {
+                    placeholderHost.replaceWith(equationNode);
+                    moveCaretAfter(equationNode, displayMode);
+                    return;
+                }
+
+                const mathWrapper = target.closest('[data-latex], .math-inline, .math-block, .katex, .katex-display') as HTMLElement | null;
+                if (mathWrapper) {
+                    mathWrapper.replaceWith(equationNode);
+                    moveCaretAfter(equationNode, displayMode);
+                    return;
+                }
+            }
+
+            const sel = context.selection ?? globalThis.getSelection();
+            if (!sel || sel.rangeCount === 0) return;
+
+            const range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(equationNode);
+
+            moveCaretAfter(equationNode, displayMode, range, sel);
         });
 
         return true;
     }
 };
 
-export type InsertEquationPayload = { latex: string, displayMode: boolean }
+function moveCaretAfter(node: Node, displayMode: boolean, range?: Range, sel?: Selection | null) {
+    const selection = sel ?? globalThis.getSelection();
+    const workingRange = range ?? document.createRange();
+
+    workingRange.setStartAfter(node);
+    workingRange.collapse(true);
+
+    selection?.removeAllRanges();
+    selection?.addRange(workingRange);
+
+    if (displayMode) {
+        const parent = node.parentElement;
+        if (parent) {
+            const next = node.nextSibling;
+            if (!(next instanceof HTMLBRElement)) {
+                const br = document.createElement("br");
+                parent.insertBefore(br, next ?? null);
+            }
+        }
+    }
+}
+
+export type InsertEquationPayload = {
+    latex: string;
+    displayMode: boolean;
+    targetEquation?: HTMLElement | null;
+};

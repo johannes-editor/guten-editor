@@ -7,8 +7,14 @@
         {
             "path": "./formatting-toolbar-equation-button-extension-plugin.tsx",
             "class": "FormattingToolbarEquationButtonExtensionPlugin",
-            "active": true,
+            "active": false,
             "description": "Adds the 'Insert Math (KaTeX)' button to the formatting toolbar; opens the equation popover."
+        },
+        {
+            "path": "./slash-menu-equation-extension-plugin.tsx",
+            "class": "SlashMenuEquationExtensionPlugin",
+            "active": true,
+            "description": "Adds the 'Equation' item to the slash menu and opens the KaTeX popover."
         },
         {
             "path": "./command-equation-extension-plugin.ts",
