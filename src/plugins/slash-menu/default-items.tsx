@@ -11,7 +11,8 @@ import { Heading5Block } from "../../components/blocks/header5.tsx";
 import { BlockquoteBlock } from "../../components/blocks/blockquote.tsx";
 import { BulletedListBlock } from "../../components/blocks/bulleted-list.tsx";
 import { NumberedListBlock } from "../../components/blocks/numbered-list.tsx";
-import { Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon, ParagraphIcon } from "../../design-system/components/icons.tsx";
+import { Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon, ParagraphIcon, SeparatorIcon } from "../../design-system/components/icons.tsx";
+import { SeparatorBlock } from "../../components/blocks/separator.tsx";
 
 export function defaultSlashMenuItems(): SlashMenuItemData[] {
     return [
@@ -114,6 +115,19 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
                 const element = <Heading5Block />;
                 focusedBlock.after(element);
                 focusOnElement(element);
+            }
+        },
+        {
+            icon: <SeparatorIcon />,
+            sort: 95,
+            label: t("separator"),
+            synonyms: [t("divider"), t("line")],
+            onSelect: (focusedBlock: HTMLElement) => {
+                const separator = <SeparatorBlock />;
+                const paragraph = <ParagraphBlock />;
+                focusedBlock.after(separator);
+                separator.after(paragraph);
+                focusOnElement(paragraph);
             }
         }
     ];
