@@ -1,0 +1,16 @@
+{
+    "name": "Code",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "./formatting-toolbar-item-code-extension.tsx",
+            "class": "FormattingToolbarItemCodeExtension",
+            "active": true
+        },
+        {
+            "path": "./slash-menu-item-code-extension.tsx",
+            "class": "SlashMenuItemCodeExtension",
+            "active": true
+        }
+    ]
+}

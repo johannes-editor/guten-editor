@@ -16,7 +16,7 @@ export class SlashMenuTodoListExtensionPlugin extends SlashMenuExtensionPlugin {
         super();
         this.icon = <MaterialChecklist />
         this.label = t("todo_list");
-        this.sort = 99;
+        this.sort = 61;
         this.synonyms = [t("list"), t("checkbox"), t("todo")];
     }
 

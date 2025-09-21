@@ -10,7 +10,7 @@ import { runCommand, t } from "../index.ts";
  * Clicking the button triggers the `openLinkPopover` command.
  */
 export class FormattingToolbarHyperlinkButtonExtensionPlugin extends FormattingToolbarExtensionPlugin {
-     /** Toolbar icon (link glyph). */
+    /** Toolbar icon (link glyph). */
     readonly icon: SVGElement = <LinkIcon />;
 
     /** Tooltip shown on hover. */

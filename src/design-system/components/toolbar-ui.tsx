@@ -11,8 +11,7 @@ export class ToolbarUI<P extends DefaultProps = DefaultProps, S = DefaultState> 
             margin: 0;
             display: flex;
             flex-direction: row;
-            gap: 0.5rem;
-            padding: 0;
+            gap: 10px;
         }
 
         .guten-toolbar li{

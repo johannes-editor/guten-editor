@@ -8,6 +8,7 @@ export interface SelectionController {
 
 export interface InputPopoverProps extends InputPopoverUIProps {
     selectionController?: SelectionController;
+    anchorRect?: DOMRectInit | null;
 }
 
 export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState> extends InputPopoverUI<P, S> {
@@ -17,7 +18,11 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
     override connectedCallback(): void {
         super.connectedCallback();
 
-        this.range = this.getDOMRect();
+        this.range = this.props.anchorRect ? this.toDOMRect(this.props.anchorRect) : this.getDOMRect();
+
+        if (this.range) {
+            this.setPosition(this.range);
+        }
 
         requestAnimationFrame(() => {
 
@@ -33,7 +38,7 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
     override disconnectedCallback(): void {
 
         super.disconnectedCallback();
-        
+
         this.props.selectionController?.unlock();
     }
 
@@ -72,5 +77,16 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
 
         this.style.left = `${leftPosition}px`;
         this.style.top = `${topPosition}px`;
+    }
+
+    private toDOMRect(rectInit: DOMRectInit): DOMRect {
+        const x = rectInit.x ?? 0;
+        const y = rectInit.y ?? 0;
+        const width = rectInit.width ?? 0;
+        const height = rectInit.height ?? 0;
+
+        return typeof DOMRect.fromRect === "function"
+            ? DOMRect.fromRect({ x, y, width, height })
+            : new DOMRect(x, y, width, height);
     }
 }

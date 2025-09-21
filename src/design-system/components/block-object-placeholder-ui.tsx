@@ -3,7 +3,7 @@
 import { Component } from "../../components/component.ts";
 import { h } from "../../jsx.ts";
 
-export abstract class ObjectPlaceholderUI extends Component {
+export abstract class BlockObjectPlaceholderUI extends Component {
 
     icon: SVGElement;
     label: string;

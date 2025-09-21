@@ -11,15 +11,15 @@ import { Heading5Block } from "../../components/blocks/header5.tsx";
 import { BlockquoteBlock } from "../../components/blocks/blockquote.tsx";
 import { BulletedListBlock } from "../../components/blocks/bulleted-list.tsx";
 import { NumberedListBlock } from "../../components/blocks/numbered-list.tsx";
-import { FontIcon, Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon } from "../../design-system/components/icons.tsx";
+import { Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon, ParagraphIcon } from "../../design-system/components/icons.tsx";
 
 export function defaultSlashMenuItems(): SlashMenuItemData[] {
     return [
         {
-            icon: <FontIcon />,
+            icon: <ParagraphIcon />,
             sort: 10,
-            label: t("text"),
-            synonyms: [t("paragraph"), t("text")],
+            label: t("paragraph"),
+            synonyms: [t("text")],
             onSelect: (focusedBlock: HTMLElement) => {
                 const element = <ParagraphBlock />;
                 focusedBlock.after(element);

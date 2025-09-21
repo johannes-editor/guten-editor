@@ -3,15 +3,16 @@ import { h } from "../../jsx.ts";
 import { Component } from "../../components/component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
 import { dom, keyboard } from "../../utils/index.ts";
+import { OverlayComponent } from "../../components/overlay/overlay-component.ts";
 
 export interface MenuItemUIProps extends DefaultProps {
-    icon?: HTMLElement;
+    icon?: SVGElement;
     label?: string;
     shortcut?: string;
     onSelect: () => void;
 }
 
-export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
+export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends OverlayComponent<P, S> {
 
     static override styles = this.extendStyles(/*css*/`
         .guten-menu-item {
@@ -23,7 +24,9 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
         .guten-menu-item button {
             all: unset;
             padding: var(--space-xs);
-            font-size: var(--font-size);            
+            font-size: var(--font-size);
+            display: flex;
+            align-items: center;        
         }
 
         .guten-menu-item button svg {

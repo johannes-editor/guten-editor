@@ -14,7 +14,7 @@ export class FormattingToolbarEquationButtonExtensionPlugin extends FormattingTo
     readonly icon: SVGElement = <EquationIcon />;
 
     /** Tooltip shown on hover. */
-    readonly label: string = t("equation_katex");
+    readonly label: string = t("equation");
 
     readonly shortcut: string = "Mod+Shift+E";
 

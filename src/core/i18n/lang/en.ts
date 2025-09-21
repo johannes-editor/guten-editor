@@ -8,7 +8,7 @@ const en: TranslationSchema = {
     code: "Code",
     subscript: "Subscript",
     link: "Link",
-    equation_katex: "Equation (KaTeX)",
+    equation: "Equation",
     untitled: 'Untitled',
     startTyping: 'Start typing...',
     paragraph: 'Paragraph',

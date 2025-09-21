@@ -8,7 +8,7 @@ const pt: TranslationSchema = {
     code: "Code",
     subscript: "Subscript",
     link: "Link",
-    equation_katex: "Equação (KaTeX)",
+    equation: "Equação",
     untitled: 'Sem título',
     startTyping: 'Comece a digitar...',
     paragraph: 'Parágrafo',

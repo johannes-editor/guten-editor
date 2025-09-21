@@ -1,11 +1,11 @@
 /** @jsx h */
 
 import { CardImageIcon } from "../../../design-system/components/icons.tsx";
-import { ObjectPlaceholderUI } from "../../../design-system/components/object-placeholder-ui.tsx";
+import { BlockObjectPlaceholderUI } from "../../../design-system/components/block-object-placeholder-ui.tsx";
 import { h, t } from "../../index.ts";
 
 
-export class ImagePlaceholder extends ObjectPlaceholderUI {
+export class ImagePlaceholder extends BlockObjectPlaceholderUI {
 
     constructor() {
         super(<CardImageIcon />, t("insert_image"));
