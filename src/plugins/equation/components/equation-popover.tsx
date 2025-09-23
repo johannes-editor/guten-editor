@@ -88,7 +88,13 @@ export class EquationPopover extends InputPopover<EquationPopoverProps> {
     }
 
     override setPosition(rect: DOMRect): void {
-      this.positionToAnchor(this.props.targetEquation!);
+        const anchor = this.props.targetEquation ?? this.targetEquation;
+        if (anchor) {
+            this.positionToAnchor(anchor);
+            return;
+        }
+
+        super.setPosition(rect);
     }
 
     /** Checkbox handler: toggles display mode. */
