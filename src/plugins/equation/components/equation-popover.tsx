@@ -2,8 +2,10 @@
 
 import { runCommand } from "../../index.ts";
 import { InputPopover, InputPopoverProps, SelectionController } from "../../../components/input-popover/input-popover.ts";
+import type { OverlayCtor } from "../../../components/overlay/overlay-component.ts";
 import { useContext } from "../../../core/context/context.ts";
 import { FormattingToolbarCtx } from "../../formatting-toolbar/formatting-toolbar-context.ts";
+import { FormattingToolbar } from "../../formatting-toolbar/component/formatting-toolbar.tsx";
 import { EquationPlaceholder } from "./equation-placeholder.tsx";
 import { EquationInline } from "./equation-inline.tsx";
 
@@ -25,6 +27,8 @@ export interface EquationPopoverProps extends InputPopoverProps {
  *   `insertEquation` command with `{ latex, displayMode }`.
  */
 export class EquationPopover extends InputPopover<EquationPopoverProps> {
+
+    override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([FormattingToolbar]);
 
     /** Whether to render as display (block) math. */
     private displayMode = false;
