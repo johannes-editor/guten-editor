@@ -1,5 +1,24 @@
 import { dom, keyboard } from "../../utils/index.ts";
-import { OverlayComponent } from "../../plugins/index.ts";
+import { OverlayStackAware, OverlayStackOptions } from "./types.ts";
+
+interface OverlayEntry {
+    element: HTMLElement;
+    options: OverlayStackBehaviour;
+}
+
+type OverlayStackBehaviour = {
+    canOverlay: boolean;
+    overlayTargets: string[];
+};
+
+const DEFAULT_OPTIONS: OverlayStackBehaviour = {
+    canOverlay: false,
+    overlayTargets: [],
+};
+
+function isOverlayStackAware(element: HTMLElement): element is HTMLElement & OverlayStackAware {
+    return typeof (element as OverlayStackAware).getOverlayStackOptions === "function";
+}
 
 /**
  * Manages a stack of overlays (e.g. modals, dialogs) and provides functionality
@@ -8,7 +27,7 @@ import { OverlayComponent } from "../../plugins/index.ts";
  */
 export class OverlayStack {
 
-    private stack: HTMLElement[] = [];
+    private stack: OverlayEntry[] = [];
 
     /**
      * Registers event listeners for keydown (to close with Escape key) and click
@@ -24,7 +43,14 @@ export class OverlayStack {
      * @param element The overlay element to add to the stack.
      */
     public push(element: HTMLElement) {
-        this.stack.push(element);
+        const options = this.resolveOptions(element);
+
+        this.prepareStackFor(options);
+
+        this.stack.push({
+            element,
+            options,
+        });
     }
 
     /**
@@ -32,17 +58,17 @@ export class OverlayStack {
      * @returns The topmost overlay element or undefined if the stack is empty.
      */
     public peek(): HTMLElement | undefined {
-        return this.stack[this.stack.length - 1];
+        return this.peekEntry()?.element;
     }
 
     /**
      * Pops and removes the topmost overlay element from the stack.
      */
     public pop() {
-        const element = this.stack.pop();
+        const entry = this.stack.pop();
 
-        if (element) {
-            element.remove();
+        if (entry) {
+            entry.element.remove();
         }
     }
 
@@ -51,10 +77,10 @@ export class OverlayStack {
      * @param element The overlay element to remove.
      */
     public remove(element: HTMLElement) {
-        const idx = this.stack.lastIndexOf(element);
+        const idx = this.stack.map((entry) => entry.element).lastIndexOf(element);
         if (idx !== -1) {
-            this.stack.splice(idx, 1);
-            element.remove();
+            const [entry] = this.stack.splice(idx, 1);
+            entry.element.remove();
         }
     }
 
@@ -77,8 +103,110 @@ export class OverlayStack {
         if (!top) return;
 
         const clickedInside = top.contains(event.target as Node);
-        if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside2) {
+        if (!clickedInside && this.canCloseOnOutside(top)) {
             this.remove(top);
         }
     };
+
+    private canCloseOnOutside(element: HTMLElement): boolean {
+        const overlay = element as OverlayStackAware;
+
+        if (typeof overlay.canCloseOnClickOutside2 === "boolean") {
+            return overlay.canCloseOnClickOutside2;
+        }
+
+        if (typeof overlay.closeOnClickOutside === "boolean") {
+            return overlay.closeOnClickOutside;
+        }
+
+        return false;
+    }
+
+    private resolveOptions(element: HTMLElement): OverlayStackBehaviour {
+        if (isOverlayStackAware(element)) {
+            const options = element.getOverlayStackOptions?.();
+            if (options) {
+                return {
+                    canOverlay: options.canOverlay ?? DEFAULT_OPTIONS.canOverlay,
+                    overlayTargets: this.normalizeOverlayTargets(options.overlayTargets),
+                };
+            }
+        }
+
+        return { ...DEFAULT_OPTIONS, overlayTargets: [...DEFAULT_OPTIONS.overlayTargets] };
+    }
+
+    private normalizeOverlayTargets(targets: OverlayStackOptions["overlayTargets"]): string[] {
+        if (!targets?.length) {
+            return [];
+        }
+
+        const unique = new Set<string>();
+        for (const target of targets) {
+            const trimmed = target?.trim();
+            if (!trimmed) continue;
+            unique.add(trimmed);
+        }
+
+        return Array.from(unique);
+    }
+
+    private peekEntry(): OverlayEntry | undefined {
+        return this.stack[this.stack.length - 1];
+    }
+
+    private prepareStackFor(options: OverlayStackBehaviour) {
+        if (!options.canOverlay) {
+            this.clear();
+            return;
+        }
+
+        if (!options.overlayTargets.length) {
+            this.clear();
+            return;
+        }
+
+        while (this.stack.length > 0) {
+            const topEntry = this.peekEntry();
+            if (!topEntry) return;
+
+            if (this.canRemainOnStack(options.overlayTargets, topEntry.element)) {
+                return;
+            }
+
+            this.pop();
+        }
+    }
+
+    private clear() {
+        while (this.stack.length > 0) {
+            this.pop();
+        }
+    }
+
+    private canRemainOnStack(targets: readonly string[], element: HTMLElement): boolean {
+        for (const target of targets) {
+            const selector = target.trim();
+            if (!selector) continue;
+
+            if (selector === "*") {
+                return true;
+            }
+
+            if (element.tagName.toLowerCase() === selector.toLowerCase()) {
+                return true;
+            }
+
+            try {
+                if (element.matches(selector)) {
+                    return true;
+                }
+            } catch {
+                // Ignore invalid selectors and continue.
+                continue;
+            }
+        }
+
+        return false;
+    }
 }
