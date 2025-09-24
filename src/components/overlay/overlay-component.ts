@@ -3,6 +3,8 @@ import { DefaultProps, DefaultState } from "../types.ts";
 import { pushOverlay, removeOverlay } from "./index.ts";
 import { CloseableOverlay } from "./types.ts";
 
+export type OverlayCtor = new (...args: any[]) => OverlayComponent<any, any>;
+
 /**
  * Base class for UI overlays (e.g. modals, dropdowns).
  * Handles z-index and optional auto-removal on outside click.
@@ -14,6 +16,8 @@ import { CloseableOverlay } from "./types.ts";
 export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> extends Component<P, S> implements CloseableOverlay {
 
     zIndex: number = 1000;
+
+    public canOverlayClasses: ReadonlySet<OverlayCtor> = new Set();
 
     /** If true, removes the overlay when clicking outside (default: true) */
     closeOnClickOutside: boolean = true;
@@ -56,6 +60,19 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         requestAnimationFrame(() => {
             this.classList.add("show-overlay");
         });
+    }
+
+    public canOverlay(other: HTMLElement): boolean {
+        if (!(other instanceof OverlayComponent)) return true;
+        if (this.canOverlayClasses.size > 0) {
+            for (const ctor of this.canOverlayClasses) {
+                if (other instanceof ctor) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
     private getAnchorRect(anchor: Node): DOMRect | null {
