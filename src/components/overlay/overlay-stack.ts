@@ -24,6 +24,20 @@ export class OverlayStack {
      * @param element The overlay element to add to the stack.
      */
     public push(element: HTMLElement) {
+        if (element instanceof OverlayComponent) {
+            for (let i = this.stack.length - 1; i >= 0; i--) {
+                const current = this.stack[i];
+                if (current instanceof OverlayComponent && current.constructor === element.constructor) {
+                    this.stack.splice(i, 1);
+                    current.remove();
+                    element.remove();
+                    return;
+                }
+            }
+            this.removeIncompatibleOverlays(element);
+        } else {
+            this.removeIncompatibleOverlays();
+        }
         this.stack.push(element);
     }
 
@@ -81,4 +95,16 @@ export class OverlayStack {
             this.remove(top);
         }
     };
+
+    private removeIncompatibleOverlays(incoming?: OverlayComponent) {
+        for (let i = this.stack.length - 1; i >= 0; i--) {
+            const current = this.stack[i];
+            const keep = incoming ? incoming.canOverlay(current) : false;
+            if (keep) {
+                break;
+            }
+            this.stack.splice(i, 1);
+            current.remove();
+        }
+    }
 }

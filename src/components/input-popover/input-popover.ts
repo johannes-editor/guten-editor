@@ -14,9 +14,16 @@ export interface InputPopoverProps extends InputPopoverUIProps {
 export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState> extends InputPopoverUI<P, S> {
 
     private range: DOMRect | null = null;
+    private selectionLocked = false;
+    private closing = false;
 
     override connectedCallback(): void {
+        this.closing = false;
         super.connectedCallback();
+
+        if (this.closing) {
+            return;
+        }
 
         this.range = this.props.anchorRect ? this.toDOMRect(this.props.anchorRect) : this.getDOMRect();
 
@@ -32,13 +39,28 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
         });
 
 
-        this.props.selectionController?.lock();
+        if (this.props.selectionController) {
+            this.props.selectionController.lock();
+            this.selectionLocked = true;
+        }
     }
 
     override disconnectedCallback(): void {
 
-        super.disconnectedCallback();
+        this.unlockSelection();
 
+        super.disconnectedCallback();
+    }
+
+    override remove(): void {
+        this.closing = true;
+        this.unlockSelection();
+        super.remove();
+    }
+
+    private unlockSelection(): void {
+        if (!this.selectionLocked) return;
+        this.selectionLocked = false;
         this.props.selectionController?.unlock();
     }
 
