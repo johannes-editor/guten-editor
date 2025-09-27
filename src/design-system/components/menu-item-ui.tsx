@@ -12,7 +12,7 @@ export interface MenuItemUIProps extends DefaultProps {
     onSelect: () => void;
 }
 
-export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends OverlayComponent<P, S> {
+export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
 
     static override styles = this.extendStyles(/*css*/`
         .guten-menu-item {
