@@ -110,15 +110,22 @@ export class SchemaEnforcementObserver {
 
   private applyClassRule(element: HTMLElement, rule?: ClassRule): void {
     if (!rule) return;
-    const allowed = new Set(rule.allowed ?? []);
-    for (const className of Array.from(element.classList)) {
-      if (!allowed.has(className) && !rule.allowAdditional) {
-        element.classList.remove(className);
+
+    const allowed = rule.allowed ? new Set(rule.allowed) : null;
+
+    if (allowed && rule.allowAdditional !== true) {
+      for (const className of Array.from(element.classList)) {
+        if (!allowed.has(className)) {
+          element.classList.remove(className);
+        }
       }
     }
-    for (const className of allowed) {
-      if (!element.classList.contains(className)) {
-        element.classList.add(className);
+
+    if (rule.required) {
+      for (const className of rule.required) {
+        if (!element.classList.contains(className)) {
+          element.classList.add(className);
+        }
       }
     }
   }

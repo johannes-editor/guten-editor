@@ -23,6 +23,11 @@ export interface ClassRule {
    * When `true` additional classes can be provided besides the allowed list.
    */
   allowAdditional?: boolean;
+  /**
+   * Classes that must be present on the element. Use this together with
+   * `allowed` to express "at least these classes and optionally these others".
+   */
+  required?: readonly string[];
 }
 
 export interface ChildRule {

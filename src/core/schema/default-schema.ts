@@ -15,6 +15,7 @@ export function createParagraphSchema(): SchemaRule {
     tag: "p",
     classes: {
       allowed: ["block", "placeholder", "empty"],
+      required: ["block", "placeholder"],
       allowAdditional: false,
     },
     allowedAttributes: [
@@ -40,6 +41,7 @@ export function createHeadingSchema(level: 1 | 2 | 3 | 4 | 5 | 6): SchemaRule {
     tag: `h${level}`,
     classes: {
       allowed: ["block"],
+      required: ["block"],
       allowAdditional: false,
     },
     allowedChildren: [
