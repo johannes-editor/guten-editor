@@ -3,6 +3,7 @@
 import { h } from "../../jsx.ts";
 import { ParagraphBlock } from "../../components/blocks/paragraph.tsx";
 import { focusOnElement } from "../../utils/dom-utils.ts";
+import { SchemaEnforcementObserver } from "../schema/schema-enforcement-observer.ts";
 
 /**
  * Observes the insertion of new blocks directly into the contentEditable DOM (e.g., when pressing Enter).
@@ -17,11 +18,16 @@ import { focusOnElement } from "../../utils/dom-utils.ts";
 export class NewContentChildrenObserver {
 
     private observer: MutationObserver | null = null;
+    private readonly schemaObserver: SchemaEnforcementObserver;
 
-    constructor(private target: HTMLElement) { }
+    constructor(private target: HTMLElement) {
+        this.schemaObserver = new SchemaEnforcementObserver(target);
+    }
 
     public start() {
         this.stop();
+
+        this.schemaObserver.start();
 
         this.observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
@@ -35,10 +41,14 @@ export class NewContentChildrenObserver {
                         ) continue;
 
                         try {
-
-                            const p = <ParagraphBlock />;
-                            node.replaceWith(p);
-                            focusOnElement(p);
+                            const enforced = this.schemaObserver.enforce(node, { isRootChild: true });
+                            if (!enforced.classList.contains("block")) {
+                                const fallback = <ParagraphBlock />;
+                                node.replaceWith(fallback);
+                                focusOnElement(fallback);
+                            } else {
+                                focusOnElement(enforced);
+                            }
                         } catch (e) {
                             console.error("Error:", e);
                         }
@@ -56,5 +66,6 @@ export class NewContentChildrenObserver {
     public stop() {
         this.observer?.disconnect();
         this.observer = null;
+        this.schemaObserver.stop();
     }
 }
