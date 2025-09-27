@@ -3,7 +3,6 @@ import { h } from "../../jsx.ts";
 import { Component } from "../../components/component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
 import { dom, keyboard } from "../../utils/index.ts";
-import { OverlayComponent } from "../../components/overlay/overlay-component.ts";
 
 export interface MenuItemUIProps extends DefaultProps {
     icon?: SVGElement;
@@ -12,7 +11,7 @@ export interface MenuItemUIProps extends DefaultProps {
     onSelect: () => void;
 }
 
-export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends OverlayComponent<P, S> {
+export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
 
     static override styles = this.extendStyles(/*css*/`
         .guten-menu-item {
@@ -72,12 +71,6 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Ove
         
     `);
 
-    override connectedCallback(): void {
-        super.connectedCallback();
-
-        this.registerEvent(this, dom.EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
-    }
-
     override render(): HTMLElement {
         const { icon, label } = this.props as MenuItemUIProps;
 
@@ -88,6 +81,12 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Ove
                 </button>
             </div>
         );
+    }
+
+    override connectedCallback(): void {
+        super.connectedCallback();
+
+        this.registerEvent(this, dom.EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
     }
 
     handleOnSelect(event: Event, onSelect: () => void) {

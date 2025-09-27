@@ -8,13 +8,13 @@ import { BlockOptionsItem } from "../components/block-options-item.tsx";
 export const OpenBlockOptions: Command = {
     id: "openBlockOptions",
     shortcut: { chord: "Mod+Shift+O", description: "Open block options" },
-    execute(context: CommandContext<{ block?: HTMLElement; rect?: DOMRect }>): boolean {
+    execute(context: CommandContext<{ block?: HTMLElement; rect?: DOMRect; anchor?: Node }>): boolean {
 
 
         let blockOptions: HTMLElement | null = null;
 
         const el = appendElementOnOverlayArea(
-            <BlockOptions >
+            <BlockOptions anchor={context.content?.anchor ?? undefined} fallbackRect={context.content?.rect}>
                 <BlockOptionsItem icon={<CopyIcon />} label={t("duplicate")} onSelect={() => runCommand("duplicateBlock", {
                     content: { block: context.content?.block, blockOptions: blockOptions }
                 })} />
@@ -35,12 +35,6 @@ export const OpenBlockOptions: Command = {
         );
 
         blockOptions = el;
-
-        const rect = context.content?.rect;
-        if (rect) {
-            el.style.top = `${rect.top}px`;
-            el.style.left = `${rect.right + 8}px`;
-        }
 
         return true;
     }
