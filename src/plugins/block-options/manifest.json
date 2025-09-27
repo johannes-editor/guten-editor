@@ -1,0 +1,11 @@
+{
+    "name": "Block options host",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./block-options-plugin.tsx",
+            "class": "BlockOptionsPlugin",
+            "active": true
+        }
+    ]
+}

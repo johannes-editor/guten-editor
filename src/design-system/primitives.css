@@ -5,6 +5,22 @@
     box-shadow: var(--shadow-sm);
 }
 
+.callout[data-callout-variant="info"] {
+    background: var(--color-callout-info);
+}
+
+.callout[data-callout-variant="success"] {
+    background: var(--color-callout-success);
+}
+
+.callout[data-callout-variant="warning"] {
+    background: var(--color-callout-warning);
+}
+
+.callout[data-callout-variant="danger"] {
+    background: var(--color-callout-danger);
+}
+
 blockquote {
     border-left: 4px solid var(--blockquote-border-color);
     padding-left: var(--space-md);

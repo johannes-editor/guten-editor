@@ -7,6 +7,11 @@
             "path": "./slash-menu-table-extension-plugin.tsx",
             "class": "SlashMenuTableExtensionPlugin",
             "active": true
+        },
+        {
+            "path": "./block-options-table-extension-plugin.tsx",
+            "class": "BlockOptionsTableExtensionPlugin",
+            "active": true
         }
     ]
 }
