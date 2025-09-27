@@ -117,10 +117,11 @@ export class DragAndDropManager {
     private onHandleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
         if (!this.currentTarget || !this.handleWrap) return;
-        const rect = this.handleWrap.getBoundingClientRect();
         const block = this.currentTarget;
+        const anchor = this.handleWrap;
+        const rect = anchor.getBoundingClientRect();
+        runCommand('openBlockOptions', { content: { block, anchor, rect } });
         this.hideHandle();
-        runCommand('openBlockOptions', { content: { block, rect } });
     };
 
     private startHideTimer() {
