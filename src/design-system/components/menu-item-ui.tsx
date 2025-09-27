@@ -1,18 +1,18 @@
 /** @jsx h */
 import { h } from "../../jsx.ts";
-import { Component } from "../../components/component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
 import { dom, keyboard } from "../../utils/index.ts";
-import { OverlayComponent } from "../../components/overlay/overlay-component.ts";
+import { Component } from "../../components/component.ts";
 
 export interface MenuItemUIProps extends DefaultProps {
-    icon?: SVGElement;
+    icon?: Element;
     label?: string;
     shortcut?: string;
     onSelect: () => void;
+    isActive?: boolean;
 }
 
-export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends OverlayComponent<P, S> {
+export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
 
     static override styles = this.extendStyles(/*css*/`
         .guten-menu-item {
@@ -79,10 +79,10 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Ove
     }
 
     override render(): HTMLElement {
-        const { icon, label } = this.props as MenuItemUIProps;
+        const { icon, label, isActive } = this.props as MenuItemUIProps;
 
         return (
-            <div class="guten-menu-item">
+            <div class={`guten-menu-item${isActive ? " active" : ""}`}>
                 <button type="button">
                     {icon} {label}
                 </button>

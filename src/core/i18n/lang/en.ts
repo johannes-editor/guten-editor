@@ -40,6 +40,18 @@ const en: TranslationSchema = {
     comment: 'Comment',
     delete: 'Delete',
 
+    add_table_header: 'Add header row',
+    remove_table_header: 'Remove header row',
+    callout_color_default: 'Default color',
+    callout_color_info: 'Info color',
+    callout_color_success: 'Success color',
+    callout_color_warning: 'Warning color',
+    callout_color_danger: 'Danger color',
+    align_left: 'Align left',
+    align_center: 'Align center',
+    align_right: 'Align right',
+    align_justify: 'Justify',
+
     image: 'Image',
     photo: 'Photo',
     picture: 'Picture',

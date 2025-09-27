@@ -18,6 +18,10 @@
     /* Primary brand color */
 
     --color-callout: #fee5b2;
+    --color-callout-info: #dbeafe;
+    --color-callout-success: #dcfce7;
+    --color-callout-warning: #fef3c7;
+    --color-callout-danger: #fee2e2;
 
     --color-primary: #007aff;
     --color-primary-hover: #005be1;

@@ -1,0 +1,11 @@
+{
+    "name": "Paragraph block options",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./block-options-paragraph-extension-plugin.tsx",
+            "class": "BlockOptionsParagraphExtensionPlugin",
+            "active": true
+        }
+    ]
+}
