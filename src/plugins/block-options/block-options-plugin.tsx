@@ -10,7 +10,7 @@ export interface BlockOptionsItemContext {
     blockOptions: HTMLElement;
     trigger: HTMLElement;
     close: () => void;
-    closeSubmenu: () => void;
+    closeOverlay: () => void;
 }
 
 export type BlockOptionsMenuItemType = "item" | "label" | "separator";
@@ -24,14 +24,14 @@ export interface BlockOptionsMenuItem {
     isActive?: (block: HTMLElement) => boolean;
     isVisible?: (block: HTMLElement) => boolean;
     onSelect?: (context: BlockOptionsItemContext) => void;
-    submenu?: (context: BlockOptionsItemContext) => BlockOptionsMenuItem[];
+    overlay?: (context: BlockOptionsItemContext) => Element | null;
 }
 
 export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPlugin> {
 
     private static instance: BlockOptionsPlugin | null = null;
     private static currentMenu: HTMLElement | null = null;
-    private static currentSubmenu: HTMLElement | null = null;
+    private static currentOverlay: HTMLElement | null = null;
 
     private extensions: BlockOptionsExtensionPlugin[] = [];
 
@@ -51,7 +51,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
 
     private open(block: HTMLElement, rect?: DOMRect): HTMLElement | null {
         BlockOptionsPlugin.currentMenu?.remove();
-        this.closeSubmenu();
+        this.closeOverlay();
 
         const items = this.collectItems(block);
         if (!items.length) return null;
@@ -106,7 +106,6 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                 label={labelValue}
                 isActive={item.isActive?.(block)}
                 data-block-options-id={item.id}
-                hasSubmenu={item.submenu ? true : undefined}
                 onSelect={(event: Event) => {
                     const menu = getMenuEl();
                     if (!menu) return;
@@ -117,33 +116,32 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                         block,
                         blockOptions: menu,
                         trigger,
-                        close: () => {
-                            const current = getMenuEl();
-                            if (!current) return;
-                            if (current.isConnected) current.remove();
-                            if (BlockOptionsPlugin.currentMenu === current) {
-                                BlockOptionsPlugin.currentMenu = null;
-                                this.closeSubmenu();
-                            }
-                            if (BlockOptionsPlugin.currentSubmenu === current) {
-                                BlockOptionsPlugin.currentSubmenu = null;
-                            }
-                        },
-                        closeSubmenu: () => this.closeSubmenu(),
-                    };
-
-                    if (item.onSelect) {
-                        item.onSelect(ctx);
+                close: () => {
+                    const current = getMenuEl();
+                    if (!current) return;
+                    if (current.isConnected) current.remove();
+                    if (BlockOptionsPlugin.currentMenu === current) {
+                        BlockOptionsPlugin.currentMenu = null;
+                        this.closeOverlay();
                     }
+                },
+                closeOverlay: () => this.closeOverlay(),
+            };
 
-                    if (item.submenu) {
-                        const submenuItems = item.submenu(ctx) ?? [];
-                        this.openSubmenu(submenuItems, block, trigger);
-                    } else {
-                        this.closeSubmenu();
-                    }
-                }}
-            />
+            if (item.onSelect) {
+                item.onSelect(ctx);
+            }
+
+            if (item.overlay) {
+                const overlayEl = item.overlay(ctx);
+                if (overlayEl instanceof HTMLElement) {
+                    this.openOverlay(overlayEl);
+                }
+            } else {
+                this.closeOverlay();
+            }
+        }}
+    />
         );
     }
 
@@ -159,31 +157,20 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
         return null;
     }
 
-    private openSubmenu(items: BlockOptionsMenuItem[], block: HTMLElement, trigger: HTMLElement): void {
-        this.closeSubmenu();
-        if (!items.length) return;
+    private openOverlay(overlay: HTMLElement): void {
+        this.closeOverlay();
+        const appended = overlay.isConnected
+            ? overlay
+            : appendElementOnOverlayArea(overlay) as HTMLElement;
 
-        let submenuEl: HTMLElement | null = null;
-
-        submenuEl = appendElementOnOverlayArea(
-            <BlockOptions keyboardNavigation={false}>
-                {items.map((item) => this.renderMenuItem(item, block, () => submenuEl))}
-            </BlockOptions>
-        ) as HTMLElement;
-
-        const rect = trigger.getBoundingClientRect();
-        submenuEl.style.top = `${rect.top}px`;
-        submenuEl.style.left = `${rect.right + 8}px`;
-
-        BlockOptionsPlugin.currentSubmenu = submenuEl;
+        BlockOptionsPlugin.currentOverlay = appended;
     }
 
-    private closeSubmenu(): void {
-        if (BlockOptionsPlugin.currentSubmenu) {
-            const submenu = BlockOptionsPlugin.currentSubmenu;
-            BlockOptionsPlugin.currentSubmenu = null;
-            if (submenu.isConnected) submenu.remove();
-        }
+    private closeOverlay(): void {
+        const overlay = BlockOptionsPlugin.currentOverlay;
+        if (!overlay) return;
+        BlockOptionsPlugin.currentOverlay = null;
+        if (overlay.isConnected) overlay.remove();
     }
 
     private defaultItems(): BlockOptionsMenuItem[] {
