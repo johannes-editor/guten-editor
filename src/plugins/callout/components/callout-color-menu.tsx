@@ -1,13 +1,12 @@
 /** @jsx h */
 import { h, t } from "../../index.ts";
-import { MenuUI } from "../../../design-system/components/menu-ui.tsx";
+import { BlockOptions, type BlockOptionsProps } from "../../drag-and-drop/components/block-options.tsx";
 import { BlockOptionsItem } from "../../drag-and-drop/components/block-options-item.tsx";
 import type { TranslationSchema } from "../../../core/i18n/types.ts";
-import type { DefaultProps, DefaultState } from "../../../components/types.ts";
+import type { DefaultState } from "../../../components/types.ts";
 import type { OverlayCtor } from "../../../components/overlay/overlay-component.ts";
-import { BlockOptions } from "../../drag-and-drop/components/block-options.tsx";
 
-interface CalloutColorMenuProps extends DefaultProps {
+interface CalloutColorMenuProps extends BlockOptionsProps {
     block: HTMLElement;
     anchor: HTMLElement;
 }
@@ -40,14 +39,15 @@ const TEXT_VARIANTS: ColorVariant[] = [
     { id: "accent", labelKey: "callout_text_accent", color: "var(--color-callout-text-accent)", stroke: "var(--color-border)" },
 ];
 
-export class CalloutColorMenu extends MenuUI<CalloutColorMenuProps, CalloutColorMenuState> {
+export class CalloutColorMenu extends BlockOptions {
 
-    override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([BlockOptions]);
-
+    override props: CalloutColorMenuProps = {} as CalloutColorMenuProps;
     override state: CalloutColorMenuState = {
         background: "",
         text: "",
     };
+
+    override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([BlockOptions]);
 
     static override styles = this.extendStyles(/*css*/`
         .guten-callout-color-menu {
@@ -66,27 +66,28 @@ export class CalloutColorMenu extends MenuUI<CalloutColorMenuProps, CalloutColor
     `);
 
     override onMount(): void {
+        super.onMount();
         this.closeOnClickOutside = true;
         this.syncStateFromBlock();
     }
 
     override afterRender(): void {
         super.afterRender();
-        const { anchor } = this.props as CalloutColorMenuProps;
+        const { anchor } = this.props;
         if (anchor) {
             requestAnimationFrame(() => this.positionToAnchor(anchor));
         }
     }
 
     private syncStateFromBlock(): void {
-        const { block } = this.props as CalloutColorMenuProps;
+        const { block } = this.props;
         const background = block.getAttribute("data-callout-variant") ?? "";
         const text = block.getAttribute("data-callout-text-color") ?? "";
         this.setState({ background, text });
     }
 
     private handleBackgroundChange = (variantId: string) => {
-        const { block } = this.props as CalloutColorMenuProps;
+        const { block } = this.props;
         if (variantId) {
             block.setAttribute("data-callout-variant", variantId);
         } else {
@@ -96,7 +97,7 @@ export class CalloutColorMenu extends MenuUI<CalloutColorMenuProps, CalloutColor
     };
 
     private handleTextChange = (variantId: string) => {
-        const { block } = this.props as CalloutColorMenuProps;
+        const { block } = this.props;
         if (variantId) {
             block.setAttribute("data-callout-text-color", variantId);
         } else {
