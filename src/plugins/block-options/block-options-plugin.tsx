@@ -31,7 +31,7 @@ export interface BlockOptionsMenuItem {
 export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPlugin> {
 
     private static instance: BlockOptionsPlugin | null = null;
-    private static currentMenu: HTMLElement | null = null;
+    private static currentMenu: BlockOptions | null = null;
     private static currentOverlay: HTMLElement | null = null;
 
     private overlayParentMenu: BlockOptions | null = null;
@@ -47,26 +47,24 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
         this.extensions = extensions ?? [];
     }
 
-    static openForBlock(block: HTMLElement, rect?: DOMRect | null): HTMLElement | null {
+    static openForBlock(block: HTMLElement, rect?: DOMRect | null): BlockOptions | null {
         const plugin = BlockOptionsPlugin.instance;
         if (!plugin) return null;
         return plugin.open(block, rect ?? undefined);
     }
 
-    private open(block: HTMLElement, rect?: DOMRect): HTMLElement | null {
+    private open(block: HTMLElement, rect?: DOMRect): BlockOptions | null {
         BlockOptionsPlugin.currentMenu?.remove();
         this.closeOverlay();
 
         const items = this.collectItems(block);
         if (!items.length) return null;
 
-        let menuEl: HTMLElement | null = null;
-
-        menuEl = appendElementOnOverlayArea(
+        const menuEl = appendElementOnOverlayArea(
             <BlockOptions>
                 {items.map((item) => this.renderMenuItem(item, block, () => menuEl))}
             </BlockOptions>
-        ) as HTMLElement;
+        ) as BlockOptions;
 
         BlockOptionsPlugin.currentMenu = menuEl;
 
@@ -88,7 +86,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
             .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
     }
 
-    private renderMenuItem(item: BlockOptionsMenuItem, block: HTMLElement, getMenuEl: () => HTMLElement | null): Element {
+    private renderMenuItem(item: BlockOptionsMenuItem, block: HTMLElement, getMenuEl: () => BlockOptions | null): Element {
         if (item.type === "separator") {
             return <hr class="guten-menu-separator" data-block-options-id={item.id} />;
         }
@@ -116,12 +114,10 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                     const trigger = this.resolveTrigger(event);
                     if (!trigger) return;
 
-                    const menuComponent = menu instanceof BlockOptions ? menu : null;
-
                     const ctx: BlockOptionsItemContext = {
                         block,
                         blockOptions: menu,
-                        menuComponent,
+                        menuComponent: menu,
                         trigger,
                         close: () => {
                             const current = getMenuEl();
@@ -142,7 +138,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                     if (item.overlay) {
                         const overlayEl = item.overlay(ctx);
                         if (overlayEl instanceof HTMLElement) {
-                            this.openOverlay(overlayEl, menuComponent);
+                            this.openOverlay(overlayEl, menu);
                         }
                     } else {
                         this.closeOverlay();
