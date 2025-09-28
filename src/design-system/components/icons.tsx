@@ -193,6 +193,10 @@ export const ArrowDownIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M208.49,152.49l-72,72a12,12,0,0,1-17,0l-72-72a12,12,0,0,1,17-17L116,187V40a12,12,0,0,1,24,0V187l51.51-51.52a12,12,0,0,1,17,17Z"></path></svg>
 );
 
+export const ArrowRightIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,122.34l-72,72a8,8,0,0,1-11.32-11.32L188.69,128H48a8,8,0,0,1,0-16H188.69L130.34,73.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,213.66,122.34Z"></path></svg>
+);
+
 
 export const Heading1Icon = () => (
     // <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-type-h1" viewBox="0 0 16 16">

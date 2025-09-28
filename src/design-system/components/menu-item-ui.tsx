@@ -3,6 +3,7 @@ import { h } from "../../jsx.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
 import { dom, keyboard } from "../../utils/index.ts";
 import { Component } from "../../components/component.ts";
+import { ArrowRightIcon } from "./icons.tsx";
 
 export interface MenuItemUIProps extends DefaultProps {
     icon?: Element;
@@ -28,7 +29,8 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
             padding: var(--space-xs);
             font-size: var(--font-size);
             display: flex;
-            align-items: center;        
+            align-items: center;
+            gap: var(--space-custom-10);
         }
 
         .guten-menu-item button svg {
@@ -56,9 +58,6 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
         }
 
         .guten-menu-item button {
-            display: flex;
-            flex-direction: row;
-            gap: var(--space-custom-10);
             color: var(--color-ui-text);
             white-space: nowrap;
             width: 100%;
@@ -70,6 +69,29 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
 
         .guten-menu-item button span{
             display: block;
+        }
+
+        .guten-menu-item button .guten-menu-item-content {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-custom-10);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .guten-menu-item button .guten-menu-item-icon {
+            display: inline-flex;
+        }
+
+        .guten-menu-item button .guten-menu-item-label {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .guten-menu-item button .guten-menu-item-overlay-indicator {
+            display: inline-flex;
+            margin-left: auto;
+            color: var(--color-muted);
         }
         
     `);
@@ -87,7 +109,15 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
         return (
             <div class={`guten-menu-item${isActive ? " active" : ""}`} data-block-options-id={dataId}>
                 <button type="button" data-has-overlay={hasOverlay ? "true" : null}>
-                    {icon} {label}
+                    <span class="guten-menu-item-content">
+                        {icon && <span class="guten-menu-item-icon">{icon}</span>}
+                        {label && <span class="guten-menu-item-label">{label}</span>}
+                    </span>
+                    {hasOverlay && (
+                        <span class="guten-menu-item-overlay-indicator" aria-hidden="true">
+                            <ArrowRightIcon />
+                        </span>
+                    )}
                 </button>
             </div>
         );
