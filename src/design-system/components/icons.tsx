@@ -350,6 +350,28 @@ export const CopyIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M216,28H88A12,12,0,0,0,76,40V76H40A12,12,0,0,0,28,88V216a12,12,0,0,0,12,12H168a12,12,0,0,0,12-12V180h36a12,12,0,0,0,12-12V40A12,12,0,0,0,216,28ZM156,204H52V100H156Zm48-48H180V88a12,12,0,0,0-12-12H100V52H204Z"></path></svg>
 );
 
+export const PaletteIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 256 256"
+        fill="none"
+    >
+        <path
+            d="M128 40a88 88 0 0 0-88 88c0 48.6 39.4 88 88 88h24a16 16 0 0 1 0 32A120 120 0 1 1 224 128a40 40 0 0 1-40 40h-20a20 20 0 0 1 0-40h20a40 40 0 0 0 0-80 87.7 87.7 0 0 0-56-8Z"
+            stroke="currentColor"
+            stroke-width="16"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+        <circle cx="100" cy="108" r="12" fill="currentColor" />
+        <circle cx="148" cy="92" r="12" fill="currentColor" />
+        <circle cx="168" cy="132" r="12" fill="currentColor" />
+        <circle cx="112" cy="156" r="12" fill="currentColor" />
+    </svg>
+);
+
 export const EmojiSmileyIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColors" viewBox="0 0 256 256"><path d="M178.39,158c-11,19.06-29.39,30-50.39,30s-39.36-10.93-50.39-30a12,12,0,0,1,20.78-12c3.89,6.73,12.91,18,29.61,18s25.72-11.28,29.61-18a12,12,0,1,1,20.78,12ZM236,128A108,108,0,1,1,128,20,108.12,108.12,0,0,1,236,128Zm-24,0a84,84,0,1,0-84,84A84.09,84.09,0,0,0,212,128ZM92,124a16,16,0,1,0-16-16A16,16,0,0,0,92,124Zm72-32a16,16,0,1,0,16,16A16,16,0,0,0,164,92Z"></path></svg>
 );

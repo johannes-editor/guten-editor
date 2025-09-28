@@ -23,6 +23,20 @@ export class MenuUI extends OverlayComponent {
             width: 100%;
             box-sizing: border-box;
         }
+
+        .guten-menu-label{
+            padding: var(--space-xs) var(--space-md);
+            font-size: var(--font-size-xxs);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-muted);
+        }
+
+        .guten-menu-separator {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: var(--space-xs) var(--space-sm);
+        }
     `);
 
     override connectedCallback(): void {

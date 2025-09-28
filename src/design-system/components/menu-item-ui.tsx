@@ -8,8 +8,9 @@ export interface MenuItemUIProps extends DefaultProps {
     icon?: Element;
     label?: string;
     shortcut?: string;
-    onSelect: () => void;
+    onSelect: (event: Event) => void;
     isActive?: boolean;
+    ['data-block-options-id']?: string;
 }
 
 export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
@@ -80,9 +81,10 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
 
     override render(): HTMLElement {
         const { icon, label, isActive } = this.props as MenuItemUIProps;
+        const dataId = (this.props as MenuItemUIProps)["data-block-options-id"];
 
         return (
-            <div class={`guten-menu-item${isActive ? " active" : ""}`}>
+            <div class={`guten-menu-item${isActive ? " active" : ""}`} data-block-options-id={dataId}>
                 <button type="button">
                     {icon} {label}
                 </button>
@@ -90,7 +92,7 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
         );
     }
 
-    handleOnSelect(event: Event, onSelect: () => void) {
+    handleOnSelect(event: Event, onSelect: (event: Event) => void) {
 
         if (event instanceof KeyboardEvent) {
             if (event.key !== keyboard.KeyboardKeys.Enter) return;
@@ -98,6 +100,6 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
 
         event.preventDefault();
 
-        onSelect();
+        onSelect(event);
     }
 }

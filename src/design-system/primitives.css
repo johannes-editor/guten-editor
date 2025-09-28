@@ -1,5 +1,6 @@
 .callout {
     background: var(--color-callout);
+    color: var(--color-callout-text-default);
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
@@ -19,6 +20,18 @@
 
 .callout[data-callout-variant="danger"] {
     background: var(--color-callout-danger);
+}
+
+.callout[data-callout-text-color="muted"] {
+    color: var(--color-callout-text-muted);
+}
+
+.callout[data-callout-text-color="light"] {
+    color: var(--color-callout-text-light);
+}
+
+.callout[data-callout-text-color="accent"] {
+    color: var(--color-callout-text-accent);
 }
 
 blockquote {
