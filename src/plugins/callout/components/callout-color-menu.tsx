@@ -83,27 +83,33 @@ export class CalloutColorMenu extends BlockOptions {
         const parent = this.offsetParent as HTMLElement | null;
         if (parent) {
             const rect = parent.getBoundingClientRect();
-            const left = rect.left + parent.clientLeft;
-            const top = rect.top + parent.clientTop;
             const width = parent.clientWidth;
             const height = parent.clientHeight;
-            return {
-                left,
-                top,
-                right: left + width,
-                bottom: top + height,
-                width,
-                height,
-            };
+
+            if (width > 0 && height > 0) {
+                const left = rect.left + parent.clientLeft;
+                const top = rect.top + parent.clientTop;
+                return {
+                    left,
+                    top,
+                    right: left + width,
+                    bottom: top + height,
+                    width,
+                    height,
+                };
+            }
         }
+
+        const viewportWidth = globalThis.innerWidth;
+        const viewportHeight = globalThis.innerHeight;
 
         return {
             left: 0,
             top: 0,
-            right: globalThis.innerWidth,
-            bottom: globalThis.innerHeight,
-            width: globalThis.innerWidth,
-            height: globalThis.innerHeight,
+            right: viewportWidth,
+            bottom: viewportHeight,
+            width: viewportWidth,
+            height: viewportHeight,
         };
     }
 
