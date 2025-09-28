@@ -1,10 +1,10 @@
 /** @jsx h */
 import { h, t } from "../../index.ts";
-import { BlockOptions, type BlockOptionsProps } from "../../drag-and-drop/components/block-options.tsx";
+import { type BlockOptionsProps } from "../../drag-and-drop/components/block-options.tsx";
+import { BlockOptionsOverlayMenu } from "../../drag-and-drop/components/block-options-overlay-menu.tsx";
 import { BlockOptionsItem } from "../../drag-and-drop/components/block-options-item.tsx";
 import type { TranslationSchema } from "../../../core/i18n/types.ts";
 import type { DefaultState } from "../../../components/types.ts";
-import type { OverlayCtor } from "../../../components/overlay/overlay-component.ts";
 
 interface CalloutColorMenuProps extends BlockOptionsProps {
     block: HTMLElement;
@@ -39,15 +39,13 @@ const TEXT_VARIANTS: ColorVariant[] = [
     { id: "accent", labelKey: "callout_text_accent", color: "var(--color-callout-text-accent)", stroke: "var(--color-border)" },
 ];
 
-export class CalloutColorMenu extends BlockOptions {
+export class CalloutColorMenu extends BlockOptionsOverlayMenu<CalloutColorMenuProps, CalloutColorMenuState> {
 
     override props: CalloutColorMenuProps = {} as CalloutColorMenuProps;
     override state: CalloutColorMenuState = {
         background: "",
         text: "",
     };
-
-    override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([BlockOptions]);
 
     static override styles = this.extendStyles(/*css*/`
         .guten-callout-color-menu {
@@ -65,88 +63,10 @@ export class CalloutColorMenu extends BlockOptions {
         }
     `);
 
+
     override onMount(): void {
         super.onMount();
-        this.closeOnClickOutside = true;
         this.syncStateFromBlock();
-    }
-
-    override afterRender(): void {
-        super.afterRender();
-        const { anchor } = this.props;
-        if (anchor) {
-            requestAnimationFrame(() => this.positionRelativeToMenu(anchor));
-        }
-    }
-
-    private getOverlayBounds() {
-        const parent = this.offsetParent as HTMLElement | null;
-        if (parent) {
-            const rect = parent.getBoundingClientRect();
-            const width = parent.clientWidth;
-            const height = parent.clientHeight;
-
-            if (width > 0 && height > 0) {
-                const left = rect.left + parent.clientLeft;
-                const top = rect.top + parent.clientTop;
-                return {
-                    left,
-                    top,
-                    right: left + width,
-                    bottom: top + height,
-                    width,
-                    height,
-                };
-            }
-        }
-
-        const viewportWidth = globalThis.innerWidth;
-        const viewportHeight = globalThis.innerHeight;
-
-        return {
-            left: 0,
-            top: 0,
-            right: viewportWidth,
-            bottom: viewportHeight,
-            width: viewportWidth,
-            height: viewportHeight,
-        };
-    }
-
-    private positionRelativeToMenu(anchor: HTMLElement): void {
-        const menuContainer = anchor.closest(".guten-menu");
-        if (!menuContainer) {
-            this.positionToAnchor(anchor);
-            return;
-        }
-
-        const bounds = this.getOverlayBounds();
-        const menuRect = menuContainer.getBoundingClientRect();
-        const anchorRect = anchor.getBoundingClientRect();
-        const overlayRect = this.getBoundingClientRect();
-        const gap = 8;
-
-        const anchorCenter = anchorRect.top + (anchorRect.height / 2);
-        const desiredTop = anchorCenter - (overlayRect.height / 2) - bounds.top;
-        let left = menuRect.right + gap - bounds.left;
-
-        if (left + overlayRect.width > bounds.width) {
-            left = menuRect.left - gap - overlayRect.width - bounds.left;
-            if (left < 0) {
-                left = Math.max(bounds.width - overlayRect.width, 0);
-            }
-        }
-
-        const maxTop = Math.max(bounds.height - overlayRect.height, 0);
-        let top = Math.min(Math.max(desiredTop, 0), maxTop);
-
-        if (top < 0) top = 0;
-        if (left < 0) left = 0;
-
-        this.style.top = `${top}px`;
-        this.style.left = `${left}px`;
-        this.style.bottom = "";
-        this.style.right = "";
     }
 
     private syncStateFromBlock(): void {
