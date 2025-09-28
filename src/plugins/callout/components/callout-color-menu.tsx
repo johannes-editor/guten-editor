@@ -126,7 +126,8 @@ export class CalloutColorMenu extends BlockOptions {
         const overlayRect = this.getBoundingClientRect();
         const gap = 8;
 
-        const desiredTop = anchorRect.top - bounds.top;
+        const anchorCenter = anchorRect.top + (anchorRect.height / 2);
+        const desiredTop = anchorCenter - (overlayRect.height / 2) - bounds.top;
         let left = menuRect.right + gap - bounds.left;
 
         if (left + overlayRect.width > bounds.width) {

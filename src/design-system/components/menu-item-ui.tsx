@@ -11,6 +11,7 @@ export interface MenuItemUIProps extends DefaultProps {
     onSelect: (event: Event) => void;
     isActive?: boolean;
     ['data-block-options-id']?: string;
+    hasOverlay?: boolean;
 }
 
 export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
@@ -80,12 +81,12 @@ export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Com
     }
 
     override render(): HTMLElement {
-        const { icon, label, isActive } = this.props as MenuItemUIProps;
+        const { icon, label, isActive, hasOverlay } = this.props as MenuItemUIProps;
         const dataId = (this.props as MenuItemUIProps)["data-block-options-id"];
 
         return (
             <div class={`guten-menu-item${isActive ? " active" : ""}`} data-block-options-id={dataId}>
-                <button type="button">
+                <button type="button" data-has-overlay={hasOverlay ? "true" : null}>
                     {icon} {label}
                 </button>
             </div>

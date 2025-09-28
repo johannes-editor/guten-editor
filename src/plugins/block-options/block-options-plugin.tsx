@@ -108,6 +108,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                 label={labelValue}
                 isActive={item.isActive?.(block)}
                 data-block-options-id={item.id}
+                hasOverlay={Boolean(item.overlay)}
                 onSelect={(event: Event) => {
                     const menu = getMenuEl();
                     if (!menu) return;

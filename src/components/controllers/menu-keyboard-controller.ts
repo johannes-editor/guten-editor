@@ -99,6 +99,15 @@ export class MenuKeyboardController {
                 event.preventDefault();
                 this.move(-1);
                 break;
+            case keyboard.KeyboardKeys.ArrowRight: {
+                const item = this.items[this.selectedIndex];
+                if (!item) return;
+                if (item.dataset.hasOverlay === "true") {
+                    event.preventDefault();
+                    item.dispatchEvent(new MouseEvent(dom.EventTypes.MouseDown, { bubbles: true }));
+                }
+                break;
+            }
             case keyboard.KeyboardKeys.Enter:
                 event.preventDefault();
                 const item = this.items[this.selectedIndex];
