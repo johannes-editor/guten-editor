@@ -8,6 +8,11 @@
             "path": "./callout-plugin.tsx",
             "class": "CalloutPlugin",
             "active": true
+        },
+        {
+            "path": "./block-options-callout-extension-plugin.tsx",
+            "class": "BlockOptionsCalloutExtensionPlugin",
+            "active": true
         }
     ]
 }

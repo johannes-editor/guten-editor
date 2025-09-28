@@ -23,6 +23,7 @@ export class MenuUI extends OverlayComponent {
             width: 100%;
             box-sizing: border-box;
         }
+
     `);
 
     override connectedCallback(): void {
