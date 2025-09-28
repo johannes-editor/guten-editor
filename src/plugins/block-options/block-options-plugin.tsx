@@ -8,6 +8,7 @@ import { PluginExtension } from "../../core/plugin-engine/plugin-extension.ts";
 export interface BlockOptionsItemContext {
     block: HTMLElement;
     blockOptions: HTMLElement;
+    menuComponent: BlockOptions | null;
     trigger: HTMLElement;
     close: () => void;
     closeOverlay: () => void;
@@ -32,6 +33,9 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
     private static instance: BlockOptionsPlugin | null = null;
     private static currentMenu: HTMLElement | null = null;
     private static currentOverlay: HTMLElement | null = null;
+
+    private overlayParentMenu: BlockOptions | null = null;
+    private overlayRemovalObserver: MutationObserver | null = null;
 
     private extensions: BlockOptionsExtensionPlugin[] = [];
 
@@ -112,34 +116,37 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                     const trigger = this.resolveTrigger(event);
                     if (!trigger) return;
 
+                    const menuComponent = menu instanceof BlockOptions ? menu : null;
+
                     const ctx: BlockOptionsItemContext = {
                         block,
                         blockOptions: menu,
+                        menuComponent,
                         trigger,
-                close: () => {
-                    const current = getMenuEl();
-                    if (!current) return;
-                    if (current.isConnected) current.remove();
-                    if (BlockOptionsPlugin.currentMenu === current) {
-                        BlockOptionsPlugin.currentMenu = null;
+                        close: () => {
+                            const current = getMenuEl();
+                            if (!current) return;
+                            if (current.isConnected) current.remove();
+                            if (BlockOptionsPlugin.currentMenu === current) {
+                                BlockOptionsPlugin.currentMenu = null;
+                                this.closeOverlay();
+                            }
+                        },
+                        closeOverlay: () => this.closeOverlay(),
+                    };
+
+                    if (item.onSelect) {
+                        item.onSelect(ctx);
+                    }
+
+                    if (item.overlay) {
+                        const overlayEl = item.overlay(ctx);
+                        if (overlayEl instanceof HTMLElement) {
+                            this.openOverlay(overlayEl, menuComponent);
+                        }
+                    } else {
                         this.closeOverlay();
                     }
-                },
-                closeOverlay: () => this.closeOverlay(),
-            };
-
-            if (item.onSelect) {
-                item.onSelect(ctx);
-            }
-
-            if (item.overlay) {
-                const overlayEl = item.overlay(ctx);
-                if (overlayEl instanceof HTMLElement) {
-                    this.openOverlay(overlayEl);
-                }
-            } else {
-                this.closeOverlay();
-            }
         }}
     />
         );
@@ -157,20 +164,58 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
         return null;
     }
 
-    private openOverlay(overlay: HTMLElement): void {
+    private openOverlay(overlay: HTMLElement, parentMenu: BlockOptions | null): void {
         this.closeOverlay();
+
         const appended = overlay.isConnected
             ? overlay
             : appendElementOnOverlayArea(overlay) as HTMLElement;
 
         BlockOptionsPlugin.currentOverlay = appended;
+        this.overlayParentMenu = parentMenu;
+
+        this.overlayRemovalObserver?.disconnect();
+        this.overlayRemovalObserver = null;
+
+        if (this.overlayParentMenu) {
+            this.overlayParentMenu.disableKeyboardNavigation();
+        }
+
+        if (appended instanceof BlockOptions) {
+            appended.enableKeyboardNavigation({ focusFirst: true });
+        }
+
+        const parent = appended.parentElement;
+        if (parent) {
+            const observer = new MutationObserver(() => {
+                if (!parent.contains(appended)) {
+                    observer.disconnect();
+                    this.overlayRemovalObserver = null;
+                    if (BlockOptionsPlugin.currentOverlay === appended) {
+                        BlockOptionsPlugin.currentOverlay = null;
+                    }
+                    this.restoreParentKeyboardNavigation();
+                }
+            });
+            observer.observe(parent, { childList: true });
+            this.overlayRemovalObserver = observer;
+        }
     }
 
     private closeOverlay(): void {
         const overlay = BlockOptionsPlugin.currentOverlay;
         if (!overlay) return;
+        this.overlayRemovalObserver?.disconnect();
+        this.overlayRemovalObserver = null;
         BlockOptionsPlugin.currentOverlay = null;
         if (overlay.isConnected) overlay.remove();
+        this.restoreParentKeyboardNavigation();
+    }
+
+    private restoreParentKeyboardNavigation(): void {
+        const parentMenu = this.overlayParentMenu;
+        this.overlayParentMenu = null;
+        parentMenu?.enableKeyboardNavigation({ focusFirst: false });
     }
 
     private defaultItems(): BlockOptionsMenuItem[] {
@@ -220,3 +265,4 @@ export abstract class BlockOptionsExtensionPlugin extends PluginExtension<BlockO
 
     abstract items(block: HTMLElement): BlockOptionsMenuItem[];
 }
+

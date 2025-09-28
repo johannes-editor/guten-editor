@@ -75,8 +75,71 @@ export class CalloutColorMenu extends BlockOptions {
         super.afterRender();
         const { anchor } = this.props;
         if (anchor) {
-            requestAnimationFrame(() => this.positionToAnchor(anchor));
+            requestAnimationFrame(() => this.positionRelativeToMenu(anchor));
         }
+    }
+
+    private getOverlayBounds() {
+        const parent = this.offsetParent as HTMLElement | null;
+        if (parent) {
+            const rect = parent.getBoundingClientRect();
+            const left = rect.left + parent.clientLeft;
+            const top = rect.top + parent.clientTop;
+            const width = parent.clientWidth;
+            const height = parent.clientHeight;
+            return {
+                left,
+                top,
+                right: left + width,
+                bottom: top + height,
+                width,
+                height,
+            };
+        }
+
+        return {
+            left: 0,
+            top: 0,
+            right: globalThis.innerWidth,
+            bottom: globalThis.innerHeight,
+            width: globalThis.innerWidth,
+            height: globalThis.innerHeight,
+        };
+    }
+
+    private positionRelativeToMenu(anchor: HTMLElement): void {
+        const menuContainer = anchor.closest(".guten-menu");
+        if (!menuContainer) {
+            this.positionToAnchor(anchor);
+            return;
+        }
+
+        const bounds = this.getOverlayBounds();
+        const menuRect = menuContainer.getBoundingClientRect();
+        const overlayRect = this.getBoundingClientRect();
+        const gap = 8;
+
+        let top = menuRect.top - bounds.top;
+        let left = menuRect.right + gap - bounds.left;
+
+        if (left + overlayRect.width > bounds.width) {
+            left = menuRect.left - gap - overlayRect.width - bounds.left;
+            if (left < 0) {
+                left = Math.max(bounds.width - overlayRect.width, 0);
+            }
+        }
+
+        if (top + overlayRect.height > bounds.height) {
+            top = Math.max(bounds.height - overlayRect.height, 0);
+        }
+
+        if (top < 0) top = 0;
+        if (left < 0) left = 0;
+
+        this.style.top = `${top}px`;
+        this.style.left = `${left}px`;
+        this.style.bottom = "";
+        this.style.right = "";
     }
 
     private syncStateFromBlock(): void {

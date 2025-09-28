@@ -18,7 +18,6 @@ export class BlockOptionsCalloutExtensionPlugin extends BlockOptionsExtensionPlu
                     <CalloutColorMenu
                         block={ctx.block}
                         anchor={ctx.trigger}
-                        keyboardNavigation={false}
                     />
                 ),
             },

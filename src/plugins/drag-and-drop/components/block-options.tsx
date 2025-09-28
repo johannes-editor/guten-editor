@@ -28,16 +28,48 @@ export class BlockOptions extends MenuUI {
 
     override props: BlockOptionsProps = {} as BlockOptionsProps;
     private keyboardController?: MenuKeyboardController;
+    private keyboardNavigationEnabled = false;
 
     override onMount(): void {
-        const { keyboardNavigation = true } = this.props;
-        if (keyboardNavigation) {
-            this.keyboardController = new MenuKeyboardController(this);
-            this.keyboardController.connect();
+        if (this.props.keyboardNavigation !== false) {
+            this.enableKeyboardNavigation();
+        }
+    }
+
+    override afterRender(): void {
+        super.afterRender();
+        if (this.keyboardNavigationEnabled) {
+            this.keyboardController?.refresh();
         }
     }
 
     override onUnmount(): void {
+        this.disableKeyboardNavigation();
+    }
+
+    public enableKeyboardNavigation(options?: { focusFirst?: boolean }): void {
+        if (this.props.keyboardNavigation === false) return;
+
+        if (!this.keyboardController) {
+            this.keyboardController = new MenuKeyboardController(this);
+        }
+
+        const focusFirst = options?.focusFirst ?? true;
+        const navigationOptions: { focusSelected?: boolean; forceFirst?: boolean } = focusFirst
+            ? {}
+            : { focusSelected: false, forceFirst: false };
+
+        if (!this.keyboardNavigationEnabled) {
+            this.keyboardController.connect(navigationOptions);
+            this.keyboardNavigationEnabled = true;
+        } else {
+            this.keyboardController.refresh(navigationOptions);
+        }
+    }
+
+    public disableKeyboardNavigation(): void {
+        if (!this.keyboardNavigationEnabled) return;
         this.keyboardController?.disconnect();
+        this.keyboardNavigationEnabled = false;
     }
 }
