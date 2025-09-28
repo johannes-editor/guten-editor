@@ -116,10 +116,11 @@ export class CalloutColorMenu extends BlockOptions {
 
         const bounds = this.getOverlayBounds();
         const menuRect = menuContainer.getBoundingClientRect();
+        const anchorRect = anchor.getBoundingClientRect();
         const overlayRect = this.getBoundingClientRect();
         const gap = 8;
 
-        let top = menuRect.top - bounds.top;
+        const desiredTop = anchorRect.top - bounds.top;
         let left = menuRect.right + gap - bounds.left;
 
         if (left + overlayRect.width > bounds.width) {
@@ -129,9 +130,8 @@ export class CalloutColorMenu extends BlockOptions {
             }
         }
 
-        if (top + overlayRect.height > bounds.height) {
-            top = Math.max(bounds.height - overlayRect.height, 0);
-        }
+        const maxTop = Math.max(bounds.height - overlayRect.height, 0);
+        let top = Math.min(Math.max(desiredTop, 0), maxTop);
 
         if (top < 0) top = 0;
         if (left < 0) left = 0;
