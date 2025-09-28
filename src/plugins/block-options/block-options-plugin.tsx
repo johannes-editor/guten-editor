@@ -69,11 +69,111 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
         BlockOptionsPlugin.currentMenu = menuEl;
 
         if (rect) {
-            menuEl.style.top = `${rect.top}px`;
-            menuEl.style.left = `${rect.right + 8}px`;
+            this.positionMenu(menuEl, rect);
         }
 
         return menuEl;
+    }
+
+    private positionMenu(menu: BlockOptions, anchorRect: DOMRect): void {
+        const gap = 8;
+
+        const bounds = this.getOverlayBounds(menu);
+
+        menu.style.maxHeight = "";
+        menu.style.maxWidth = "";
+        menu.style.overflowY = "";
+        menu.style.right = "";
+        menu.style.bottom = "";
+        menu.style.top = "0px";
+        menu.style.left = "0px";
+
+        const menuRect = menu.getBoundingClientRect();
+        let menuWidth = menuRect.width;
+        let menuHeight = menuRect.height;
+
+        const availableWidth = bounds.width;
+        if (menuWidth > availableWidth) {
+            menuWidth = availableWidth;
+            menu.style.maxWidth = `${availableWidth}px`;
+        }
+
+        const availableHeight = bounds.height;
+        if (menuHeight > availableHeight) {
+            menuHeight = availableHeight;
+            menu.style.maxHeight = `${availableHeight}px`;
+            menu.style.overflowY = "auto";
+        }
+
+        let top = anchorRect.top;
+        let left = anchorRect.right + gap;
+
+        const maxLeft = bounds.right - menuWidth;
+        if (left > maxLeft) {
+            const alternativeLeft = anchorRect.left - gap - menuWidth;
+            if (alternativeLeft >= bounds.left) {
+                left = alternativeLeft;
+            } else {
+                left = Math.max(maxLeft, bounds.left);
+            }
+        }
+
+        if (left < bounds.left) {
+            left = bounds.left;
+        }
+
+        const maxTop = bounds.bottom - menuHeight;
+        if (top > maxTop) {
+            top = Math.max(maxTop, bounds.top);
+        }
+
+        if (top < bounds.top) {
+            top = bounds.top;
+        }
+
+        menu.style.top = `${top - bounds.top}px`;
+        menu.style.left = `${left - bounds.left}px`;
+    }
+
+    private getOverlayBounds(element: HTMLElement): {
+        left: number;
+        top: number;
+        right: number;
+        bottom: number;
+        width: number;
+        height: number;
+    } {
+        const parent = element.offsetParent as HTMLElement | null;
+        if (parent) {
+            const rect = parent.getBoundingClientRect();
+            const width = parent.clientWidth;
+            const height = parent.clientHeight;
+
+            if (width > 0 && height > 0) {
+                const left = rect.left + parent.clientLeft;
+                const top = rect.top + parent.clientTop;
+                return {
+                    left,
+                    top,
+                    right: left + width,
+                    bottom: top + height,
+                    width,
+                    height,
+                };
+            }
+        }
+
+        const viewportWidth = globalThis.innerWidth;
+        const viewportHeight = globalThis.innerHeight;
+
+        return {
+            left: 0,
+            top: 0,
+            right: viewportWidth,
+            bottom: viewportHeight,
+            width: viewportWidth,
+            height: viewportHeight,
+        };
     }
 
     private collectItems(block: HTMLElement): BlockOptionsMenuItem[] {
