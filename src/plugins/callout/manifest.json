@@ -1,12 +1,25 @@
 {
-    "name": "MyPlugin",
+    "name": "Callout",
     "version": "1.0.0",
-    "author": "Your Name",
-    "description": "This is a plugin that does amazing things.",
+    "author": "Alexandre Tavares",
+    "description": "Adds callout blocks.",
     "entries": [
         {
-            "path": "./callout-plugin.tsx",
-            "class": "CalloutPlugin",
+            "path": "./extensions/slash-menu-callout-extension.tsx",
+            "class": "SlashMenuCalloutExtension",
+            "description": "Adds callout block to the slash menu.",
+            "active": true
+        },
+        {
+            "path": "./extensions/block-options-callout-extension.tsx",
+            "class": "BlockOptionsCalloutExtension",
+            "description": "Adds callout background color item to the block options menu.",
+            "active": true
+        },
+        {
+            "path": "./extensions/callout-command-extension.ts",
+            "class": "CalloutCommandExtension",
+            "description": "Adds callout commands. E.g., openCalloutColorOptions.",
             "active": true
         }
     ]
