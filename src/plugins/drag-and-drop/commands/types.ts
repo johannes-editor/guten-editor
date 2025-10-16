@@ -1,1 +1,0 @@
-export type BlockOptionPayload = { block: HTMLElement, blockOptions: HTMLElement };
