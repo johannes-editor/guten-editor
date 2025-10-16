@@ -28,8 +28,8 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
 
         .guten-toolbar-item button svg {
             display: block;
-            width: var(--icon-size-sm);
-            height: var(--icon-size-sm);
+            width: var(--icon-size-md);
+            height: var(--icon-size-md);
         }
 
         .guten-toolbar-item button:hover {

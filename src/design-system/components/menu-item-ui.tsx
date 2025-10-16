@@ -1,103 +1,161 @@
 /** @jsx h */
 import { h } from "../../jsx.ts";
-import { Component } from "../../components/component.ts";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
+import { Component } from "../../components/component.ts";
 import { dom, keyboard } from "../../utils/index.ts";
-import { OverlayComponent } from "../../components/overlay/overlay-component.ts";
+import { ArrowRightIcon, CheckIcon } from "./icons.tsx";
 
-export interface MenuItemUIProps extends DefaultProps {
-    icon?: SVGElement;
+
+export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Component<P, S> {
+
+    private btn: HTMLButtonElement | null = null;
+
+    icon?: Element;
     label?: string;
-    shortcut?: string;
-    onSelect: () => void;
-}
+    type: "item" | "label" | "separator" = "item";
 
-export class MenuItemUI<P extends MenuItemUIProps, S = DefaultState> extends Component<P, S> {
+    shortcut?: string;
+    isActive(): boolean { return false; }
+    selected?: boolean;
+
+    rightIndicator?: "auto" | "check" | "chevron" | "none";
+
+    right?: Element;
+    checkIcon?: Element;
+
+    chevronIcon?: Element;
 
     static override styles = this.extendStyles(/*css*/`
-        .guten-menu-item {
-            position: relative;
-            display: inline-flex;
-            width: 100%;
+        .guten-menu-item { 
+            position: relative; 
+            display: inline-flex; 
+            width: 100%; 
         }
 
         .guten-menu-item button {
-            all: unset;
-            padding: var(--space-xs);
-            font-size: var(--font-size);
-            display: flex;
-            align-items: center;        
-        }
-
-        .guten-menu-item button svg {
-            display: block;
-            width: var(--icon-size-sm);
-            height: var(--icon-size-sm);
+          --menu-indicator-w: 20px;
+          all: unset;
+          padding: var(--space-xs) var(--space-md);
+          font-size: var(--font-size);
+          display: grid;
+          grid-template-columns: 1fr var(--menu-indicator-w);
+          align-items: center;
+          column-gap: var(--space-custom-10);
+          column-gap: 20px;
+          color: var(--color-ui-text);
+          white-space: nowrap;
+          width: 100%;
+          box-sizing: border-box;
+          border-radius: var(--radius-sm);
+          border: 1px solid transparent;
         }
 
         .guten-menu-item button:hover,
         .guten-menu-item button.selected,
         .guten-menu-item button:focus {
-            background-color: var(--color-surface-muted);
-            cursor: pointer;
-            border-radius: var(--radius-sm);
+          background-color: var(--color-surface-muted);
+          cursor: pointer;
         }
 
-        .active button svg{
-            color: var(--color-primary);            
-        }
+        .guten-menu-item-left  { display: inline-flex; align-items: center; gap: var(--space-custom-10); min-width: 0; }
+        .guten-menu-item-icon  { display: inline-flex; }
+        .guten-menu-item-icon  svg{ width: var(--icon-size-md); height: var(--icon-size-md); display: block; }
+        .guten-menu-item-label { min-width: 0; }
 
-        .guten-menu-item:hover .tooltip {
-            opacity: 1;
-            transition-delay: 0.5s;
-            display: flex;
+        .guten-menu-item-right {
+          display: inline-flex;
+          justify-content: flex-end;
+          align-items: center;
+          width: var(--menu-indicator-w);
         }
+        .guten-menu-item-right[data-visible="false"] { visibility: hidden; }
+        .guten-menu-item-right svg { width: var(--icon-size-md); height: var(--icon-size-md); display: block; }
 
-        .guten-menu-item button {
-            display: flex;
-            flex-direction: row;
-            gap: var(--space-custom-10);
-            color: var(--color-ui-text);
-            white-space: nowrap;
-            width: 100%;
-            padding: var(--space-xs) var(--space-md);
-            flex: 1;
-            white-space: nowrap;
-            box-sizing: border-box;
+        .guten-menu-label{
+          padding: var(--space-xs) var(--space-md);
+          font-size: var(--font-size-xxs);
+          text-transform: uppercase;
+          letter-spacing: .08em;
+          color: var(--color-muted);
         }
-
-        .guten-menu-item button span{
-            display: block;
+        .guten-menu-separator{
+          border: none;
+          border-top: 1px solid var(--color-border);
+          margin: var(--space-xs) var(--space-sm);
+          height:0;
         }
-        
-    `);
+  `);
 
     override connectedCallback(): void {
         super.connectedCallback();
 
-        this.registerEvent(this, dom.EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
+        if (this.type !== "item") return;
+
+        this.registerEvent(this, dom.EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e));
+
+        this.registerEvent(this, dom.EventTypes.KeyDown, (e: Event) => {
+            const ke = e as KeyboardEvent;
+            if (ke.key === keyboard.KeyboardKeys.Enter) {
+                ke.preventDefault();
+                this.handleOnSelect(ke);
+            }
+        });
+
+        if (this.selected) {
+            requestAnimationFrame(() => this.btn?.focus());
+        }
     }
 
+    onSelect(_event: Event): void { /* Implemented by subclass */ }
+
     override render(): HTMLElement {
-        const { icon, label } = this.props as MenuItemUIProps;
+        const type = this.type ?? "item";
+
+        if (type === "separator") {
+            return <hr class="guten-menu-separator" role="separator" /> as HTMLElement;
+        }
+
+        if (type === "label") {
+            return <div class="guten-menu-label">{this.label ?? ""}</div> as HTMLElement;
+        }
+
+        const mode = this.rightIndicator ?? "auto";
+        const kind =
+            mode === "auto"
+                ? (this.isActive() ? "check" : "none")
+                : mode;
+
+        const rightNode =
+            this.right ??
+            (kind === "chevron"
+                ? (this.chevronIcon ?? <ArrowRightIcon />)
+                : (kind === "check" ? (this.checkIcon ?? <CheckIcon />) : null));
+
+        const hasRight = kind !== "none" || !!this.right;
 
         return (
             <div class="guten-menu-item">
-                <button type="button">
-                    {icon} {label}
+                <button
+                    type="button"
+                    ref={(el: HTMLButtonElement) => (this.btn = el)}
+                    class={this.selected ? "selected" : undefined}
+                    tabIndex={this.selected ? 0 : -1}
+                >
+                    <span class="guten-menu-item-left">
+                        {this.icon && <span class="guten-menu-item-icon">{this.icon}</span>}
+                        {this.label && <span class="guten-menu-item-label">{this.label}</span>}
+                    </span>
+
+                    <span class="guten-menu-item-right" data-visible={hasRight ? "true" : "false"} aria-hidden="true">
+                        {hasRight ? rightNode : null}
+                    </span>
                 </button>
             </div>
-        );
+        ) as HTMLElement;
     }
 
-    handleOnSelect(event: Event, onSelect: () => void) {
-
-        if (event instanceof KeyboardEvent) {
-            if (event.key !== keyboard.KeyboardKeys.Enter) return;
-        }
-
+    private handleOnSelect(event: Event) {
         event.preventDefault();
-
-        onSelect();
+        this.onSelect(event);
     }
 }

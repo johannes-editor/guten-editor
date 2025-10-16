@@ -1,4 +1,7 @@
 :root {
+
+    --sep-color: color-mix(in oklab, currentColor 22%, transparent);
+    
     /* === COLORS === */
     --color-bg: #ffffff;
     --color-surface: #ffffff;
@@ -18,6 +21,15 @@
     /* Primary brand color */
 
     --color-callout: #fee5b2;
+
+    --color-callout-info: #dbeafe;
+    --color-callout-success: #dcfce7;
+    --color-callout-warning: #fef3c7;
+    --color-callout-danger: #fee2e2;
+    --color-callout-text-default: var(--color-ui-text);
+    --color-callout-text-muted: #4b5563;
+    --color-callout-text-light: #ffffff;
+    --color-callout-text-accent: var(--color-primary);
 
     --color-primary: #007aff;
     --color-primary-hover: #005be1;
@@ -66,22 +78,22 @@
     --space-xl: 2rem;     /* 32px */
     --space-2xl: 3rem;    /* 48px */
 
-    --space-custom-10: 0.625rem; /* 10px */
+    --space-custom-10: 0.625rem;  /* 10px */
 
     /* === BORDER RADIUS & SHADOWS === */
-    --radius-sm: .25rem; /* 4px */
-    --radius-md: .5rem;  /* 8px */
-    --radius-lg: .75rem; /* 12px */
-    --radius-xl:   1rem; /* 16px */
+    --radius-sm: .25rem;  /* 4px */
+    --radius-md: .5rem;   /* 8px */
+    --radius-lg: .75rem;  /* 12px */
+    --radius-xl: 1rem;    /* 16px */
 
     --shadow-sm: 0 1px 2px rgba(97, 63, 63, 0.05);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.2);
 
     /* === ICONS === */
-    --icon-size-sm:      1rem; /* 16px */
-    --icon-size-md:  1.125rem; /* 18px*/
-    --icon-size-lg:   1.25rem; /* 20px */
+    --icon-size-sm: 1rem;     /* 16px */
+    --icon-size-md: 1.125rem; /* 18px*/
+    --icon-size-lg: 1.25rem;  /* 20px */
 
     /* === INTERACTION / ANIMATION === */
     --transition-fast: 0.15s ease-in-out;
