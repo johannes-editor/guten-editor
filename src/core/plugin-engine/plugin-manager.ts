@@ -9,7 +9,7 @@ const manifests = import.meta.glob(
 ) as unknown as Record<string, { default: PluginManifest }>;
 
 const pluginModules = import.meta.glob(
-    "../../plugins/*/*.{ts,tsx}",
+    "../../plugins/**/*.{ts,tsx}",
 ) as unknown as Record<string, () => Promise<Record<string, unknown>>>;
 
 export class PluginManager {
