@@ -5,6 +5,9 @@ import { OverlayComponent } from "../../plugins/index.ts";
  * Manages a stack of overlays (e.g. modals, dialogs) and provides functionality
  * to close and remove them, including handling key events (e.g. Escape) and
  * mouse clicks outside the overlay to close it.
+ *
+ * Supports toggle behavior (reopening the same overlay closes it)
+ * and overlay compatibility rules via `canOverlay()` and `canOverlayClasses`.
  */
 export class OverlayStack {
 
@@ -20,11 +23,20 @@ export class OverlayStack {
     }
 
     /**
-     * Pushes a new overlay element onto the stack.
-     * @param element The overlay element to add to the stack.
-     */
+    * Adds a new overlay to the stack.
+    * 
+    * If an overlay of the same type is already open, it is removed and
+    * the new one is not added — resulting in a toggle-like behavior.
+    * 
+    * Otherwise, it removes incompatible overlays (based on `canOverlay()` rules)
+    * before adding the new one to the stack.
+    *
+    * @param element The overlay element to add.
+    */
     public push(element: HTMLElement) {
         if (element instanceof OverlayComponent) {
+
+            // Toggle behavior: close existing overlay of the same type
             for (let i = this.stack.length - 1; i >= 0; i--) {
                 const current = this.stack[i];
                 if (current instanceof OverlayComponent && current.constructor === element.constructor) {
@@ -34,10 +46,13 @@ export class OverlayStack {
                     return;
                 }
             }
+
             this.removeIncompatibleOverlays(element);
         } else {
             this.removeIncompatibleOverlays();
         }
+
+        // Add new overlay to the top of the stack
         this.stack.push(element);
     }
 
@@ -91,11 +106,21 @@ export class OverlayStack {
         if (!top) return;
 
         const clickedInside = top.contains(event.target as Node);
-        if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside2) {
+        if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside) {
             this.remove(top);
         }
     };
 
+    /**
+    * Removes overlays from the stack that are not allowed to coexist
+    * with the incoming overlay, based on its `canOverlay()` rules.
+    *
+    * Called automatically when a new overlay is pushed to the stack.
+    * If `incoming.canOverlay(current)` returns false, the existing overlay
+    * is removed from both the stack and the DOM.
+    *
+    * @param incoming The new overlay being added (optional).
+    */
     private removeIncompatibleOverlays(incoming?: OverlayComponent) {
         for (let i = this.stack.length - 1; i >= 0; i--) {
             const current = this.stack[i];
