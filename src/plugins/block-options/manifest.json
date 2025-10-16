@@ -1,0 +1,20 @@
+{
+    "name": "Block options",
+    "author": "Alexandre Tavares",
+    "description": "Adds block options menu.",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./extensible/block-options-plugin.tsx",
+            "class": "BlockOptionsPlugin",
+            "description": "Allow other plugins to add items to the block options menu.",
+            "active": true
+        },
+        {
+            "path": "./extensions/block-options-command-plugin.ts",
+            "class": "BlockOptionsCommandPlugin",
+            "description": "Register default block options commands.",
+            "active": true
+        }
+    ]
+}
