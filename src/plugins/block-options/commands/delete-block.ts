@@ -17,16 +17,16 @@ export const DeleteBlock: Command = {
 
         if (!currentBlock || !currentBlock.parentElement) return false;
 
-        
+
         const dest = dom.getNextBlockSibling(currentBlock) || dom.getPrevBlockSibling(currentBlock);
 
         if (dest) {
             dom.focusStartOfBlock(dest);
         } else {
-            const sel = window.getSelection?.();
+            const sel = globalThis.getSelection?.();
             sel?.removeAllRanges();
         }
 
-        return  dom.removeBlockWithTransition(currentBlock, 200);
+        return dom.removeBlockWithTransition(currentBlock, 200);
     },
 };

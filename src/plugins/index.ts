@@ -4,7 +4,7 @@ export { h, Fragment } from "../jsx.ts";
 /* components */
 export { Component } from "../components/component.ts";
 export { OverlayComponent } from "../components/overlay/overlay-component.ts";
-export type { DefaultProps } from "../components/types.ts";
+export type { DefaultProps, DefaultState } from "../components/types.ts";
 
 /* i18n */
 export type { TranslationSchema } from "../core/i18n/types.ts";
@@ -42,7 +42,36 @@ export { EventTypes } from "../utils/dom/events.ts";
 /** @deprecated Se mudou de lugar, reexporte até a migração */
 export { focusOnElement } from "../utils/dom-utils.ts"; // ajuste o caminho real se necessário
 
-export { Plugin, PluginExtension, ExtensiblePlugin }   from "../core/plugin-engine/index.ts";
+export { Plugin, PluginExtension, ExtensiblePlugin } from "../core/plugin-engine/index.ts";
 // export { runCommand, runCommand } from "../core/plugin-engine/index.ts";
 
 // import { Command, ExtensiblePlugin, , PluginExtension, registerCommand, runCommand } from "../index.ts";
+
+
+/**
+ * Constructor type for overlay components.
+ * 
+ * Used by plugins to reference or declare overlay compatibility,
+ * e.g. defining which overlays can stack above others.
+ */
+export type { OverlayCtor } from "../components/overlay/overlay-component.ts";
+
+/**
+ * Main overlay that displays block options in the editor.
+ * 
+ * Exported so other overlays can reference it in `canOverlayClasses`
+ * to declare they are allowed to appear above BlockOptions.
+ */
+export { BlockOptionsMenu as BlockOptions } from "./block-options/components/block-options-menu.tsx";
+
+
+export { icons } from "../design-system/index.ts";
+
+
+export { MenuUI } from "../design-system/components/menu-ui.tsx";
+export type { MenuUIProps } from "../design-system/components/menu-ui.tsx";
+export { MenuItemUI } from "../design-system/components/menu-item-ui.tsx";
+
+export { FormattingToolbarExtensionPlugin } from "./formatting-toolbar/formatting-toolbar-plugin.tsx";
+
+

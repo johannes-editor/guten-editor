@@ -12,6 +12,7 @@ export class EventTypes {
     static readonly DblClick = 'dblclick';
     static readonly ContextMenu = 'contextmenu';
     static readonly Focus = 'focus';
+    static readonly FocusIn = 'focusin';
     static readonly Blur = 'blur';
     static readonly Change = 'change';
     static readonly Input = 'input';

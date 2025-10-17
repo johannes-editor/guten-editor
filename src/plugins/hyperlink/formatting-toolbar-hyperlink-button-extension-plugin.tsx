@@ -1,9 +1,7 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
-import { LinkIcon } from "../../design-system/components/icons.tsx";
-import { FormattingToolbarExtensionPlugin } from "../formatting-toolbar/formatting-toolbar-plugin.tsx";
-import { runCommand, t } from "../index.ts";
+import { icons, t, runCommand, FormattingToolbarExtensionPlugin } from "../index.ts";
 
 /**
  * FormattingToolbar extension that adds the "Insert Link" button.
@@ -11,7 +9,7 @@ import { runCommand, t } from "../index.ts";
  */
 export class FormattingToolbarHyperlinkButtonExtensionPlugin extends FormattingToolbarExtensionPlugin {
     /** Toolbar icon (link glyph). */
-    readonly icon: SVGElement = <LinkIcon />;
+    readonly icon: SVGElement = <icons.LinkIcon />;
 
     /** Tooltip shown on hover. */
     readonly label: string = t("link");

@@ -3,16 +3,18 @@ import { Command, CommandContext } from "../../../core/command/command.ts";
 import { selection, dom } from "../../index.ts";
 import { BlockOptionPayload } from "./types.ts";
 
-export const MoveBlockUp: Command = {
-    id: "moveBlockUp",
-    shortcut: { chord: "Alt+ArrowUp", description: "Move block up" },
+export const MoveBlockDown: Command = {
+    id: "moveBlockDown",
+    shortcut: { chord: "Alt+ArrowDown", description: "Move block down" },
     execute(context: CommandContext<BlockOptionPayload>): boolean {
 
         context.content?.blockOptions.remove();
 
         const currentBlock =
             context.content?.block ?? selection.findClosestBlockBySelection();
+
         if (!currentBlock) return false;
-        return dom.moveBlockUpPreservingCaret(currentBlock);
+
+        return dom.moveBlockDownPreservingCaret(currentBlock);
     }
 };

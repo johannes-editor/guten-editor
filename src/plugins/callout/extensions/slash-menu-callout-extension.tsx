@@ -1,11 +1,9 @@
 /** @jsx h */
-import { h } from '../../jsx.ts';
-import { SlashMenuExtensionPlugin } from "../slash-menu/index.ts";
-import { CalloutBlock } from "./components/callout-block.tsx";
-import { focusOnElement } from "../index.ts";
-import { CardTextIcon } from "../../design-system/components/icons.tsx";
+import { h, focusOnElement, icons } from "../../index.ts";
+import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
+import { CalloutBlock } from "../components/callout-block.tsx";
 
-export class CalloutPlugin extends SlashMenuExtensionPlugin {
+export class SlashMenuCalloutExtension extends SlashMenuExtensionPlugin {
 
     override icon: SVGElement;
     override label: string;
@@ -14,7 +12,7 @@ export class CalloutPlugin extends SlashMenuExtensionPlugin {
     constructor() {
         super();
 
-        this.icon = <CardTextIcon />
+        this.icon = <icons.CardTextIcon />
         this.label = "Callout";
         this.sort = 31;
     }

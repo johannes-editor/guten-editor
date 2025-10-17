@@ -1,12 +1,10 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
-import { CodeSlashIcon } from "../../design-system/components/icons.tsx";
-import { FormattingToolbarExtensionPlugin } from "../formatting-toolbar/formatting-toolbar-plugin.tsx";
-import { runCommand, t } from "../index.ts";
+import { icons, runCommand, t, FormattingToolbarExtensionPlugin } from "../index.ts";
 
 export class FormattingToolbarItemCodeExtension extends FormattingToolbarExtensionPlugin {
-    readonly icon: SVGElement = <CodeSlashIcon />;
+    readonly icon: SVGElement = <icons.CodeSlashIcon />;
 
     readonly label: string = t("code");
 

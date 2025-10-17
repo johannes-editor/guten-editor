@@ -16,7 +16,6 @@ export const DuplicateBlock: Command = {
 
         if (!currentBlock) return false;
 
-
         dom.duplicateBlock(currentBlock, {
             insert: 'after',
             highlight: true,

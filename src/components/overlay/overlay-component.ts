@@ -3,20 +3,35 @@ import { DefaultProps, DefaultState } from "../types.ts";
 import { pushOverlay, removeOverlay } from "./index.ts";
 import { CloseableOverlay } from "./types.ts";
 
+
+/**
+ * Constructor type for overlay components.
+ * 
+ * Used to reference or instantiate overlay classes (e.g. in registries or overlay rules).
+ * Commonly used in `canOverlayClasses` to define which overlays can stack above others.
+ */
 export type OverlayCtor = new (...args: any[]) => OverlayComponent<any, any>;
 
 /**
- * Base class for UI overlays (e.g. modals, dropdowns).
- * Handles z-index and optional auto-removal on outside click.
+ * Base class for UI overlays (e.g. modals, dropdowns, popovers).
+ * 
+ * Handles overlay registration, stacking (z-index), entry/exit animations,
+ * and optional auto-removal when clicking outside.
+ *
+ * Extend this class to implement custom overlay components.
  *
  * @template P Props type
  * @template S State type
  */
-
 export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> extends Component<P, S> implements CloseableOverlay {
 
+    /** Default z-index for overlays */
     zIndex: number = 1000;
 
+    /**
+    * Defines which overlay classes are allowed to appear above this one.
+    * Used to control overlay stacking behavior.
+    */
     public canOverlayClasses: ReadonlySet<OverlayCtor> = new Set();
 
     /** If true, removes the overlay when clicking outside (default: true) */
@@ -47,10 +62,11 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         removeOverlay(this);
     }
 
-    get canCloseOnClickOutside2(): boolean {
+    get canCloseOnClickOutside(): boolean {
         return this.closeOnClickOutside === true && this.listenClickOutside === true;
     }
 
+    /** Removes the overlay with an exit animation */
     override remove(): void {
         const finishRemoval = () => requestAnimationFrame(() => super.remove());
         const hadShowOverlay = this.classList.contains("show-overlay");
@@ -77,12 +93,17 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         }, { once: true });
     }
 
+    /** Adds entry animation after rendering */
     override afterRender(): void {
         requestAnimationFrame(() => {
             this.classList.add("show-overlay");
         });
     }
 
+    /**
+    * Determines whether this overlay can appear above another.
+    * Uses `canOverlayClasses` to decide compatibility between overlays.
+    */
     public canOverlay(other: HTMLElement): boolean {
         if (!(other instanceof OverlayComponent)) return true;
         if (this.canOverlayClasses.size > 0) {
@@ -113,10 +134,16 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         return r.getBoundingClientRect();
     }
 
-    positionToAnchor(anchor: Node) {
-
+    public positionToAnchor(anchorOrRect: Node | DOMRect): void {
         const rect =
-            this.getAnchorRect(anchor);
+            anchorOrRect instanceof Node
+                ? this.getAnchorRect(anchorOrRect)
+                : new DOMRect(
+                    anchorOrRect.x,
+                    anchorOrRect.y,
+                    anchorOrRect.width,
+                    anchorOrRect.height
+                );
 
         if (!rect) return;
 
@@ -132,9 +159,14 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
                 const bottom = top + parent.clientHeight;
                 return { left, top, right, bottom };
             })()
-            : { left: 0, top: 0, right: globalThis.innerWidth, bottom: globalThis.innerHeight };
+            : {
+                left: 0,
+                top: 0,
+                right: globalThis.innerWidth,
+                bottom: globalThis.innerHeight,
+            };
 
-        this.style.position = 'absolute';
+        this.style.position = "absolute";
 
         const { width: menuWidth, height: menuHeight } = this.getBoundingClientRect();
 
@@ -143,24 +175,100 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
 
         if (showAbove) {
             this.style.bottom = `${pad.bottom - (rect.top - gap)}px`;
-            this.style.top = '';
+            this.style.top = "";
         } else {
-            this.style.top = `${(rect.bottom + gap) - pad.top}px`;
-            this.style.bottom = '';
+            this.style.top = `${rect.bottom + gap - pad.top}px`;
+            this.style.bottom = "";
         }
-
 
         const spaceRight = globalThis.innerWidth - rect.right;
         const spaceLeft = rect.left;
         const showRight = spaceRight >= menuWidth || spaceRight >= spaceLeft;
 
         if (showRight) {
-
-            this.style.left = `${(rect.right + gap) - pad.left}px`;
-            this.style.right = '';
+            this.style.left = `${rect.right + gap - pad.left}px`;
+            this.style.right = "";
         } else {
             this.style.right = `${pad.right - (rect.left - gap)}px`;
-            this.style.left = '';
+            this.style.left = "";
         }
+    }
+
+    public positionRelativeToMenu(anchorOrRect: HTMLElement | DOMRect, gap: number = 8): void {
+        const anchorRect = anchorOrRect instanceof HTMLElement
+            ? anchorOrRect.getBoundingClientRect()
+            : anchorOrRect;
+
+        const anchor = anchorOrRect instanceof HTMLElement ? anchorOrRect : null;
+        const menuContainer = anchor?.closest?.(".guten-menu");
+
+        if (!menuContainer) {
+            if (anchor) this.positionToAnchor(anchor);
+            return;
+        }
+
+        const bounds = this.getOverlayBounds();
+        const menuRect = menuContainer.getBoundingClientRect();
+        const overlayRect = this.getBoundingClientRect();
+
+        const anchorCenter = anchorRect.top + (anchorRect.height / 2);
+        const desiredTop = anchorCenter - (overlayRect.height / 2) - bounds.top;
+        let left = menuRect.right + gap - bounds.left;
+
+        if (left + overlayRect.width > bounds.width) {
+            left = menuRect.left - gap - overlayRect.width - bounds.left;
+            if (left < 0) {
+                left = Math.max(bounds.width - overlayRect.width, 0);
+            }
+        }
+
+        const maxTop = Math.max(bounds.height - overlayRect.height, 0);
+        let top = Math.min(Math.max(desiredTop, 0), maxTop);
+
+        if (top < 0) top = 0;
+        if (left < 0) left = 0;
+
+        this.style.top = `${top}px`;
+        this.style.left = `${left}px`;
+        this.style.bottom = "";
+        this.style.right = "";
+    }
+
+    /**
+     * Computes the bounding box available for overlay positioning.
+     * Uses the overlay's offset parent when available, otherwise falls back to the viewport bounds.
+     */
+    protected getOverlayBounds() {
+        const parent = this.offsetParent as HTMLElement | null;
+        if (parent) {
+            const rect = parent.getBoundingClientRect();
+            const width = parent.clientWidth;
+            const height = parent.clientHeight;
+
+            if (width > 0 && height > 0) {
+                const left = rect.left + parent.clientLeft;
+                const top = rect.top + parent.clientTop;
+                return {
+                    left,
+                    top,
+                    right: left + width,
+                    bottom: top + height,
+                    width,
+                    height,
+                };
+            }
+        }
+
+        const viewportWidth = globalThis.innerWidth;
+        const viewportHeight = globalThis.innerHeight;
+
+        return {
+            left: 0,
+            top: 0,
+            right: viewportWidth,
+            bottom: viewportHeight,
+            width: viewportWidth,
+            height: viewportHeight,
+        };
     }
 }

@@ -1,8 +1,7 @@
 /** @jsx h */
 
 import { provideContext } from "../../core/context/context.ts";
-import { BoldIcon, ItalicIcon, StrikeThroughIcon, UnderlineIcon } from "../../design-system/components/icons.tsx";
-import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin, t } from "../index.ts";
+import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin, t, icons } from "../index.ts";
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
@@ -77,7 +76,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
     private readonly defaultItems: ToolbarEntry[] = [
         {
-            icon: <BoldIcon />,
+            icon: <icons.BoldIcon />,
             label: t("bold"),
             shortcut: "Mod+B",
             onSelect: () => runCommand("toggleBold"),
@@ -85,7 +84,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 10,
         },
         {
-            icon: <ItalicIcon />,
+            icon: <icons.ItalicIcon />,
             label: t("italic"),
             shortcut: "Mod+I",
             onSelect: () => runCommand("toggleItalic"),
@@ -93,7 +92,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 20,
         },
         {
-            icon: <StrikeThroughIcon />,
+            icon: <icons.StrikeThroughIcon />,
             label: t("strikethrough"),
             shortcut: "Mod+Shift+X",
             onSelect: () => runCommand("toggleStrike"),
@@ -101,7 +100,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 30,
         },
         {
-            icon: <UnderlineIcon />,
+            icon: <icons.UnderlineIcon />,
             label: t("underline"),
             shortcut: "Mod+U",
             onSelect: () => runCommand("toggleUnderline"),
