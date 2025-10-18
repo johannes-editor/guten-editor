@@ -5,18 +5,17 @@ import { useContext } from "../../../core/context/context.ts";
 import { FormattingToolbarCtx, FormattingToolbarContext } from "../formatting-toolbar-context.ts";
 import { FormattingToolbar } from "./formatting-toolbar.tsx";
 import { FormattingToolbarColorMenuItem } from "./color-menu-item.tsx";
-import { HIGHLIGHT_COLOR_OPTIONS, TEXT_COLOR_OPTIONS, normalizeColorValue, type ColorOption } from "./color-options.ts";
+import { HIGHLIGHT_COLOR_OPTIONS, normalizeColorValue, type ColorOption } from "./color-options.ts";
 
-interface FormattingToolbarColorMenuProps extends MenuUIProps {
+interface FormattingToolbarHighlightColorMenuProps extends MenuUIProps {
     anchor?: HTMLElement;
 }
 
 interface FormattingToolbarHighlightColorMenuState extends MenuUIState {
-    textValue: string;
     highlightValue: string;
 }
 
-export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolbarColorMenuProps, FormattingToolbarHighlightColorMenuState> {
+export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolbarHighlightColorMenuProps, FormattingToolbarHighlightColorMenuState> {
 
 
     override positionToAnchorVerticalGap: number = 12;
@@ -40,7 +39,6 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
 
     override state: FormattingToolbarHighlightColorMenuState = {
         selectedIndex: 0,
-        textValue: TEXT_COLOR_OPTIONS[0]?.value ?? "",
         highlightValue: HIGHLIGHT_COLOR_OPTIONS[0]?.value ?? "",
     };
 
@@ -48,7 +46,6 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
     private selectionLocked = false;
 
     override onMount(): void {
-        this.syncWithSelection();
         super.onMount?.();
         this.formattingToolbar = useContext(this, FormattingToolbarCtx);
         if (this.formattingToolbar?.lock) {
@@ -94,33 +91,6 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
     private isHighlightColorActive = (option: ColorOption): boolean => {
         return normalizeColorValue(this.state.highlightValue) === normalizeColorValue(option.value);
     };
-
-    private syncWithSelection(): void {
-        const textValue = normalizeColorValue(this.queryCommandValue("foreColor"));
-        const highlightValue = normalizeColorValue(
-            this.queryCommandValue("hiliteColor") || this.queryCommandValue("backColor"),
-        );
-
-        this.setState({
-            textValue: this.matchOptionValue(TEXT_COLOR_OPTIONS, textValue),
-            highlightValue: this.matchOptionValue(HIGHLIGHT_COLOR_OPTIONS, highlightValue),
-        } as Partial<FormattingToolbarHighlightColorMenuState>);
-    }
-
-    private matchOptionValue(options: ColorOption[], value: string): string {
-        const normalized = normalizeColorValue(value);
-        const match = options.find((option) => normalizeColorValue(option.value) === normalized);
-        return match?.value ?? options[0]?.value ?? "";
-    }
-
-    private queryCommandValue(command: string): string {
-        try {
-            const result = document.queryCommandValue(command);
-            return typeof result === "string" ? result : "";
-        } catch {
-            return "";
-        }
-    }
 
     private unlockSelection(): void {
         if (!this.selectionLocked) return;

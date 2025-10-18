@@ -124,7 +124,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                     content: { anchor: button ?? undefined },
                 });
             },
-            isActive: () => this.isColorSelectionActive(),
+            isActive: () => false,
             sort: 45,
         },
         {
@@ -140,36 +140,10 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                     content: { anchor: button ?? undefined },
                 });
             },
-            isActive: () => this.isColorSelectionActive(),
+            isActive: () => false,
             sort: 46,
         },
     ];
-
-    private isColorSelectionActive(): boolean {
-        const textValue = normalizeColorValue(this.queryCommandValue("foreColor"));
-        const highlightValue = normalizeColorValue(
-            this.queryCommandValue("hiliteColor") || this.queryCommandValue("backColor"),
-        );
-
-        const hasTextColor = TEXT_COLOR_OPTIONS
-            .filter((option) => option.id !== "default")
-            .some((option) => normalizeColorValue(option.value) === textValue);
-
-        const hasHighlight = HIGHLIGHT_COLOR_OPTIONS
-            .filter((option) => option.id !== "none")
-            .some((option) => normalizeColorValue(option.value) === highlightValue);
-
-        return hasTextColor || hasHighlight;
-    }
-
-    private queryCommandValue(command: string): string {
-        try {
-            const value = document.queryCommandValue(command);
-            return typeof value === "string" ? value : "";
-        } catch {
-            return "";
-        }
-    }
 
     private buildToolbarItems(): ToolbarEntry[] {
         const itemsFromExtensions: ToolbarEntry[] = this.extensionPlugins.map(
