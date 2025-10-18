@@ -28,6 +28,9 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
     /** Default z-index for overlays */
     zIndex: number = 1000;
 
+    positionToAnchorVerticalGap: number = 2;
+    positionToAnchorHorizontalGap: number = 2;
+
     /**
     * Defines which overlay classes are allowed to appear above this one.
     * Used to control overlay stacking behavior.
@@ -134,20 +137,13 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         return r.getBoundingClientRect();
     }
 
-    public positionToAnchor(anchorOrRect: Node | DOMRect): void {
+    positionToAnchor(anchorOrRect: Node | DOMRect): void {
         const rect =
             anchorOrRect instanceof Node
-                ? this.getAnchorRect(anchorOrRect)
-                : new DOMRect(
-                    anchorOrRect.x,
-                    anchorOrRect.y,
-                    anchorOrRect.width,
-                    anchorOrRect.height
-                );
+                ? (this as any).getAnchorRect(anchorOrRect)
+                : new DOMRect(anchorOrRect.x, anchorOrRect.y, anchorOrRect.width, anchorOrRect.height);
 
         if (!rect) return;
-
-        const gap = 2;
 
         const parent = (this as unknown as HTMLElement).offsetParent as HTMLElement | null;
         const pad = parent
@@ -174,10 +170,10 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         const showAbove = spaceBelow < menuHeight && rect.top > menuHeight;
 
         if (showAbove) {
-            this.style.bottom = `${pad.bottom - (rect.top - gap)}px`;
+            this.style.bottom = `${pad.bottom - (rect.top - this.positionToAnchorVerticalGap)}px`;
             this.style.top = "";
         } else {
-            this.style.top = `${rect.bottom + gap - pad.top}px`;
+            this.style.top = `${rect.bottom + this.positionToAnchorVerticalGap - pad.top}px`;
             this.style.bottom = "";
         }
 
@@ -185,11 +181,12 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         const spaceLeft = rect.left;
         const showRight = spaceRight >= menuWidth || spaceRight >= spaceLeft;
 
+        
         if (showRight) {
-            this.style.left = `${rect.right + gap - pad.left}px`;
+            this.style.left = `${rect.right + this.positionToAnchorHorizontalGap - pad.left}px`;
             this.style.right = "";
         } else {
-            this.style.right = `${pad.right - (rect.left - gap)}px`;
+            this.style.right = `${pad.right - (rect.left - this.positionToAnchorHorizontalGap)}px`;
             this.style.left = "";
         }
     }

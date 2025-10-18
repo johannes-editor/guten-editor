@@ -6,6 +6,9 @@ import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
 
+import { COLOR_TOOLBAR_ITEM_ID } from "./component/constants.ts";
+import { HIGHLIGHT_COLOR_OPTIONS, TEXT_COLOR_OPTIONS, normalizeColorValue } from "./component/color-options.ts";
+
 import { dom, keyboard } from "../index.ts";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
@@ -14,12 +17,12 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
     private extensionPlugins: FormattingToolbarExtensionPlugin[] = [];
 
     override setup(_root: HTMLElement, _plugins: Plugin[]): void {
-        
+
         provideContext(_root, FormattingToolbarCtx, {
 
             lock: () => FormattingToolbarPlugin.toolbarInstance?.lockSelection(),
             unlock: () => FormattingToolbarPlugin.toolbarInstance?.unlockSelection(),
-           
+
         }, { scopeRoot: _root });
     }
 
@@ -63,7 +66,8 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                                 shortcut={item.shortcut}
                                 onSelect={item.onSelect}
                                 isActive={item.isActive}
-                                refreshSelection={() => ft?.refreshSelection()}                                
+                                refreshSelection={() => ft?.refreshSelection()}
+                                dataId={item.id}
                             />
                         </li>
                     ))}
@@ -107,7 +111,65 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             isActive: () => runCommand("stateUnderline"),
             sort: 40,
         },
+        {
+            id: COLOR_TOOLBAR_ITEM_ID,
+            icon: <icons.TextColorIcon />,
+            label: t("text_color"),
+            shortcut: "",
+            onSelect: (event?: Event, button?: HTMLButtonElement | null) => {
+                console.log("open fore color menu");
+                runCommand("openFormattingToolbarForeColorMenu", {
+                    event,
+                    target: button ?? undefined,
+                    content: { anchor: button ?? undefined },
+                });
+            },
+            isActive: () => this.isColorSelectionActive(),
+            sort: 45,
+        },
+        {
+            id: COLOR_TOOLBAR_ITEM_ID,
+            icon: <icons.HighlightColorIcon />,
+            label: t("text_color"),
+            shortcut: "",
+            onSelect: (event?: Event, button?: HTMLButtonElement | null) => {
+                console.log("open highlight color menu");
+                runCommand("openFormattingToolbarHighlightColorMenu", {
+                    event,
+                    target: button ?? undefined,
+                    content: { anchor: button ?? undefined },
+                });
+            },
+            isActive: () => this.isColorSelectionActive(),
+            sort: 46,
+        },
     ];
+
+    private isColorSelectionActive(): boolean {
+        const textValue = normalizeColorValue(this.queryCommandValue("foreColor"));
+        const highlightValue = normalizeColorValue(
+            this.queryCommandValue("hiliteColor") || this.queryCommandValue("backColor"),
+        );
+
+        const hasTextColor = TEXT_COLOR_OPTIONS
+            .filter((option) => option.id !== "default")
+            .some((option) => normalizeColorValue(option.value) === textValue);
+
+        const hasHighlight = HIGHLIGHT_COLOR_OPTIONS
+            .filter((option) => option.id !== "none")
+            .some((option) => normalizeColorValue(option.value) === highlightValue);
+
+        return hasTextColor || hasHighlight;
+    }
+
+    private queryCommandValue(command: string): string {
+        try {
+            const value = document.queryCommandValue(command);
+            return typeof value === "string" ? value : "";
+        } catch {
+            return "";
+        }
+    }
 
     private buildToolbarItems(): ToolbarEntry[] {
         const itemsFromExtensions: ToolbarEntry[] = this.extensionPlugins.map(
@@ -140,10 +202,11 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
 }
 
 type ToolbarEntry = {
+    id?: string;
     icon: SVGElement;
     label: string;
     shortcut: string;
     sort: number;
-    onSelect: () => void;
+    onSelect: (event?: Event, button?: HTMLButtonElement | null) => void;
     isActive: () => boolean;
 };

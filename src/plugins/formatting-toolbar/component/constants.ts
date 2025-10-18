@@ -1,0 +1,1 @@
+export const COLOR_TOOLBAR_ITEM_ID = "formatting-toolbar-color";

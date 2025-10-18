@@ -27,6 +27,9 @@ export { registerCommand, runCommand } from "../core/command/index.ts";
 
 /* ---- Legacy aliases (opcional, para não quebrar plugins existentes) ---- */
 
+
+export { colorUtil } from "../utils/color/index.ts";
+
 /** @deprecated Import from `timing.debounce` */
 export { debounce } from "../utils/timing/debounce.ts";
 

@@ -1,7 +1,7 @@
 :root {
 
     --sep-color: color-mix(in oklab, currentColor 22%, transparent);
-    
+
     /* === COLORS === */
     --color-bg: #ffffff;
     --color-surface: #ffffff;
@@ -10,6 +10,18 @@
     --color-muted: #6e6e73;
     --color-border: #d0d0d0;
     --color-overlay: rgba(0, 0, 0, 0.5);
+
+
+    --color-gray-600: #6b7280;
+    --color-red-600: #dc2626;
+    --color-green-600: #059669;
+    --color-blue-600: #2563eb;
+    --color-purple-600: #7c3aed;
+
+    --color-yellow-200: #fef08a;
+    --color-green-200: #bbf7d0;
+    --color-blue-200: #bfdbfe;
+    --color-pink-200: #fbcfe8;
 
 
     /* --color-ui-text: #464645; */

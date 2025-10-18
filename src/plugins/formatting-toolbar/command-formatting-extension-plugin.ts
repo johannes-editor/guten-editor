@@ -10,11 +10,27 @@ import { ToggleBold } from "./commands/toggle-bold.ts";
 import { ToggleItalic } from "./commands/toggle-italic.ts";
 import { ToggleStrike } from "./commands/toggle-strike.ts";
 import { ToggleUnderline } from "./commands/toggle-underline.ts";
+import { OpenFormattingToolbarForeColorMenu } from "./commands/open-fore-color-menu.tsx";
+import { OpenFormattingToolbarHighlightColorMenu } from "./commands/open-highlight-color-menu.tsx";
+import { SetHighlightColor } from "./commands/set-highlight-color.ts";
+import { SetTextColor } from "./commands/set-text-color.ts";
 
 export class CommandFormattingExtensionPlugin extends CommandExtensionPlugin {
 
     override commands(): Command | Command[] {
-        return [ToggleBold, ToggleItalic, ToggleStrike, ToggleUnderline, 
-                StateBold, StateItalic, StateStrike, StateUnderline];
+        return [
+            ToggleBold, 
+            ToggleItalic, 
+            ToggleStrike, 
+            ToggleUnderline, 
+            StateBold, 
+            StateItalic, 
+            StateStrike, 
+            StateUnderline,
+            OpenFormattingToolbarForeColorMenu,
+            OpenFormattingToolbarHighlightColorMenu,
+            SetHighlightColor,
+            SetTextColor
+        ];
     }
 }

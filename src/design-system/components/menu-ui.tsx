@@ -90,8 +90,6 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         super.afterRender();
         this.applySelection();
         this.maybeInitialReposition();
-
-
     }
 
     override onUnmount(): void {
@@ -188,7 +186,6 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
 
         const sel = (this.state as MenuUIState).selectedIndex ?? 0;
 
-        // qualquer navegação/ação por teclado desabilita hover até o próximo movimento real
         const lockHover = () => { this._hoverByMouseEnabled = false; };
 
         switch (e.key) {
@@ -203,7 +200,6 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
                 this.setState({ selectedIndex: (sel - 1 + count) % count } as Partial<S>);
                 break;
             case keyboard.KeyboardKeys.Enter:
-                // deixe o <button> clicar naturalmente, mas já bloqueie hover
                 lockHover();
                 break;
         }
@@ -227,10 +223,8 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
 
         const selectedBtn = buttons[idx];
 
-        // >>> NOVO: ao mudar de item, feche submenus “pendurados” em outras âncoras
         if (selectedBtn !== this._lastSelectedAnchor) {
             this._lastSelectedAnchor = selectedBtn;
-            // duck-typing para buscar a âncora do filho (sem depender de instanceof entre bundles)
             this._childrenMenus.forEach((child) => {
                 const childAny = child as any;
                 const childAnchor: HTMLElement | null | undefined = childAny?.props?.anchor;
@@ -267,12 +261,12 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     }
 
     /**
-   * One-shot initial positioning:
-   * - No-ops if already done, no `anchor`, or `positionMode === "none"`.
-   * - Optionally locks current width to avoid reflow during animation.
-   * - Uses double rAF to ensure layout is settled before positioning.
-   * - Calls `positionRelativeToMenu(anchor)` or `positionToAnchor(anchor)` accordingly.
-   */
+    * One-shot initial positioning:
+    * - No-ops if already done, no `anchor`, or `positionMode === "none"`.
+    * - Optionally locks current width to avoid reflow during animation.
+    * - Uses double rAF to ensure layout is settled before positioning.
+    * - Calls `positionRelativeToMenu(anchor)` or `positionToAnchor(anchor)` accordingly.
+    */
     private maybeInitialReposition() {
         if (this._didInitialPosition) return;
         const { anchor } = this.props as MenuUIProps;
@@ -284,7 +278,6 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         }
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                // revalida a âncora antes de posicionar
                 if (!anchor.isConnected) { this.remove(); return; }
                 if (this.positionMode === "relative") this.positionRelativeToMenu(anchor);
                 else this.positionToAnchor(anchor);
@@ -313,7 +306,6 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         if (!trigger) return null;
         const wrapper = trigger.closest(".guten-menu") as HTMLElement | null;
         const host = wrapper?.parentElement as any;
-        // checagem por forma (duck-typing) pra evitar problemas de instanceof entre bundles
         return host && typeof host.appendChildMenu === "function" ? host as MenuUI : null;
     }
 }
