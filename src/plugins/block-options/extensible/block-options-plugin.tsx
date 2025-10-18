@@ -92,7 +92,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
             type: "separator",
         };
 
-        return [...baseItems, separator, ...extensionItems];
+        return [...extensionItems, separator, ...baseItems ];
     }
 
 
@@ -128,15 +128,15 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
 
     private defaultItems(): BlockOptionsItem[] {
         return [
-            {
-                id: "duplicateBlock",
-                icon: <icons.CopyIcon />,
-                label: t("duplicate"),
-                sort: 10,
-                onSelect: ({ block, blockOptions }) => {
-                    runCommand("duplicateBlock", { content: { block, blockOptions } });
-                },
-            },
+            // {
+            //     id: "duplicateBlock",
+            //     icon: <icons.CopyIcon />,
+            //     label: t("duplicate"),
+            //     sort: 10,
+            //     onSelect: ({ block, blockOptions }) => {
+            //         runCommand("duplicateBlock", { content: { block, blockOptions } });
+            //     },
+            // },
             {
                 id: "moveBlockUp",
                 icon: <icons.ArrowUpIcon />,
@@ -147,23 +147,24 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                 },
             },
             {
-                id: "moveBlockDown",
-                icon: <icons.ArrowDownIcon />,
-                label: t("move_down"),
-                sort: 30,
-                onSelect: ({ block, blockOptions }) => {
-                    runCommand("moveBlockDown", { content: { block, blockOptions } });
-                },
-            },
-            {
                 id: "deleteBlock",
                 icon: <icons.TrashIcon />,
                 label: t("delete"),
-                sort: 40,
+                sort: 30,
                 onSelect: ({ block, blockOptions }) => {
                     runCommand("deleteBlock", { content: { block, blockOptions } });
                 },
             },
+            {
+                id: "moveBlockDown",
+                icon: <icons.ArrowDownIcon />,
+                label: t("move_down"),
+                sort: 40,
+                onSelect: ({ block, blockOptions }) => {
+                    runCommand("moveBlockDown", { content: { block, blockOptions } });
+                },
+            }
+            
         ];
     }
 }
