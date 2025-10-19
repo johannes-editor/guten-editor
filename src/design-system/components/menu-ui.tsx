@@ -282,7 +282,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
                 if (this.positionMode === "relative") this.positionRelativeToMenu(anchor);
                 else this.positionToAnchor(anchor);
                 this._didInitialPosition = true;
-                if (this.lockWidthOnOpen) setTimeout(() => (this.style.minWidth = ""), 160);
+                // if (this.lockWidthOnOpen) setTimeout(() => (this.style.minWidth = ""), 160);
             });
         });
     }
