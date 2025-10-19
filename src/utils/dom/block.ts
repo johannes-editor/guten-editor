@@ -17,7 +17,7 @@ export function captureSelectionInBlock(block: HTMLElement): () => void {
             const dir = (active as any).selectionDirection as "forward" | "backward" | "none" | undefined;
 
             return () => {
-                
+
                 active.focus({ preventScroll: false });
                 try {
                     active.setSelectionRange(start, end, dir || 'none');
@@ -28,7 +28,7 @@ export function captureSelectionInBlock(block: HTMLElement): () => void {
         }
     }
 
-    const sel = window.getSelection?.() || null;
+    const sel = globalThis.getSelection?.() || null;
     if (!sel || sel.rangeCount === 0) return () => { };
 
     const anchorNode = sel.anchorNode;
@@ -81,7 +81,7 @@ export function captureSelectionInBlock(block: HTMLElement): () => void {
     }
 
     return () => {
-        const sel2 = window.getSelection?.();
+        const sel2 = globalThis.getSelection?.();
         if (!sel2) {
             anchorMarker.remove(); focusMarker.remove(); return;
         }
@@ -176,7 +176,7 @@ export function removeBlockWithTransition(block: HTMLElement, durationMs = 200):
     block.classList.add("block-removing");
     block.style.boxSizing = "border-box";
     block.style.height = `${startHeight}px`;
-    
+
     block.offsetHeight;
 
     block.style.opacity = "0";
@@ -216,13 +216,13 @@ export function removeBlockWithTransition(block: HTMLElement, durationMs = 200):
 }
 
 export function focusStartOfBlock(block: HTMLElement) {
-    
+
     const editable =
         (block.matches('[contenteditable="true"]') ? block : block.querySelector('[contenteditable="true"]')) as HTMLElement | null;
 
     if (editable) {
         editable.focus({ preventScroll: false });
-        const sel = window.getSelection?.();
+        const sel = globalThis.getSelection?.();
         if (sel) {
             const r = document.createRange();
 
@@ -293,4 +293,29 @@ export function duplicateBlock(
     if (highlight) applyTemporaryRing(clone, highlightMs);
 
     return clone;
+}
+
+
+
+
+
+
+
+export function findCodeAncestor(node: Node | null): HTMLElement | null {
+    let current: Node | null = node;
+
+    while (current) {
+        if (current instanceof HTMLElement && current.tagName === "CODE") {
+            return current;
+        }
+
+        if (current instanceof ShadowRoot) {
+            current = current.host;
+            continue;
+        }
+
+        current = current.parentNode;
+    }
+
+    return null;
 }

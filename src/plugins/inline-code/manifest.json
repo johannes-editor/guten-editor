@@ -1,0 +1,16 @@
+{
+    "name": "Inline Code",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "./extensions/formatting-toolbar-item-code-extension.tsx",
+            "class": "FormattingToolbarItemCodeExtension",
+            "active": true
+        },
+        {
+            "path": "./extensions/inline-code-command-extension.ts",
+            "class": "InlineCodeCommandExtension",
+            "active": true
+        }
+    ]
+}

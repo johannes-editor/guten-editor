@@ -31,3 +31,10 @@
 .katex {
     font-size: 1rem;
 }
+
+code {
+    background-color: #cccccc7a;
+    padding: 0 3px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
