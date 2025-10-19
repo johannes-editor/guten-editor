@@ -1,8 +1,9 @@
 import { Command } from "../../../core/command/command.ts";
-import { dom } from "../../index.ts";
+import { dom, hasSelection } from "../../index.ts";
 
 export const ToggleInlineCode: Command = {
     id: "toggleInlineCode",
+    shortcut: { chord: "Mod+E", description: "Toggle inline code", when: () => hasSelection(), preventDefault: true },
     execute() {
         const selection = globalThis.getSelection?.();
 
