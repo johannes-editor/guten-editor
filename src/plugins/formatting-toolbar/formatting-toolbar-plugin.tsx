@@ -118,7 +118,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                 });
             },
             isActive: () => false,
-            sort: 45,
+            sort: 50,
         },
         {
             icon: <icons.TextColorIcon />,
@@ -132,7 +132,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                 });
             },
             isActive: () => false,
-            sort: 46,
+            sort: 60,
         },
     ];
 

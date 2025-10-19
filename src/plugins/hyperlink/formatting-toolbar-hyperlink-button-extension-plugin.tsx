@@ -17,7 +17,7 @@ export class FormattingToolbarHyperlinkButtonExtensionPlugin extends FormattingT
     readonly shortcut: string = "Mod+K";
 
     /** Sort order within the toolbar (lower = earlier). */
-    readonly sort: number = 50;
+    readonly sort: number = 80;
 
     /** Invoked on button click: opens the link popover. */
     onSelect(): void {
