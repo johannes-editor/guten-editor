@@ -8,7 +8,7 @@ export class FormattingToolbarItemCodeExtension extends FormattingToolbarExtensi
 
     readonly label: string = t("code");
 
-    readonly shortcut: string = "Mod+B+C";
+    readonly shortcut: string = "Mod+E";
 
     readonly sort: number = 70;
 
@@ -16,14 +16,9 @@ export class FormattingToolbarItemCodeExtension extends FormattingToolbarExtensi
         runCommand("toggleInlineCode");
     }
 
-
-    
-
     override isActive = (): boolean => {
         try {
-            const result = !!runCommand("stateInlineCode");
-            console.log("FormattingToolbarItemCodeExtension isActive:", result);
-            return result;
+            return !!runCommand("stateInlineCode");
         } catch {
             return false;
         }

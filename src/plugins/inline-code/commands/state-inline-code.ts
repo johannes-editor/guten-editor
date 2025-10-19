@@ -15,9 +15,6 @@ export const StateInlineCode: Command = {
         const startCode = dom.findCodeAncestor(range.startContainer);
         const endCode = dom.findCodeAncestor(range.endContainer);
 
-        const value = !!(startCode && endCode && startCode === endCode);
-        
-        console.log("StateInlineCode executed. Value", value);
-        return value;
+        return !!(startCode && endCode && startCode === endCode);
     },
 };
