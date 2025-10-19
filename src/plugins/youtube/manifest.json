@@ -1,0 +1,17 @@
+{
+    "name": "YouTube",
+    "author": "Alexandre Tavares",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./extensions/slash-menu-youtube-extension-plugin.tsx",
+            "class": "SlashMenuYouTubeExtensionPlugin",
+            "active": true
+        },
+        {
+            "path": "./extensions/command-youtube-extension-plugin.ts",
+            "class": "CommandYouTubeExtensionPlugin",
+            "active": true
+        }
+    ]
+}

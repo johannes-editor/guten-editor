@@ -1,7 +1,7 @@
 {
     "name": "Block Selection",
     "version": "1.0.0",
-    "author": "Gutenberg Editor",
+    "author": "Alexandre tavares",
     "description": "Adds block-aware selection shortcuts.",
     "entries": [
         {

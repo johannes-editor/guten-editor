@@ -78,6 +78,12 @@ const pt: TranslationSchema = {
     picture: 'Figura',
     img: 'img',
     insert_image: 'Inserir imagem',
+    youtube: 'YouTube',
+    insert_youtube: 'Inserir YouTube',
+    paste_or_type_a_youtube_link: 'Cole ou digite um link do YouTube…',
+    invalid_youtube_url: 'Insira um link válido do YouTube',
+    youtube_video: 'Vídeo do YouTube',
+    youtube_playlist: 'Playlist do YouTube',
 };
 
 export default pt;
