@@ -1,8 +1,6 @@
 import { Command } from "../../../core/command/command.ts";
 import { CommandExtensionPlugin } from "../../commands/command-plugin.ts";
-import { HistoryManager } from "../utils/history-manager.ts";
-
-const historyManager = new HistoryManager();
+import { historyManager } from "../utils/history-manager-instance.ts";
 
 export class UndoRedoCommandExtension extends CommandExtensionPlugin {
     override commands(): Command | Command[] {

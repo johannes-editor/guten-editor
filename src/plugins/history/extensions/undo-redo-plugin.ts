@@ -1,9 +1,9 @@
 import { Command } from "../../../core/command/command.ts";
 import { Plugin } from "../../../core/plugin-engine/plugin.ts";
 import { registerCommand } from "../../index.ts";
-import { HistoryManager } from "../utils/history-manager.ts";
+import { historyManager } from "../utils/history-manager-instance.ts";
 
-const historyManager = new HistoryManager();
+
 
 export class UndoRedoPlugin extends Plugin {
     
@@ -33,10 +33,3 @@ export class UndoRedoPlugin extends Plugin {
         console.log("UndoRedoPlugin");
     }
 }
-
-
-
-
-
-
-
