@@ -1,43 +1,37 @@
 import { CommandContext } from "../../../core/command/command.ts";
 import { commandRegistry } from "../../../core/command/index.ts";
-import { ChangeRecord, COMMAND_COMMIT_DELAY, DocumentChange, MAX_HISTORY, NodeSnapshot, observerConfig, SelectionSnapshot, Transaction, TYPING_COMMIT_DELAY } from "./types.ts";
+import { Component } from "../../../components/component.ts";
+import { COMMAND_COMMIT_DELAY, DocumentChange, MAX_HISTORY, NodeSnapshot, SelectionSnapshot, Transaction, TYPING_COMMIT_DELAY } from "./types.ts";
 
 export class HistoryManager {
     private root: HTMLElement | null = null;
-    private observer: MutationObserver | null = null;
     private transaction: Transaction | null = null;
     private commitTimer: number | null = null;
-    private suppressMutations = false;
 
     private history: DocumentChange[] = [];
     private future: DocumentChange[] = [];
 
     private originalCommandRun: ((id: string, context?: CommandContext) => boolean) | null = null;
 
+    private keydownHandler = (event: KeyboardEvent) => {
+        if (!this.shouldTrackKeydown(event)) return;
+        this.beginTransaction();
+        this.scheduleCommit(TYPING_COMMIT_DELAY);
+    };
+
     private inputHandler = () => {
         this.beginTransaction();
         this.scheduleCommit(TYPING_COMMIT_DELAY);
     };
 
-    private mutationHandler = (mutations: MutationRecord[]) => {
-        if (this.suppressMutations) return;
-        if (!this.root) return;
-
-        let observed = false;
-        for (const mutation of mutations) {
-            if (!this.root.contains(mutation.target)) continue;
-            this.beginTransaction();
-            this.recordMutation(mutation);
-            observed = true;
-        }
-
-        if (observed && !this.commitTimer) {
-            this.scheduleCommit(TYPING_COMMIT_DELAY);
-        }
-    };
-
     attach(root: HTMLElement): void {
         if (this.root === root) return;
+
+        if (this.root) {
+            this.root.removeEventListener("keydown", this.keydownHandler);
+            this.root.removeEventListener("input", this.inputHandler);
+        }
+
         const content = root.querySelector<HTMLElement>("#contentArea");
         if (!content) {
             console.warn("[UndoRedoPlugin] Unable to locate #contentArea inside editor root.");
@@ -45,7 +39,11 @@ export class HistoryManager {
         }
 
         this.root = content;
-        this.startObserver();
+        this.history = [];
+        this.future = [];
+        this.transaction = null;
+
+        content.addEventListener("keydown", this.keydownHandler);
         content.addEventListener("input", this.inputHandler);
         this.patchCommandRegistry();
     }
@@ -53,15 +51,11 @@ export class HistoryManager {
     undo(): boolean {
         if (!this.root) return false;
         this.flushPendingTransaction();
+
         const change = this.history.pop();
         if (!change) return false;
 
-        this.withoutObservation(() => {
-            for (let i = change.changes.length - 1; i >= 0; i--) {
-                this.applyChange(change.changes[i], "undo");
-            }
-        });
-
+        this.applySnapshot(change.before);
         if (change.beforeSelection) this.restoreSelection(change.beforeSelection);
         this.future.push(change);
         return true;
@@ -70,15 +64,11 @@ export class HistoryManager {
     redo(): boolean {
         if (!this.root) return false;
         this.flushPendingTransaction();
+
         const change = this.future.pop();
         if (!change) return false;
 
-        this.withoutObservation(() => {
-            for (const record of change.changes) {
-                this.applyChange(record, "redo");
-            }
-        });
-
+        this.applySnapshot(change.after);
         if (change.afterSelection) this.restoreSelection(change.afterSelection);
         this.history.push(change);
         return true;
@@ -98,18 +88,12 @@ export class HistoryManager {
         };
     }
 
-    private startObserver() {
-        if (!this.root) return;
-        if (this.observer) this.observer.disconnect();
-        this.observer = new MutationObserver(this.mutationHandler);
-        this.observer.observe(this.root, observerConfig);
-    }
-
     private beginTransaction() {
         if (!this.root) return;
         if (this.transaction) return;
+
         this.transaction = {
-            changes: [],
+            beforeNodes: captureNodes(this.root),
             beforeSelection: this.captureSelection(),
         };
     }
@@ -132,177 +116,44 @@ export class HistoryManager {
     }
 
     private commitTransaction() {
-        if (!this.transaction) return;
-        if (this.transaction.changes.length === 0) {
+        if (!this.transaction || !this.root) return;
+
+        const afterNodes = captureNodes(this.root);
+        if (snapshotsEqual(this.transaction.beforeNodes, afterNodes)) {
             this.transaction = null;
             return;
         }
 
-        const afterSelection = this.captureSelection();
-        const entry: DocumentChange = {
-            changes: this.transaction.changes,
+        const change: DocumentChange = {
+            before: this.transaction.beforeNodes,
+            after: afterNodes,
             beforeSelection: this.transaction.beforeSelection,
-            afterSelection,
+            afterSelection: this.captureSelection(),
         };
 
-        this.history.push(entry);
+        this.history.push(change);
         if (this.history.length > MAX_HISTORY) this.history.shift();
         this.future = [];
         this.transaction = null;
     }
 
-    private recordMutation(mutation: MutationRecord) {
-        if (!this.root || !this.transaction) return;
-        switch (mutation.type) {
-            case "characterData":
-                this.recordCharacterDataMutation(mutation);
-                break;
-            case "attributes":
-                this.recordAttributeMutation(mutation);
-                break;
-            case "childList":
-                this.recordChildListMutation(mutation);
-                break;
-        }
-    }
-
-    private recordCharacterDataMutation(mutation: MutationRecord) {
-        if (!this.root || !this.transaction) return;
-        const target = mutation.target as CharacterData;
-        if (!this.root.contains(target)) return;
-        const path = getNodePath(this.root, target);
-        const existing = this.transaction.changes.find(
-            (change): change is Extract<ChangeRecord, { type: "text" }> =>
-                change.type === "text" && pathsEqual(change.path, path),
-        );
-
-        if (existing) {
-            existing.after = target.data;
-        } else {
-            this.transaction.changes.push({
-                type: "text",
-                path,
-                before: mutation.oldValue ?? "",
-                after: target.data,
-            });
-        }
-    }
-
-    private recordAttributeMutation(mutation: MutationRecord) {
-        if (!this.root || !this.transaction) return;
-        const target = mutation.target as Element;
-        if (!this.root.contains(target)) return;
-        const path = getNodePath(this.root, target);
-        const attr = mutation.attributeName ?? "";
-        const existing = this.transaction.changes.find(
-            (change): change is Extract<ChangeRecord, { type: "attribute" }> =>
-                change.type === "attribute" && change.attribute === attr && pathsEqual(change.path, path),
-        );
-        const after = target.getAttribute(attr);
-        if (existing) {
-            existing.after = after;
-        } else {
-            this.transaction.changes.push({
-                type: "attribute",
-                path,
-                attribute: attr,
-                before: mutation.oldValue,
-                after,
-            });
-        }
-    }
-
-    private recordChildListMutation(mutation: MutationRecord) {
-        if (!this.root || !this.transaction) return;
-        const parent = mutation.target as ParentNode;
-        if (!this.root.contains(parent as Node)) return;
-        const parentPath = getNodePath(this.root, parent as Node);
-
-        if (mutation.removedNodes.length) {
-            const index = mutation.nextSibling
-                ? getNodeIndex(parent, mutation.nextSibling)
-                : parent.childNodes.length;
-            const nodes = Array.from(mutation.removedNodes, serializeNode).filter(Boolean) as NodeSnapshot[];
-            if (nodes.length) {
-                this.transaction.changes.push({
-                    type: "remove",
-                    parentPath,
-                    index,
-                    nodes,
-                });
-            }
-        }
-
-        if (mutation.addedNodes.length) {
-            const first = mutation.addedNodes[0];
-            const index = getNodeIndex(parent, first);
-            const nodes = Array.from(mutation.addedNodes, serializeNode).filter(Boolean) as NodeSnapshot[];
-            if (nodes.length) {
-                this.transaction.changes.push({
-                    type: "insert",
-                    parentPath,
-                    index,
-                    nodes,
-                });
-            }
-        }
-    }
-
-    private applyChange(change: ChangeRecord, direction: "undo" | "redo") {
+    private applySnapshot(nodes: NodeSnapshot[]) {
         if (!this.root) return;
-        switch (change.type) {
-            case "text": {
-                const node = getNodeFromPath(this.root, change.path) as CharacterData | null;
-                if (!node) break;
-                node.data = direction === "undo" ? change.before : change.after;
-                break;
-            }
-            case "attribute": {
-                const node = getNodeFromPath(this.root, change.path) as Element | null;
-                if (!node) break;
-                const value = direction === "undo" ? change.before : change.after;
-                if (value === null || value === undefined) node.removeAttribute(change.attribute);
-                else node.setAttribute(change.attribute, value);
-                break;
-            }
-            case "insert": {
-                const parent = getNodeFromPath(this.root, change.parentPath) as ParentNode | null;
-                if (!parent) break;
-                if (direction === "undo") {
-                    removeNodes(parent, change.index, change.nodes.length);
-                } else {
-                    insertNodes(parent, change.index, change.nodes);
-                }
-                break;
-            }
-            case "remove": {
-                const parent = getNodeFromPath(this.root, change.parentPath) as ParentNode | null;
-                if (!parent) break;
-                if (direction === "undo") {
-                    insertNodes(parent, change.index, change.nodes);
-                } else {
-                    removeNodes(parent, change.index, change.nodes.length);
-                }
-                break;
-            }
-        }
-    }
 
-    private withoutObservation(fn: () => void) {
-        if (!this.root || !this.observer) {
-            fn();
-            return;
+        const fragment = document.createDocumentFragment();
+        for (const snapshot of nodes) {
+            fragment.appendChild(deserializeNode(snapshot));
         }
 
-        this.observer.disconnect();
-        this.suppressMutations = true;
-        try {
-            fn();
-        } finally {
-            this.suppressMutations = false;
-            this.observer.observe(this.root, observerConfig);
-            this.transaction = null;
+        if ("customElements" in globalThis && typeof customElements.upgrade === "function") {
+            customElements.upgrade(fragment);
         }
+
+        while (this.root.firstChild) {
+            this.root.removeChild(this.root.firstChild);
+        }
+
+        this.root.appendChild(fragment);
     }
 
     private captureSelection(): SelectionSnapshot | undefined {
@@ -336,15 +187,60 @@ export class HistoryManager {
         selection.removeAllRanges();
         selection.addRange(range);
     }
+
+    private shouldTrackKeydown(event: KeyboardEvent): boolean {
+        if (event.defaultPrevented) return false;
+        if (event.isComposing) return false;
+
+        const key = event.key;
+        const isModifier = event.ctrlKey || event.metaKey;
+
+        if (isModifier) {
+            const lower = key.toLowerCase();
+            if (lower === "z" || lower === "y") return false;
+            if (lower === "v" || lower === "x") return true;
+            return false;
+        }
+
+        if (key === "Backspace" || key === "Delete" || key === "Enter") return true;
+        if (key.length === 1) return true;
+        return false;
+    }
 }
 
+function captureNodes(root: ParentNode): NodeSnapshot[] {
+    const snapshots: NodeSnapshot[] = [];
+    for (const node of Array.from(root.childNodes)) {
+        const snapshot = serializeNode(node);
+        if (snapshot) snapshots.push(snapshot);
+    }
+    return snapshots;
+}
 
+function snapshotsEqual(a: NodeSnapshot[], b: NodeSnapshot[]): boolean {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+        const left = a[i];
+        const right = b[i];
+        if (left.kind !== right.kind) return false;
+        switch (left.kind) {
+            case "text":
+            case "comment":
+                if (left.text !== (right as typeof left).text) return false;
+                break;
+            case "element":
+                if (left.html !== (right as typeof left).html) return false;
+                break;
+        }
+    }
+    return true;
+}
 
 function getNodePath(root: Node, node: Node): number[] {
     const path: number[] = [];
     let current: Node | null = node;
     while (current && current !== root) {
-        const parent : any = current.parentNode;
+        const parent: any = current.parentNode;
         if (!parent) break;
         const index = Array.prototype.indexOf.call(parent.childNodes, current);
         path.unshift(index);
@@ -362,13 +258,11 @@ function getNodeFromPath(root: Node, path: number[]): Node | null {
     return current;
 }
 
-function pathsEqual(a: number[], b: number[]): boolean {
-    if (a.length !== b.length) return false;
-    return a.every((value, index) => value === b[index]);
-}
-
-function getNodeIndex(parent: ParentNode, node: Node): number {
-    return Array.prototype.indexOf.call(parent.childNodes, node);
+function getNodeLength(node: Node): number {
+    if (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.COMMENT_NODE) {
+        return (node.textContent ?? "").length;
+    }
+    return (node as ParentNode).childNodes.length;
 }
 
 function serializeNode(node: Node): NodeSnapshot | null {
@@ -378,33 +272,12 @@ function serializeNode(node: Node): NodeSnapshot | null {
         case Node.COMMENT_NODE:
             return { kind: "comment", text: node.textContent ?? "" };
         case Node.ELEMENT_NODE:
-            return { kind: "element", html: (node as Element).outerHTML };
+            return { kind: "element", html: serializeElement(node as Element) };
         default:
             return null;
     }
 }
 
-function insertNodes(parent: ParentNode, index: number, nodes: NodeSnapshot[]) {
-    const fragment = document.createDocumentFragment();
-    for (const snapshot of nodes) fragment.appendChild(deserializeNode(snapshot));
-    const reference = parent.childNodes[index] ?? null;
-    parent.insertBefore(fragment, reference);
-}
-
-function removeNodes(parent: ParentNode, index: number, count: number) {
-    for (let i = 0; i < count; i++) {
-        const child = parent.childNodes[index];
-        if (!child) break;
-        parent.removeChild(child);
-    }
-}
-
-function getNodeLength(node: Node): number {
-    if (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.COMMENT_NODE) {
-        return (node.textContent ?? "").length;
-    }
-    return (node as ParentNode).childNodes.length;
-}
 
 function deserializeNode(snapshot: NodeSnapshot): Node {
     switch (snapshot.kind) {
@@ -415,7 +288,116 @@ function deserializeNode(snapshot: NodeSnapshot): Node {
         case "element": {
             const template = document.createElement("template");
             template.innerHTML = snapshot.html;
-            return template.content.firstChild ?? document.createTextNode("");
+            const node = (template.content.firstElementChild ?? template.content.firstChild) ?? document.createTextNode("");
+
+            if (!(node instanceof Element)) {
+                return node;
+            }
+
+            const element = ensureUpgradedElement(node);
+
+            if (element instanceof Component) {
+                applyComponentSnapshot(element);
+            }
+
+            return element;
         }
+    }
+}
+
+function ensureUpgradedElement(node: Element): Element {
+    if (!("customElements" in globalThis)) return node;
+
+    if (typeof customElements.upgrade === "function") {
+        try {
+            customElements.upgrade(node);
+        } catch (error) {
+            console.warn("[HistoryManager] Failed to upgrade custom element snapshot", error);
+        }
+    }
+
+    const tagName = node.tagName.toLowerCase();
+    const definition = customElements.get(tagName);
+    if (!definition || node instanceof definition) {
+        return node;
+    }
+
+    const upgraded = document.createElement(tagName);
+    copyElementAttributes(node, upgraded);
+    moveChildNodes(node, upgraded);
+    return upgraded;
+}
+
+function copyElementAttributes(source: Element, target: Element) {
+    for (const { name } of Array.from(target.attributes)) {
+        target.removeAttribute(name);
+    }
+    for (const { name, value } of Array.from(source.attributes)) {
+        target.setAttribute(name, value);
+    }
+}
+
+function moveChildNodes(from: Element, to: Element) {
+    while (from.firstChild) {
+        to.appendChild(from.firstChild);
+    }
+}
+
+function serializeElement(element: Element): string {
+    if (!(element instanceof Component)) return element.outerHTML;
+
+    const clone = element.cloneNode(true) as Element;
+    const component = element as Component;
+
+    const propsSnapshot = snapshotSerializableData(component.props ?? {});
+    if (propsSnapshot) clone.setAttribute("data-component-props", propsSnapshot);
+
+    const stateSnapshot = snapshotSerializableData(component.state ?? {});
+    if (stateSnapshot) clone.setAttribute("data-component-state", stateSnapshot);
+
+    return clone.outerHTML;
+}
+
+function applyComponentSnapshot(component: Component) {
+    const propsAttr = component.getAttribute("data-component-props");
+    if (propsAttr) {
+        try {
+            const parsed = JSON.parse(propsAttr) as Record<string, unknown>;
+            component.props = { ...component.props, ...parsed } as typeof component.props;
+        } catch (error) {
+            console.warn("[HistoryManager] Unable to parse component props snapshot", error);
+        }
+        component.removeAttribute("data-component-props");
+    }
+
+    const stateAttr = component.getAttribute("data-component-state");
+    if (stateAttr) {
+        try {
+            const parsed = JSON.parse(stateAttr) as Record<string, unknown>;
+            component.state = { ...component.state, ...parsed } as typeof component.state;
+        } catch (error) {
+            console.warn("[HistoryManager] Unable to parse component state snapshot", error);
+        }
+        component.removeAttribute("data-component-state");
+    }
+}
+
+function snapshotSerializableData(value: Record<string, unknown>): string | null {
+    const entries = Object.entries(value).filter(([key]) => key !== "children");
+    if (entries.length === 0) return null;
+
+    const data: Record<string, unknown> = {};
+    for (const [key, val] of entries) {
+        if (typeof val === "function") continue;
+        if (val instanceof Node) continue;
+        data[key] = val;
+    }
+
+    if (Object.keys(data).length === 0) return null;
+
+    try {
+        return JSON.stringify(data);
+    } catch {
+        return null;
     }
 }

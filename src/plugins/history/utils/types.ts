@@ -11,20 +11,15 @@ export type NodeSnapshot =
     | { kind: "comment"; text: string }
     | { kind: "element"; html: string };
 
-export type ChangeRecord =
-    | { type: "text"; path: number[]; before: string; after: string }
-    | { type: "attribute"; path: number[]; attribute: string; before: string | null; after: string | null }
-    | { type: "insert"; parentPath: number[]; index: number; nodes: NodeSnapshot[] }
-    | { type: "remove"; parentPath: number[]; index: number; nodes: NodeSnapshot[] };
-
 export interface DocumentChange {
-    changes: ChangeRecord[];
+    before: NodeSnapshot[];
+    after: NodeSnapshot[];
     beforeSelection?: SelectionSnapshot;
     afterSelection?: SelectionSnapshot;
 }
 
 export interface Transaction {
-    changes: ChangeRecord[];
+    beforeNodes: NodeSnapshot[];
     beforeSelection?: SelectionSnapshot;
 }
 
