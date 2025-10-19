@@ -5,7 +5,6 @@ import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debou
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
-import { COLOR_TOOLBAR_ITEM_ID } from "./component/constants.ts";
 import { dom, keyboard } from "../index.ts";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
@@ -64,7 +63,6 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                                 onSelect={item.onSelect}
                                 isActive={item.isActive}
                                 refreshSelection={() => ft?.refreshSelection()}
-                                dataId={item.id}
                             />
                         </li>
                     ))}
@@ -109,7 +107,6 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 40,
         },
         {
-            id: COLOR_TOOLBAR_ITEM_ID,
             icon: <icons.HighlightColorIcon />,
             label: t("highlight_color"),
             shortcut: "",
@@ -124,7 +121,6 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 45,
         },
         {
-            id: COLOR_TOOLBAR_ITEM_ID,
             icon: <icons.TextColorIcon />,
             label: t("text_color"),
             shortcut: "",
@@ -171,7 +167,6 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
 }
 
 type ToolbarEntry = {
-    id?: string;
     icon: SVGElement;
     label: string;
     shortcut: string;

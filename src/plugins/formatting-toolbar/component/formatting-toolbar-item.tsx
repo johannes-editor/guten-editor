@@ -9,7 +9,6 @@ interface FormattingToolbarItemProps {
     onSelect: (event?: Event, button?: HTMLButtonElement | null) => void;
     isActive: () => boolean;
     refreshSelection(): void;
-    dataId?: string;
 }
 
 export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemProps> {
@@ -40,7 +39,6 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
 
     handleSelectionChange() {
         requestAnimationFrame(() => {
-            this.ensureButtonReference();
             if (this.props.isActive()) {
                 this.classList.add("active");
             } else {
@@ -52,14 +50,6 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
     private ensureButtonReference(): HTMLButtonElement | null {
         if (!this.buttonEl || !this.buttonEl.isConnected) {
             this.buttonEl = this.querySelector<HTMLButtonElement>("button");
-        }
-
-        if (this.buttonEl) {
-            if (this.props.dataId) {
-                this.buttonEl.dataset.toolbarItem = this.props.dataId;
-            } else {
-                delete this.buttonEl.dataset.toolbarItem;
-            }
         }
 
         return this.buttonEl;
