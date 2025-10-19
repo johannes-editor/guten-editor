@@ -1,0 +1,16 @@
+{
+    "name": "Editor History",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "./extensions/undo-redo-plugin.ts",
+            "class": "UndoRedoPlugin",
+            "active": true
+        },
+        {
+            "path": "./extensions/undo-redo-command-extension.ts",
+            "class": "UndoRedoCommandExtension",
+            "active": true
+        }
+    ]
+}
