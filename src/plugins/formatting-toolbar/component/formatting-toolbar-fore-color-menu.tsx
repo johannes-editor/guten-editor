@@ -46,13 +46,14 @@ export class FormattingToolbarForeColorMenu extends MenuUI<FormattingToolbarFore
     private selectionLocked = false;
 
     override onMount(): void {
-        super.onMount?.();
+
         this.formattingToolbar = useContext(this, FormattingToolbarCtx);
         if (this.formattingToolbar?.lock) {
             this.formattingToolbar.lock();
             this.selectionLocked = true;
         }
 
+        super.onMount?.();
     }
 
     override onUnmount(): void {

@@ -5,10 +5,7 @@ import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debou
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
-
 import { COLOR_TOOLBAR_ITEM_ID } from "./component/constants.ts";
-import { HIGHLIGHT_COLOR_OPTIONS, TEXT_COLOR_OPTIONS, normalizeColorValue } from "./component/color-options.ts";
-
 import { dom, keyboard } from "../index.ts";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
@@ -113,12 +110,11 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         },
         {
             id: COLOR_TOOLBAR_ITEM_ID,
-            icon: <icons.TextColorIcon />,
-            label: t("text_color"),
+            icon: <icons.HighlightColorIcon />,
+            label: t("highlight_color"),
             shortcut: "",
             onSelect: (event?: Event, button?: HTMLButtonElement | null) => {
-                console.log("open fore color menu");
-                runCommand("openFormattingToolbarForeColorMenu", {
+                runCommand("openFormattingToolbarHighlightColorMenu", {
                     event,
                     target: button ?? undefined,
                     content: { anchor: button ?? undefined },
@@ -129,12 +125,11 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         },
         {
             id: COLOR_TOOLBAR_ITEM_ID,
-            icon: <icons.HighlightColorIcon />,
+            icon: <icons.TextColorIcon />,
             label: t("text_color"),
             shortcut: "",
             onSelect: (event?: Event, button?: HTMLButtonElement | null) => {
-                console.log("open highlight color menu");
-                runCommand("openFormattingToolbarHighlightColorMenu", {
+                runCommand("openFormattingToolbarForeColorMenu", {
                     event,
                     target: button ?? undefined,
                     content: { anchor: button ?? undefined },
