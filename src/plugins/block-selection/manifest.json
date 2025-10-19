@@ -1,0 +1,14 @@
+{
+    "name": "Block Selection",
+    "version": "1.0.0",
+    "author": "Gutenberg Editor",
+    "description": "Adds block-aware selection shortcuts.",
+    "entries": [
+        {
+            "path": "./extensions/block-selection-command-extension.ts",
+            "class": "BlockSelectionCommandExtension",
+            "active": true,
+            "description": "Overrides Mod+A to first select the current block contents."
+        }
+    ]
+}
