@@ -154,6 +154,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         if (!sel || !this.selectionRange) { this.locked = false; return; }
 
         if (!this.selectionRange.startContainer.isConnected || !this.selectionRange.endContainer.isConnected) {
+            this.refreshSelection();
             this.locked = false;
             return;
         }
@@ -171,5 +172,9 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         if (!sel?.rangeCount) return;
         this.selectionRange = sel.getRangeAt(sel.rangeCount - 1).cloneRange();
         this.isBackwardSelection = this.isSelectionBackward(sel);
+    }
+
+    public isSelectionLocked(): boolean {
+        return this.locked;
     }
 }

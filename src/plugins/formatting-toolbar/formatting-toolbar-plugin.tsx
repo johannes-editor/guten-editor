@@ -18,6 +18,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
             lock: () => FormattingToolbarPlugin.toolbarInstance?.lockSelection(),
             unlock: () => FormattingToolbarPlugin.toolbarInstance?.unlockSelection(),
+            refreshSelection: () => FormattingToolbarPlugin.toolbarInstance?.refreshSelection()
 
         }, { scopeRoot: _root });
     }
@@ -37,7 +38,10 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
         document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
             if (event.key === keyboard.KeyboardKeys.ArrowUp || event.key === keyboard.KeyboardKeys.ArrowDown || event.key === keyboard.KeyboardKeys.ArrowLeft || event.key === keyboard.KeyboardKeys.ArrowRight) {
-                FormattingToolbarPlugin.toolbarInstance?.remove();
+                
+                const toolbar = FormattingToolbarPlugin.toolbarInstance;
+                if (!toolbar || toolbar.isSelectionLocked()) return;
+                toolbar.remove();                
             }
         }, 100) as EventListener);
     }

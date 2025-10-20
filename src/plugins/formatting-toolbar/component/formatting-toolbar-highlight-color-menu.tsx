@@ -84,6 +84,7 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
         this.unlockSelection();
         this.setState({ highlightValue: option.value } as Partial<FormattingToolbarHighlightColorMenuState>);
         runCommand("setHighlightColor", { content: { color: option.value } });
+        this.formattingToolbar?.refreshSelection?.();
         this.remove();
     };
 

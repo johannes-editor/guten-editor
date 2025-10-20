@@ -84,6 +84,7 @@ export class FormattingToolbarForeColorMenu extends MenuUI<FormattingToolbarFore
         this.unlockSelection();
         this.setState({ textValue: option.value } as Partial<FormattingToolbarForeColorMenuState>);
         runCommand("setTextColor", { content: { color: option.value } });
+        this.formattingToolbar?.refreshSelection?.();
         this.remove();
     };
 
