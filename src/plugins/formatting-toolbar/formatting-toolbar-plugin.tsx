@@ -146,9 +146,11 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                 icon: ext.icon,
                 label: ext.label,
                 shortcut: ext.shortcut,
-                onSelect: () => ext.onSelect(),
+                onSelect: (event?: Event, button?: HTMLButtonElement | null) =>
+                    ext.onSelect(event, button),
                 isActive: ext.isActive,
                 sort: ext.sort,
+                showMenuIndicator: ext.showMenuIndicator,
             }),
         );
 
