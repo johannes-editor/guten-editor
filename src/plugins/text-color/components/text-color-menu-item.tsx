@@ -30,7 +30,6 @@ export class TextColorMenuItem extends MenuItemUI<TextColorMenuItemProps, Defaul
         this.state = { ...this.state, isActive };
         this.icon = this.renderSwatch(this.props.option);
         this.label = t(this.props.option.labelKey);
-        this.rightIndicator = "none";
         super.connectedCallback?.();
     }
 

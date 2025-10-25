@@ -17,6 +17,17 @@ export function clearInlineHighlightInSelection() {
         if (n && intersects(range, n)) toProcess.push(n);
     }
 
+    const addAncestorElements = (node: Node | null) => {
+        for (let el = (node instanceof HTMLElement ? node : node?.parentElement); el; el = el.parentElement) {
+            if (!intersects(range, el)) continue;
+            if (!toProcess.includes(el)) toProcess.push(el);
+            if (el === walker.root) break;
+        }
+    };
+
+    addAncestorElements(range.startContainer);
+    addAncestorElements(range.endContainer);
+
     for (const el of toProcess) {
         if (el.style?.backgroundColor) el.style.removeProperty("background-color");
         if (el.style?.background) el.style.removeProperty("background");
