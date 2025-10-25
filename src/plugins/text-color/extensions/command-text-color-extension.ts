@@ -4,12 +4,12 @@ import { SetHighlightColor } from "../commands/set-highlight-color.ts";
 import { SetTextColor } from "../commands/set-text-color.ts";
 
 /**
- * Command extension that registers text-color–related commands.
+ * Command extension that registers text color–related commands.
  *
- * Registers:
- *  - OpenTextColorMenu — Opens the text color menu.
- *  - SetHighlightColor — Sets the highlight color of the selected text.
- *  - SetTextColor — Sets the text (foreground) color of the selected text.
+ * Provides:
+ *  - OpenTextColorMenu — Opens the text color menu overlay.
+ *  - SetTextColor — Applies a foreground (text) color to the current selection.
+ *  - SetHighlightColor — Applies a background (highlight) color to the current selection.
  */
 export class CommandTextColorExtension extends CommandExtensionPlugin {
 

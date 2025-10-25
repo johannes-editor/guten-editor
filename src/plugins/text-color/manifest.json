@@ -1,20 +1,20 @@
 {
-    "name": "Text Color",
-    "version": "1.0.0",
-    "author": "Alexandre Tavares",
-    "description": "Adds hyperlink insertion to the editor: toolbar button, URL popover, and createLink command.",
-    "entries": [
-        {
-            "path": "./extensions/formatting-toolbar-text-color-extension.tsx",
-            "class": "FormattingToolbarTextColorExtension",
-            "active": true,
-            "description": "Adds the 'Insert Link' button to the formatting toolbar and opens the Link popover."
-        },
-        {
-            "path": "./extensions/command-text-color-extension.ts",
-            "class": "CommandTextColorExtension",
-            "active": true,
-            "description": "Registers hyperlink commands: openLinkPopover and createLink."
-        }
-    ]
+  "name": "Text Color",
+  "version": "1.0.0",
+  "author": "Alexandre Tavares",
+  "description": "Adds text and highlight color controls to the editor, including a formatting toolbar button and color picker menu.",
+  "entries": [
+    {
+      "path": "./extensions/formatting-toolbar-text-color-extension.tsx",
+      "class": "FormattingToolbarTextColorExtension",
+      "active": true,
+      "description": "Adds the 'Text Color' button to the formatting toolbar and opens the Text Color menu overlay."
+    },
+    {
+      "path": "./extensions/command-text-color-extension.ts",
+      "class": "CommandTextColorExtension",
+      "active": true,
+      "description": "Registers text color–related commands: openTextColorMenu, setTextColor, and setHighlightColor."
+    }
+  ]
 }
