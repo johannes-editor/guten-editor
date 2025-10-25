@@ -166,7 +166,7 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
     abstract readonly label: string;
     abstract readonly shortcut: string;
     abstract readonly sort: number;
-    abstract onSelect(): void;
+    abstract onSelect(event?: Event, button?: HTMLButtonElement | null): void;
     isActive: () => boolean = () => { return false; };
 }
 
