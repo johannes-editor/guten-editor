@@ -28,6 +28,9 @@ export class TextColorMenuItem extends MenuItemUI<TextColorMenuItemProps, Defaul
     override connectedCallback(): void {
         const isActive = this.props.isActive(this.props.option);
         this.state = { ...this.state, isActive };
+        if (this.props.option.id === "default" || this.props.option.id === "none") {
+            this.rightIndicator = "none";
+        }
         this.icon = this.renderSwatch(this.props.option);
         this.label = t(this.props.option.labelKey);
         super.connectedCallback?.();
