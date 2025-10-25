@@ -1,7 +1,7 @@
 /** @jsx h */
 import { Command } from "../../../core/command/command.ts";
 import { h, appendElementOnOverlayArea, hasSelection } from "../../index.ts";
-import { TextColorMenu } from "../components/text-menu.tsx";
+import { TextColorMenu } from "../components/text-color-menu.tsx";
 
 type OpenColorMenuPayload = {
     anchor?: HTMLElement | null;
@@ -10,8 +10,6 @@ type OpenColorMenuPayload = {
 export const OpenTextColorMenu: Command<OpenColorMenuPayload> = {
     id: "openTextColorMenu",
     execute(context) {
-        console.log("opa, deveria exxibir o TextColorMenu");
-        console.log("context: ", context);
         if (!hasSelection()) return false;
 
         const anchor = context?.content?.anchor

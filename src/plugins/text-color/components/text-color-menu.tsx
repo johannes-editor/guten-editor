@@ -2,7 +2,7 @@
 import { FormattingToolbar, FormattingToolbarContext, FormattingToolbarCtx, h, MenuUI, MenuUIProps, runCommand, t } from "../../index.ts";
 import type { MenuUIState } from "../../../design-system/components/menu-ui.tsx";
 import { useContext } from "../../../core/context/context.ts";
-import { TextColorMenuItem } from "./color-menu-item.tsx";
+import { TextColorMenuItem } from "./text-color-menu-item.tsx";
 import { HIGHLIGHT_COLOR_OPTIONS, normalizeColorValue, TEXT_COLOR_OPTIONS, type ColorOption } from "../color-options.ts";
 
 interface TextColorMenuProps extends MenuUIProps {
