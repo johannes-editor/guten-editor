@@ -5,7 +5,7 @@ import { useContext } from "../../../core/context/context.ts";
 import { FormattingToolbarCtx, FormattingToolbarContext } from "../formatting-toolbar-context.ts";
 import { FormattingToolbar } from "./formatting-toolbar.tsx";
 import { FormattingToolbarColorMenuItem } from "./color-menu-item.tsx";
-import { HIGHLIGHT_COLOR_OPTIONS, normalizeColorValue, type ColorOption } from "./color-options.ts";
+import { HIGHLIGHT_COLOR_OPTIONS, normalizeColorValue, TEXT_COLOR_OPTIONS, type ColorOption } from "./color-options.ts";
 
 interface FormattingToolbarHighlightColorMenuProps extends MenuUIProps {
     anchor?: HTMLElement;
@@ -13,11 +13,17 @@ interface FormattingToolbarHighlightColorMenuProps extends MenuUIProps {
 
 interface FormattingToolbarHighlightColorMenuState extends MenuUIState {
     highlightValue: string;
+    textValue: string;
 }
 
-export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolbarHighlightColorMenuProps, FormattingToolbarHighlightColorMenuState> {
+interface FormattingToolbarColorMenuState extends MenuUIState {
+    highlightValue: string;
+    textValue: string;
+}
 
+export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolbarHighlightColorMenuProps, FormattingToolbarColorMenuState> {
 
+    override lockScroll = true;
     override positionToAnchorVerticalGap: number = 12;
     override positionToAnchorHorizontalGap: number = -20;
 
@@ -34,11 +40,14 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
         
         guten-formatting-highlight-color-menu {
             opacity: 0;
+            max-height: 350px;
+            overflow-y: scroll; 
         }       
     `);
 
-    override state: FormattingToolbarHighlightColorMenuState = {
+    override state: FormattingToolbarColorMenuState = {
         selectedIndex: 0,
+        textValue: TEXT_COLOR_OPTIONS[0]?.value ?? "",
         highlightValue: HIGHLIGHT_COLOR_OPTIONS[0]?.value ?? "",
     };
 
@@ -46,6 +55,9 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
     private selectionLocked = false;
 
     override onMount(): void {
+
+        console.log("ancora: ", this.props.anchor);
+        
         super.onMount?.();
         this.formattingToolbar = useContext(this, FormattingToolbarCtx);
         if (this.formattingToolbar?.lock) {
@@ -66,6 +78,13 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
     }
 
     private buildChildren(): HTMLElement[] {
+        const textItems = TEXT_COLOR_OPTIONS.map((option) => (
+            <FormattingToolbarColorMenuItem
+                option={option}
+                isActive={this.isTextColorActive}
+                onSelectOption={this.handleTextColorSelect}
+            />
+        )) as HTMLElement[];
 
         const highlightItems = HIGHLIGHT_COLOR_OPTIONS.map((option) => (
             <FormattingToolbarColorMenuItem
@@ -76,21 +95,44 @@ export class FormattingToolbarHighlightColorMenu extends MenuUI<FormattingToolba
         )) as HTMLElement[];
 
         return [
+            <div class="guten-menu-label">{t("text_color")}</div> as HTMLElement,
+            ...textItems,
+            <hr class="guten-menu-separator" /> as HTMLElement,
+            <div class="guten-menu-label">{t("highlight_color")}</div> as HTMLElement,
             ...highlightItems,
         ];
     }
 
+    // private handleHighlightColorSelect = (option: ColorOption) => {
+    //     this.unlockSelection();
+    //     this.setState({ highlightValue: option.value } as Partial<FormattingToolbarHighlightColorMenuState>);
+    //     runCommand("setHighlightColor", { content: { color: option.value } });
+    //     this.formattingToolbar?.refreshSelection?.();
+    //     // this.remove();
+    // };
+
+
+    private handleTextColorSelect = (option: ColorOption) => {
+        this.unlockSelection();
+        this.setState({ textValue: option.value } as Partial<FormattingToolbarColorMenuState>);
+        runCommand("setTextColor", { content: { color: option.value } });
+        // this.remove();
+    };
+
     private handleHighlightColorSelect = (option: ColorOption) => {
         this.unlockSelection();
-        this.setState({ highlightValue: option.value } as Partial<FormattingToolbarHighlightColorMenuState>);
+        this.setState({ highlightValue: option.value } as Partial<FormattingToolbarColorMenuState>);
         runCommand("setHighlightColor", { content: { color: option.value } });
-        this.formattingToolbar?.refreshSelection?.();
-        this.remove();
+        // this.remove();
     };
 
 
     private isHighlightColorActive = (option: ColorOption): boolean => {
         return normalizeColorValue(this.state.highlightValue) === normalizeColorValue(option.value);
+    };
+
+    private isTextColorActive = (option: ColorOption): boolean => {
+        return normalizeColorValue(this.state.textValue) === normalizeColorValue(option.value);
     };
 
     private unlockSelection(): void {

@@ -18,7 +18,8 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
             lock: () => FormattingToolbarPlugin.toolbarInstance?.lockSelection(),
             unlock: () => FormattingToolbarPlugin.toolbarInstance?.unlockSelection(),
-            refreshSelection: () => FormattingToolbarPlugin.toolbarInstance?.refreshSelection()
+            refreshSelection: () => FormattingToolbarPlugin.toolbarInstance?.refreshSelection(),
+
 
         }, { scopeRoot: _root });
     }
@@ -38,10 +39,10 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
         document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
             if (event.key === keyboard.KeyboardKeys.ArrowUp || event.key === keyboard.KeyboardKeys.ArrowDown || event.key === keyboard.KeyboardKeys.ArrowLeft || event.key === keyboard.KeyboardKeys.ArrowRight) {
-                
+
                 const toolbar = FormattingToolbarPlugin.toolbarInstance;
                 if (!toolbar || toolbar.isSelectionLocked()) return;
-                toolbar.remove();                
+                toolbar.remove();
             }
         }, 100) as EventListener);
     }
@@ -67,6 +68,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
                                 onSelect={item.onSelect}
                                 isActive={item.isActive}
                                 refreshSelection={() => ft?.refreshSelection()}
+                                showMenuIndicator={item.showMenuIndicator}
                             />
                         </li>
                     ))}
@@ -95,19 +97,19 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 20,
         },
         {
-            icon: <icons.StrikeThroughIcon />,
-            label: t("strikethrough"),
-            shortcut: "Mod+Shift+X",
-            onSelect: () => runCommand("toggleStrike"),
-            isActive: () => runCommand("stateStrike"),
-            sort: 30,
-        },
-        {
             icon: <icons.UnderlineIcon />,
             label: t("underline"),
             shortcut: "Mod+U",
             onSelect: () => runCommand("toggleUnderline"),
             isActive: () => runCommand("stateUnderline"),
+            sort: 30,
+        },
+        {
+            icon: <icons.StrikeThroughIcon />,
+            label: t("strikethrough"),
+            shortcut: "Mod+Shift+X",
+            onSelect: () => runCommand("toggleStrike"),
+            isActive: () => runCommand("stateStrike"),
             sort: 40,
         },
         {
@@ -123,6 +125,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             },
             isActive: () => false,
             sort: 50,
+            showMenuIndicator: true
         },
         {
             icon: <icons.TextColorIcon />,
@@ -137,6 +140,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             },
             isActive: () => false,
             sort: 60,
+            showMenuIndicator: true,
         },
     ];
 
@@ -170,6 +174,7 @@ export abstract class FormattingToolbarExtensionPlugin extends PluginExtension<F
     abstract readonly sort: number;
     abstract onSelect(event?: Event, button?: HTMLButtonElement | null): void;
     isActive: () => boolean = () => { return false; };
+    showMenuIndicator: boolean = false;
 }
 
 type ToolbarEntry = {
@@ -179,4 +184,5 @@ type ToolbarEntry = {
     sort: number;
     onSelect: (event?: Event, button?: HTMLButtonElement | null) => void;
     isActive: () => boolean;
+    showMenuIndicator?: boolean;
 };

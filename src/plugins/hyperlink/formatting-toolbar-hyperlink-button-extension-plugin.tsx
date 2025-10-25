@@ -16,6 +16,9 @@ export class FormattingToolbarHyperlinkButtonExtensionPlugin extends FormattingT
 
     readonly shortcut: string = "Mod+K";
 
+    /** Indicates this button opens an overlay instead of applying formatting immediately. */
+    override readonly showMenuIndicator: boolean = true;
+
     /** Sort order within the toolbar (lower = earlier). */
     readonly sort: number = 80;
 
