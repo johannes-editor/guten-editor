@@ -7,7 +7,7 @@ export class ToolbarUI<P extends DefaultProps = DefaultProps, S = DefaultState> 
 
     static override styles = this.extendStyles(/*css*/`
         .guten-toolbar{
-            border-radius: var(--radius-xl);
+            border-radius: 1.125rem;
         }
         
         .guten-toolbar ul{

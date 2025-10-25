@@ -21,9 +21,10 @@ export * as timing from "../utils/timing/index.ts";       // debounce
 /* editor utilities */
 export { appendElementOnOverlayArea } from "../components/editor/index.tsx";
 
-/* command system */
+/* Command system */
 export type { Command, CommandContext, ShortcutDef, KeyChord } from "../core/command/command.ts";
 export { registerCommand, runCommand } from "../core/command/index.ts";
+// export { CommandExtensionPlugin } from "./commands/command-plugin.ts";
 
 /* ---- Legacy aliases (opcional, para não quebrar plugins existentes) ---- */
 
@@ -75,6 +76,13 @@ export { MenuUI } from "../design-system/components/menu-ui.tsx";
 export type { MenuUIProps } from "../design-system/components/menu-ui.tsx";
 export { MenuItemUI } from "../design-system/components/menu-item-ui.tsx";
 
+/*Formatting Toolbar */
 export { FormattingToolbarExtensionPlugin } from "./formatting-toolbar/formatting-toolbar-plugin.tsx";
+export { FormattingToolbar, } from "./formatting-toolbar/component/formatting-toolbar.tsx"
+export type { FormattingToolbarContext } from "./formatting-toolbar/formatting-toolbar-context.ts";
+export { FormattingToolbarCtx } from "./formatting-toolbar/formatting-toolbar-context.ts";
 
+
+
+export { CommandExtensionPlugin } from "./commands/command-plugin.ts";
 
