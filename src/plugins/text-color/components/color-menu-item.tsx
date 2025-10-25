@@ -11,6 +11,8 @@ interface TextColorMenuItemProps {
 
 export class TextColorMenuItem extends MenuItemUI<TextColorMenuItemProps, DefaultState> {
 
+    override state: DefaultState = { isActive: false };
+
     static override get tagName() {
         return "guten-formatting-color-menu-item";
     }
@@ -24,6 +26,8 @@ export class TextColorMenuItem extends MenuItemUI<TextColorMenuItemProps, Defaul
     ` );
 
     override connectedCallback(): void {
+        const isActive = this.props.isActive(this.props.option);
+        this.state = { ...this.state, isActive };
         this.icon = this.renderSwatch(this.props.option);
         this.label = t(this.props.option.labelKey);
         this.rightIndicator = "none";
@@ -31,7 +35,12 @@ export class TextColorMenuItem extends MenuItemUI<TextColorMenuItemProps, Defaul
     }
 
     override isActive(): boolean {
-        return this.props.isActive(this.props.option);
+        return Boolean(this.state.isActive);
+    }
+
+    override afterRender(): void {
+        super.afterRender?.();
+        this.toggleAttribute("data-active", this.isActive());
     }
 
     override onSelect(_event: Event): void {

@@ -30,12 +30,20 @@ export class TextColorMenu extends MenuUI<TextColorMenuProps, TextColorMenuState
 
 
     static override styles = this.extendStyles(/*css*/`
-        
+
         guten-formatting-highlight-color-menu {
             opacity: 0;
             max-height: 350px;
-            overflow-y: scroll; 
-        }       
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        guten-formatting-highlight-color-menu .guten-menu {
+            max-height: inherit;
+            overflow-y: auto;
+            scrollbar-gutter: stable;
+        }
     `);
 
     override state: TextColorMenuState = {
@@ -46,6 +54,9 @@ export class TextColorMenu extends MenuUI<TextColorMenuProps, TextColorMenuState
 
     private formattingToolbar: FormattingToolbarContext | undefined | null = null;
     private selectionLocked = false;
+
+    private textItems: TextColorMenuItem[] = [];
+    private highlightItems: TextColorMenuItem[] = [];
 
     override onMount(): void {
         super.onMount?.();
@@ -67,21 +78,31 @@ export class TextColorMenu extends MenuUI<TextColorMenuProps, TextColorMenuState
     }
 
     private buildChildren(): HTMLElement[] {
-        const textItems = TEXT_COLOR_OPTIONS.map((option) => (
-            <TextColorMenuItem
-                option={option}
-                isActive={this.isTextColorActive}
-                onSelectOption={this.handleTextColorSelect}
-            />
-        )) as HTMLElement[];
+        this.textItems = [];
+        const textItems = TEXT_COLOR_OPTIONS.map((option) => {
+            const item = (
+                <TextColorMenuItem
+                    option={option}
+                    isActive={this.isTextColorActive}
+                    onSelectOption={this.handleTextColorSelect}
+                />
+            ) as unknown as TextColorMenuItem;
+            this.textItems.push(item);
+            return item as unknown as HTMLElement;
+        });
 
-        const highlightItems = HIGHLIGHT_COLOR_OPTIONS.map((option) => (
-            <TextColorMenuItem
-                option={option}
-                isActive={this.isHighlightColorActive}
-                onSelectOption={this.handleHighlightColorSelect}
-            />
-        )) as HTMLElement[];
+        this.highlightItems = [];
+        const highlightItems = HIGHLIGHT_COLOR_OPTIONS.map((option) => {
+            const item = (
+                <TextColorMenuItem
+                    option={option}
+                    isActive={this.isHighlightColorActive}
+                    onSelectOption={this.handleHighlightColorSelect}
+                />
+            ) as unknown as TextColorMenuItem;
+            this.highlightItems.push(item);
+            return item as unknown as HTMLElement;
+        });
 
         return [
             <div class="guten-menu-label">{t("text_color")}</div> as HTMLElement,
@@ -94,14 +115,16 @@ export class TextColorMenu extends MenuUI<TextColorMenuProps, TextColorMenuState
 
     private handleTextColorSelect = (option: ColorOption) => {
         this.unlockSelection();
-        this.setState({ textValue: option.value } as Partial<TextColorMenuState>);
+        this.updateStateSilently({ textValue: option.value });
+        this.refreshActiveItems("text");
         runCommand("setTextColor", { content: { color: option.value } });
         // this.remove();
     };
 
     private handleHighlightColorSelect = (option: ColorOption) => {
         this.unlockSelection();
-        this.setState({ highlightValue: option.value } as Partial<TextColorMenuState>);
+        this.updateStateSilently({ highlightValue: option.value });
+        this.refreshActiveItems("highlight");
         runCommand("setHighlightColor", { content: { color: option.value } });
         // this.remove();
     };
@@ -119,5 +142,52 @@ export class TextColorMenu extends MenuUI<TextColorMenuProps, TextColorMenuState
         if (!this.selectionLocked) return;
         this.formattingToolbar?.unlock?.();
         this.selectionLocked = false;
+    }
+
+
+    private updateStateSilently(partial: Partial<TextColorMenuState>) {
+        this.state = { ...this.state, ...partial } as TextColorMenuState;
+    }
+
+    private refreshActiveItems(section: "text" | "highlight") {
+        const items = section === "text" ? this.textItems : this.highlightItems;
+        const matcher = section === "text" ? this.isTextColorActive : this.isHighlightColorActive;
+
+        for (const item of items) {
+            if (!item) continue;
+            const isActive = matcher(item.props.option);
+            if (Boolean(item.state?.isActive) === isActive) continue;
+            item.setState({ isActive });
+        }
+    }
+
+    public override setState(partial: Partial<TextColorMenuState>) {
+        const { textValue, highlightValue, ...rest } = partial;
+
+        if (textValue !== undefined) {
+            this.updateStateSilently({ textValue });
+            this.refreshActiveItems("text");
+        }
+
+        if (highlightValue !== undefined) {
+            this.updateStateSilently({ highlightValue });
+            this.refreshActiveItems("highlight");
+        }
+
+        const restKeys = Object.keys(rest as Record<string, unknown>);
+        if (restKeys.length === 0) return;
+
+        const scroller = this.querySelector<HTMLElement>(".guten-menu");
+        const scrollTop = scroller?.scrollTop ?? null;
+        const scrollLeft = scroller?.scrollLeft ?? null;
+
+        super.setState(rest as Partial<TextColorMenuState>);
+
+        if (scrollTop === null) return;
+
+        const nextScroller = this.querySelector<HTMLElement>(".guten-menu");
+        if (!nextScroller) return;
+        nextScroller.scrollTop = scrollTop;
+        nextScroller.scrollLeft = scrollLeft ?? 0;
     }
 }
