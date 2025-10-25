@@ -21,7 +21,7 @@ export class FormattingToolbarTextColorExtension extends FormattingToolbarExtens
     override readonly showMenuIndicator: boolean = true;
 
     /** Sort order within the toolbar (lower = earlier). */
-    readonly sort: number = 80;
+    readonly sort: number = 50;
 
     /** Invoked on button click: opens the link popover. */
     // onSelect(): void {

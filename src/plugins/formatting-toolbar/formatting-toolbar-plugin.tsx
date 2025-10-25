@@ -111,37 +111,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             onSelect: () => runCommand("toggleStrike"),
             isActive: () => runCommand("stateStrike"),
             sort: 40,
-        },
-        {
-            icon: <icons.HighlightColorIcon />,
-            label: t("highlight_color"),
-            shortcut: "",
-            onSelect: (event?: Event, button?: HTMLButtonElement | null) => {
-                runCommand("openFormattingToolbarHighlightColorMenu", {
-                    event,
-                    target: button ?? undefined,
-                    content: { anchor: button ?? undefined },
-                });
-            },
-            isActive: () => false,
-            sort: 50,
-            showMenuIndicator: true
-        },
-        {
-            icon: <icons.TextColorIcon />,
-            label: t("text_color"),
-            shortcut: "",
-            onSelect: (event?: Event, button?: HTMLButtonElement | null) => {
-                runCommand("openFormattingToolbarForeColorMenu", {
-                    event,
-                    target: button ?? undefined,
-                    content: { anchor: button ?? undefined },
-                });
-            },
-            isActive: () => false,
-            sort: 60,
-            showMenuIndicator: true,
-        },
+        }
     ];
 
     private buildToolbarItems(): ToolbarEntry[] {
