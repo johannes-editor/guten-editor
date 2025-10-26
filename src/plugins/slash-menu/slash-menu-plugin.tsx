@@ -21,6 +21,8 @@ import { dom, keyboard, timing } from "../index.ts";
  */
 export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> {
 
+    private contentArea: HTMLElement | null = null;
+
     override attachExtensions(extensions: SlashMenuExtensionPlugin[]): void {
 
         // extensions.map( e => e.setup(_root, extensions));
@@ -41,7 +43,10 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
     * @param root The editor's root HTMLElement.
     * @param plugins The list of all loaded editor plugins.
     */
-    override setup(_root: HTMLElement, _plugins: Plugin[]): void {
+    override setup(root: HTMLElement, _plugins: Plugin[]): void {
+
+        this.contentArea = root.querySelector<HTMLElement>("#contentArea") ??
+            root.querySelector<HTMLElement>('[contenteditable="true"]');
 
         registerTranslation("en", en);
         registerTranslation("pt", pt);
@@ -49,23 +54,31 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
 
     private readonly handleKey = async (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
         if (event.key === keyboard.KeyboardKeys.Slash && !this.mounted()) {
+            const selection = globalThis.getSelection();
+            if (!selection || selection.rangeCount === 0) return;
+
+            const contentArea = this.getContentArea();
+            if (contentArea) {
+                const { startContainer } = selection.getRangeAt(0);
+                if (!contentArea.contains(startContainer)) return;
+            }
 
             event.preventDefault();
             event.stopImmediatePropagation();
 
             await timing.waitFrames(2);
 
-            const selection = globalThis.getSelection();
-            if (selection && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
+            const refreshedSelection = globalThis.getSelection();
+            if (refreshedSelection && refreshedSelection.rangeCount > 0) {
+                const range = refreshedSelection.getRangeAt(0);
 
                 const slashNode = document.createTextNode("/");
                 range.insertNode(slashNode);
 
                 range.setStartAfter(slashNode);
                 range.setEndAfter(slashNode);
-                selection.removeAllRanges();
-                selection.addRange(range);
+                refreshedSelection.removeAllRanges();
+                refreshedSelection.addRange(range);
 
                 await timing.waitFrames(2);
 
@@ -84,6 +97,15 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
 
     private mounted(): boolean {
         return document.getElementsByTagName(SlashMenuOverlay.getTagName()).length > 0;
+    }
+
+    private getContentArea(): HTMLElement | null {
+        if (this.contentArea && document.contains(this.contentArea)) {
+            return this.contentArea;
+        }
+
+        this.contentArea = document.getElementById("contentArea");
+        return this.contentArea;
     }
 }
 
