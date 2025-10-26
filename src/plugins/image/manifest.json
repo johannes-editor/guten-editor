@@ -4,9 +4,22 @@
     "version": "1.0.0",
     "entries": [
         {
-            "path": "./slash-menu-image-extension-plugin.tsx",
-            "class": "SlashMenuImageExtensionPlugin",
-            "active": true
+            "path": "./extensions/image-plugin.ts",
+            "class": "ImagePlugin",
+            "active": true,
+            "description": "Provides configuration hooks for image uploads and shared image commands."
+        },
+        {
+            "path": "./extensions/slash-menu-image-extension.tsx",
+            "class": "SlashMenuImageExtension",
+            "active": true,
+            "description": "Adds the image item to the slash menu."
+        },
+        {
+            "path": "./extensions/command-image-extension.ts",
+            "class": "CommandImageExtension",
+            "active": true,
+            "description": "Registers the image menu and insertion commands."
         }
     ]
 }

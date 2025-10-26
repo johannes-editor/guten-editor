@@ -1,3 +1,26 @@
+const BLOCK_ID_PREFIX = "block-";
+
+export function generateBlockId(): string {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return `${BLOCK_ID_PREFIX}${crypto.randomUUID()}`;
+    }
+
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).slice(2, 10);
+    return `${BLOCK_ID_PREFIX}${timestamp}${random}`;
+}
+
+export function ensureBlockId(element: HTMLElement, preferredId?: string): string {
+    const existing = element.dataset.blockId;
+    if (existing && existing.length > 0) {
+        return existing;
+    }
+
+    const resolved = preferredId && preferredId.length > 0 ? preferredId : generateBlockId();
+    element.dataset.blockId = resolved;
+    return resolved;
+}
+
 export function applyTemporaryRing(target: HTMLElement, durationMs = 600) {
     void target.offsetWidth;
     target.classList.add('dup-block-ring');
