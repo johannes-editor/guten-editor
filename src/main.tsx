@@ -5,6 +5,7 @@ import { appendElementOnContentArea, setRoot } from "./components/editor/index.t
 import { init } from "./core/plugin-engine/index.ts";
 import { ParagraphBlock } from "./components/blocks/paragraph.tsx";
 import { Heading1Block } from "./components/blocks/header1.tsx";
+import { bootstrapDefaultSchema } from "./core/schema/bootstrap.ts";
 
 /**
 * Initializes the text editor.
@@ -14,6 +15,7 @@ import { Heading1Block } from "./components/blocks/header1.tsx";
 export async function initEditor(root: HTMLElement) {
 
     setRoot(root);
+    bootstrapDefaultSchema();
     // Set the language for the interface, defaulting to English if not specified.
     const lang = root.getAttribute("lang") || "en";
     await setLocale(lang);
