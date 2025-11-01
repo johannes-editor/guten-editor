@@ -35,6 +35,11 @@ export class LinkPopover extends InputPopover<InputPopoverProps> {
             };
 
             (this.props as InputPopoverProps).selectionController = selectionCtrl;
+
+            const rect = formattingToolbar.getSelectionRect?.();
+            if (rect) {
+                this.setPosition(rect);
+            }
         }
 
         const selection = globalThis.getSelection();

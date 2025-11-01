@@ -29,6 +29,11 @@ export function hasSelection(
     const getSel = (root as any).getSelection?.bind(root) ?? document.getSelection.bind(document);
     const sel: Selection | null = getSel();
 
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+        const hasLockedSelection = Boolean((globalThis as any).CSS?.highlights?.has?.("persist"));
+        return hasLockedSelection;
+    }
+
     if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return false;
     if (!container.contains(sel.anchorNode) || !container.contains(sel.focusNode)) return false;
 

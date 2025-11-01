@@ -19,6 +19,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             lock: () => FormattingToolbarPlugin.toolbarInstance?.lockSelection(),
             unlock: () => FormattingToolbarPlugin.toolbarInstance?.unlockSelection(),
             refreshSelection: () => FormattingToolbarPlugin.toolbarInstance?.refreshSelection(),
+            getSelectionRect: () => FormattingToolbarPlugin.toolbarInstance?.getSelectionRect() ?? null,
 
 
         }, { scopeRoot: _root });

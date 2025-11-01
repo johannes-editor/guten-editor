@@ -17,6 +17,8 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
     private locked: boolean = false;
     private isBackwardSelection: boolean = false;
 
+    private selectionRect: DOMRect | null = null;
+
     static override styles = this.extendStyles(style);
 
     static override getTagName() {
@@ -28,6 +30,7 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
             this.positionToolbarNearSelection();
 
             this.selectionRange = globalThis.getSelection()?.getRangeAt(0).cloneRange() ?? null;
+            this.captureSelectionRect(this.selectionRange);
 
         });
 
@@ -176,5 +179,54 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
 
     public isSelectionLocked(): boolean {
         return this.locked;
+    }
+
+    public getSelectionRect(): DOMRect | null {
+        if (!this.selectionRect) return null;
+        return this.cloneDOMRect(this.selectionRect);
+    }
+
+    private captureSelectionRect(range: Range | null): void {
+        if (!range) {
+            this.selectionRect = null;
+            return;
+        }
+
+        const rects = range.getClientRects();
+        if (rects.length === 0) {
+            const bounding = range.getBoundingClientRect?.();
+            if (bounding && (bounding.width || bounding.height)) {
+                this.selectionRect = this.cloneDOMRect(bounding);
+                return;
+            }
+
+            const container = range.startContainer instanceof Element
+                ? range.startContainer
+                : range.startContainer?.parentElement ?? null;
+
+            if (container) {
+                const fallback = container.getBoundingClientRect();
+                if (fallback && (fallback.width || fallback.height)) {
+                    this.selectionRect = this.cloneDOMRect(fallback);
+                    return;
+                }
+            }
+
+            this.selectionRect = null;
+            return;
+        }
+
+        const rect = this.isBackwardSelection
+            ? rects[0]
+            : rects[rects.length - 1];
+
+        this.selectionRect = this.cloneDOMRect(rect);
+    }
+
+    private cloneDOMRect(rect: DOMRect | DOMRectReadOnly): DOMRect {
+        if (typeof DOMRect.fromRect === 'function') {
+            return DOMRect.fromRect(rect);
+        }
+        return new DOMRect(rect.x, rect.y, rect.width, rect.height);
     }
 }

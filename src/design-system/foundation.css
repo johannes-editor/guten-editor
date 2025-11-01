@@ -14,7 +14,8 @@
 }
 
 ::highlight(persist) {
-    background-color: var(--color-selection);
+    /* background-color: var(--color-selection); */
+    background-color: pink;
     color: var(--color-selection-text);
 }
 
