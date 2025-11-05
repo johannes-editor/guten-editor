@@ -1,10 +1,10 @@
 {
-    "name": "Code",
+    "name": "Code Block",
     "author": "Alexandre Tavares",
     "entries": [
         {
-            "path": "./slash-menu-item-code-extension.tsx",
-            "class": "SlashMenuItemCodeExtension",
+            "path": "./extensions/slash-menu-code-block-extension.tsx",
+            "class": "SlashMenuCodeBlockExtension",
             "active": true
         }
     ]
