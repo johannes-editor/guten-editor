@@ -6,6 +6,11 @@
             "path": "./extensions/slash-menu-code-block-extension.tsx",
             "class": "SlashMenuCodeBlockExtension",
             "active": true
+        },
+        {
+            "path": "./extensions/code-block-enter-plugin.ts",
+            "class": "CodeBlockEnterPlugin",
+            "active": true
         }
     ]
 }

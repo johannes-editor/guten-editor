@@ -4,6 +4,7 @@
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
+    margin-bottom: 1rem;
 }
 
 .callout[data-callout-variant="info"] {
@@ -40,6 +41,7 @@ blockquote {
     color: var(--color-text-secondary);
     font-style: italic;
     margin-left: 0;
+
 }
 
 blockquote::before {
