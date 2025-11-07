@@ -1,11 +1,11 @@
 /** @jsx h */
 
-import { GridIcon } from "../../design-system/components/icons.tsx";
-import { h, t, focusOnElement, } from "../index.ts";
-import { SlashMenuExtensionPlugin } from "../slash-menu/index.ts";
-import { TableBlock } from "./components/table-block.tsx";
+import { GridIcon } from "../../../design-system/components/icons.tsx";
+import { h, t, focusOnElement, } from "../../index.ts";
+import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
+import { TableBlock } from "../components/table-block.tsx";
 
-export class SlashMenuTableExtensionPlugin extends SlashMenuExtensionPlugin {
+export class SlashMenuTableExtension extends SlashMenuExtensionPlugin {
 
     icon: SVGElement;
     label: string;

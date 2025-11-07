@@ -4,8 +4,13 @@
     "version": "1.0.0",
     "entries": [
         {
-            "path": "./slash-menu-table-extension-plugin.tsx",
-            "class": "SlashMenuTableExtensionPlugin",
+            "path": "./extensions/slash-menu-table-extension.tsx",
+            "class": "SlashMenuTableExtension",
+            "active": true
+        },
+        {
+            "path": "./extensions/table-navigation-plugin.ts",
+            "class": "TableNavigationPlugin",
             "active": true
         }
     ]

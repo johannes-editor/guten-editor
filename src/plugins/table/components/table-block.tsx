@@ -1,15 +1,31 @@
 /** @jsx h */
 
 import { h, DefaultProps } from "../../index.ts";
-import { Table } from "./table.tsx";
 
-export function TableBlock(props: DefaultProps) {
+export function TableBlock({ children, className = "", ...props }: DefaultProps) {
+    const blockClass = ["block", "table-block", className].filter(Boolean).join(" ");
+    const content = children ?? (
+        <table>
+            <tbody>
+                <tr>
+                    <td contentEditable="true"><br /></td>
+                    <td contentEditable="true"><br /></td>
+                </tr>
+                <tr>
+                    <td contentEditable="true"><br /></td>
+                    <td contentEditable="true"><br /></td>
+                </tr>
+            </tbody>
+        </table>
+    );
+
     return (
-        <Table
-            className="block"
+        <div
+            className={blockClass}
+            contentEditable="false"
             {...props}
         >
-            {props.children ?? <br />}
-        </Table>
+            {content}
+        </div>
     );
 }
