@@ -30,12 +30,12 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     private previousScrollTop: number = 0;
 
     static override get tagName() {
-        return "slash-menu";
+        return "guten-slash-menu";
     }
 
     static override styles = this.extendStyles(/*css */`
         
-        slash-menu .slash-menu-wrapper {
+        guten-slash-menu .slash-menu-wrapper {
             border-radius: 10px;
             overflow: hidden;
             max-height: 18rem;

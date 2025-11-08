@@ -1,0 +1,124 @@
+/** @jsx h */
+import { h } from "../../../jsx.ts";
+import { Plugin } from "../../../core/plugin-engine/plugin.ts";
+import { ParagraphBlock } from "../../../components/blocks/paragraph.tsx";
+import { focusOnElement } from "../../../utils/dom-utils.ts";
+import { ClassName } from "../../../utils/dom/class-name.ts";
+
+export class BlockquoteEnterPlugin extends Plugin {
+
+    private contentArea: HTMLElement | null = null;
+
+    override setup(root: HTMLElement): void {
+        if (this.contentArea) {
+            this.contentArea.removeEventListener("keydown", this.handleKeyDown, true);
+        }
+
+        const contentArea = root.querySelector<HTMLElement>("#contentArea");
+        if (!contentArea) {
+            console.warn("[BlockquoteEnterPlugin] Unable to find #contentArea in editor root.");
+            return;
+        }
+
+        this.contentArea = contentArea;
+        contentArea.addEventListener("keydown", this.handleKeyDown, true);
+    }
+
+    private handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key !== "Enter") return;
+        if (event.shiftKey) return;
+        if (event.defaultPrevented) return;
+        if (event.isComposing) return;
+
+        const contentArea = this.contentArea;
+        if (!contentArea) return;
+
+        const doc = contentArea.ownerDocument ?? document;
+
+        if (this.hasActiveSlashMenu(doc)) return;
+        const selection = doc.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+
+        const range = selection.getRangeAt(0);
+        const startBlockquote = this.findClosestBlockquote(range.startContainer);
+        if (!startBlockquote) return;
+
+        const endBlockquote = this.findClosestBlockquote(range.endContainer);
+        if (endBlockquote !== startBlockquote) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!selection.isCollapsed) {
+            range.deleteContents();
+        }
+
+        range.collapse(false);
+
+        const trailingRange = range.cloneRange();
+        trailingRange.selectNodeContents(startBlockquote);
+        trailingRange.setStart(range.endContainer, range.endOffset);
+        const trailingFragment = trailingRange.extractContents();
+
+        const paragraph = this.createParagraph(doc);
+        if (trailingFragment.childNodes.length) {
+            paragraph.innerHTML = "";
+            paragraph.append(trailingFragment);
+        }
+
+        if (paragraph.textContent?.trim().length) {
+            paragraph.classList.remove(ClassName.Empty);
+        } else {
+            paragraph.innerHTML = "<br />";
+        }
+
+        startBlockquote.insertAdjacentElement("afterend", paragraph);
+
+        this.normalizeBlockquote(startBlockquote);
+
+        focusOnElement(paragraph);
+
+        this.dispatchInput(startBlockquote);
+        this.dispatchInput(paragraph);
+    };
+
+    private findClosestBlockquote(node: Node | null): HTMLElement | null {
+        const contentArea = this.contentArea;
+        while (node && contentArea && node !== contentArea) {
+            if (node instanceof HTMLElement && node.tagName === "BLOCKQUOTE") {
+                return node;
+            }
+            node = node.parentNode;
+        }
+        return null;
+    }
+
+    private hasActiveSlashMenu(doc: Document): boolean {
+        return doc.getElementsByTagName("guten-slash-menu").length > 0;
+    }
+
+    private createParagraph(doc: Document): HTMLParagraphElement {
+        const paragraph = <ParagraphBlock /> as HTMLParagraphElement;
+        if (paragraph.ownerDocument !== doc && "adoptNode" in doc) {
+            return doc.adoptNode(paragraph) as HTMLParagraphElement;
+        }
+        return paragraph;
+    }
+
+    private normalizeBlockquote(blockquote: HTMLElement) {
+        const text = blockquote.textContent?.trim() ?? "";
+        if (!text.length) {
+            if (!blockquote.querySelector("br")) {
+                blockquote.innerHTML = "<br />";
+            }
+            blockquote.classList.add(ClassName.Empty);
+        } else {
+            blockquote.classList.remove(ClassName.Empty);
+        }
+    }
+
+    private dispatchInput(target: HTMLElement) {
+        const event = new Event("input", { bubbles: true });
+        target.dispatchEvent(event);
+    }
+}

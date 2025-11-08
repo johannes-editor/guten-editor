@@ -1,0 +1,14 @@
+{
+    "name": "Blockquote",
+    "version": "1.0.0",
+    "author": "Alexandre Tavares",
+    "description": "Adds enhanced blockquote behaviors.",
+    "entries": [
+        {
+            "path": "./extensions/blockquote-enter-plugin.tsx",
+            "class": "BlockquoteEnterPlugin",
+            "description": "Allows leaving blockquotes when pressing Enter on empty content.",
+            "active": true
+        }
+    ]
+}

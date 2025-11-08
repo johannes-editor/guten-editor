@@ -53,7 +53,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             icon: <QuotationIcon />,
             sort: 40,
             label: t("quotation"),
-            synonyms: ["cite", "blockquote"],
+            synonyms: ["cite", "quote", "blockquote"],
             onSelect: (focusedBlock: HTMLElement) => {
                 const element = <BlockquoteBlock />;
                 focusedBlock.after(element);
