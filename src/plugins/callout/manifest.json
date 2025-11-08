@@ -21,6 +21,12 @@
             "class": "CalloutCommandExtension",
             "description": "Adds callout commands. E.g., openCalloutColorOptions.",
             "active": true
+        },
+        {
+            "path": "./extensions/callout-enter-plugin.tsx",
+            "class": "CalloutEnterPlugin",
+            "description": "Handles Enter key behavior inside callout blocks.",
+            "active": true
         }
     ]
 }
