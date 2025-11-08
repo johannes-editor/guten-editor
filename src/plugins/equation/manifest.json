@@ -5,26 +5,26 @@
     "description": "Adds equation authoring to the editor using KaTeX: toolbar button, equation popover, insertion commands, and KaTeX asset loading.",
     "entries": [
         {
-            "path": "./formatting-toolbar-equation-button-extension-plugin.tsx",
-            "class": "FormattingToolbarEquationButtonExtensionPlugin",
+            "path": "./extensions/formatting-toolbar-equation-extension.tsx",
+            "class": "FormattingToolbarEquationExtension",
             "active": false,
             "description": "Adds the 'Insert Math (KaTeX)' button to the formatting toolbar; opens the equation popover."
         },
         {
-            "path": "./slash-menu-equation-extension-plugin.tsx",
-            "class": "SlashMenuEquationExtensionPlugin",
+            "path": "./extensions/slash-menu-equation-extension.tsx",
+            "class": "SlashMenuEquationExtension",
             "active": true,
             "description": "Adds the 'Equation' item to the slash menu and opens the KaTeX popover."
         },
         {
-            "path": "./command-equation-extension-plugin.ts",
-            "class": "CommandEquationExtensionPlugin",
+            "path": "./extensions/command-equation-extension.ts",
+            "class": "CommandEquationExtension",
             "active": true,
             "description": "Registers equation-related commands: openEquationPopover and insertEquation."
         },
         {
-            "path": "./katex-assert-extension-plugin.ts",
-            "class": "KatexAssetsExtensionPlugin",
+            "path": "./extensions/katex-assert-extension.ts",
+            "class": "KatexAssetsExtension",
             "active": true,
             "description": "Declares and eagerly loads KaTeX CSS/JS assets at startup so equations can be rendered."
         },

@@ -1,7 +1,7 @@
-import { CommandExtensionPlugin } from "../commands/command-plugin.ts";
-import { Command } from "../index.ts";
-import { InsertEquation } from "./commands/insert-equation.ts";
-import { OpenEquationPopover } from "./commands/open-math-popover.tsx";
+import { CommandExtensionPlugin } from "../../commands/command-plugin.ts";
+import { Command } from "../../index.ts";
+import { InsertEquation } from "../commands/insert-equation.ts";
+import { OpenEquationPopover } from "../commands/open-math-popover.tsx";
 
 /**
  * Command extension that registers equation-related commands.
@@ -9,7 +9,7 @@ import { OpenEquationPopover } from "./commands/open-math-popover.tsx";
  *  - OpenEquationPopover: opens the equation (KaTeX) input popover.
  *  - InsertEquation: inserts a rendered equation at the current selection.
  */
-export class CommandEquationExtensionPlugin extends CommandExtensionPlugin {
+export class CommandEquationExtension extends CommandExtensionPlugin {
     /**
     * Returns the commands provided by this extension.
     * @returns {Command[]} [OpenEquationPopover, InsertEquation]
