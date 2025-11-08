@@ -27,6 +27,12 @@
             "class": "KatexAssetsExtensionPlugin",
             "active": true,
             "description": "Declares and eagerly loads KaTeX CSS/JS assets at startup so equations can be rendered."
+        },
+        {
+            "path": "./extensions/equation-click-plugin.ts",
+            "class": "EquationClickPlugin",
+            "active": true,
+            "description": "Listens for clicks on equations to reopen the editing popover."
         }
     ]
 }

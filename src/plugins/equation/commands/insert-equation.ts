@@ -1,10 +1,9 @@
-// If you prefer the global window.katex, remove this import and rely on a <script> include.
-// With Vite+Deno you can import from npm:
-
 import { Command, CommandContext } from "../../../core/command/command.ts";
 import { h } from "../../../jsx.ts";
+import { t } from "../../index.ts";
 import { EquationInline } from "../components/equation-inline.tsx";
 import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
+import { createEquationElement } from "../utils/equation-element.ts";
 
 /**
  * Command: renders LaTeX with KaTeX and inserts it at the current selection.
@@ -13,7 +12,7 @@ import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
  * - Requires a `latex` string in the command context.
  * - Optional `displayMode` (block math when true, inline otherwise).
  * - Uses `window.katex.renderToString()` to generate HTML.
- * - Wraps the output with {@link EquationInline}, which keeps metadata and reopens the editor when clicked.
+ * - Wraps the output with a standard HTML element that stores the LaTeX metadata.
  * - Moves the caret after the inserted node; if block, inserts a `<br>` to allow continued typing.
  *
  * Fails fast (returns false) when:
@@ -60,29 +59,25 @@ export const InsertEquation: Command = {
                 return;
             }
 
-            const equationNode = h(EquationInline, {
-                latex,
-                displayMode,
-                html,
-            }) as HTMLElement;
+            const createEquationNode = (doc?: Document) =>
+                createEquationElement({
+                    latex,
+                    displayMode,
+                    html,
+                    doc,
+                    ariaLabel: t("equation"),
+                });
 
             const target = context.content?.targetEquation ?? null;
             if (target instanceof HTMLElement) {
-                const inlineHost = target.matches(EquationInline.getTagName())
-                    ? target
-                    : target.closest(EquationInline.getTagName());
-
-                if (inlineHost) {
-                    inlineHost.replaceWith(equationNode);
-                    moveCaretAfter(equationNode, displayMode);
-                    return;
-                }
+                
 
                 const placeholderHost = target.matches(EquationPlaceholder.getTagName())
                     ? target
                     : target.closest(EquationPlaceholder.getTagName());
 
                 if (placeholderHost) {
+                    const equationNode = createEquationNode(placeholderHost.ownerDocument ?? document);
                     placeholderHost.replaceWith(equationNode);
                     moveCaretAfter(equationNode, displayMode);
                     return;
@@ -90,6 +85,7 @@ export const InsertEquation: Command = {
 
                 const mathWrapper = target.closest('[data-latex], .math-inline, .math-block, .katex, .katex-display') as HTMLElement | null;
                 if (mathWrapper) {
+                    const equationNode = createEquationNode(mathWrapper.ownerDocument ?? document);
                     mathWrapper.replaceWith(equationNode);
                     moveCaretAfter(equationNode, displayMode);
                     return;
@@ -101,6 +97,7 @@ export const InsertEquation: Command = {
 
             const range = sel.getRangeAt(0);
             range.deleteContents();
+            const equationNode = createEquationNode(range.startContainer.ownerDocument ?? document);
             range.insertNode(equationNode);
 
             moveCaretAfter(equationNode, displayMode, range, sel);
