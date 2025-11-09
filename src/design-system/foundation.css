@@ -61,3 +61,7 @@ p code {
     background-color: #F9F9F9;
     border-radius: var(--radius-sm);
 }
+
+.todo-list {
+    padding-left: 0;
+}

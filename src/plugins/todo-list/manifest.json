@@ -4,8 +4,13 @@
     "version": "1.0.0",
     "entries": [
         {
-            "path": "./slash-menu-todo-list-extension-plugin.tsx",
-            "class": "SlashMenuTodoListExtensionPlugin",
+            "path": "./extensions/slash-menu-todo-list-extension.tsx",
+            "class": "SlashMenuTodoListExtension",
+            "active": true
+        },
+        {
+            "path": "./extensions/todo-list-enter-plugin.tsx",
+            "class": "TodoListEnterPlugin",
             "active": true
         }
     ]
