@@ -1,5 +1,7 @@
 :root {
 
+
+    --mobile-toolbar-bottom-offset: clamp(0.75rem, 2vh, 1.5rem);
     --sep-color: color-mix(in oklab, currentColor 22%, transparent);
 
     /* === COLORS === */

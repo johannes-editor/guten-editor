@@ -1,0 +1,11 @@
+{
+    "name": "Mobile Context Toolbar",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "mobile-toolbar-plugin.tsx",
+            "class": "MobileToolbarPlugin",
+            "active": true
+        }
+    ]
+}
