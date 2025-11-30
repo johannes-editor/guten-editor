@@ -93,6 +93,6 @@ body.has-mobile-toolbar {
 }
 
 
-body:has(guten-slash-menu) .mobile-toolbar {
+body:has(.modal--sheet-mobile) .mobile-toolbar {
     display: none;
 }
