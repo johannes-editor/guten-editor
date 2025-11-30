@@ -34,6 +34,12 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     }
 
     static override styles = this.extendStyles(/*css */`
+
+        @media (max-width: 720px) {
+            .modal--sheet-mobile ul{
+                min-height: 20rem;
+            }
+        }
         
         guten-slash-menu .slash-menu-wrapper {
             border-radius: 10px;
@@ -56,7 +62,6 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             overflow-y: auto;
             max-height: 12rem;
             padding: 0 .5rem;
-
             width: max-content;
         }
 
@@ -114,7 +119,10 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         this.registerEvent(document, dom.EventTypes.KeyDown, this.handleKey as EventListener);
         this.registerEvent(this, dom.EventTypes.MouseMove, this.handleMouse as EventListener)
         this.setState({ items: this.props.items });
-        this.positionToAnchor(this.props.anchorNode);
+
+        if (!this.isMobileSheetViewport()) {
+            this.positionToAnchor(this.props.anchorNode);
+        }
 
         this.updateFilterFromEditor();
     }
@@ -385,7 +393,5 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
 
 
     }
-
-
 
 }

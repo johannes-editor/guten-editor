@@ -3,7 +3,7 @@ export { h, Fragment } from "../jsx.ts";
 
 /* components */
 export { Component } from "../components/component.ts";
-export { OverlayComponent } from "../components/overlay/overlay-component.ts";
+export { OverlayComponent } from "../components/overlay/overlay-component.tsx";
 export type { DefaultProps, DefaultState } from "../components/types.ts";
 
 /* i18n */
@@ -58,7 +58,7 @@ export { Plugin, PluginExtension, ExtensiblePlugin } from "../core/plugin-engine
  * Used by plugins to reference or declare overlay compatibility,
  * e.g. defining which overlays can stack above others.
  */
-export type { OverlayCtor } from "../components/overlay/overlay-component.ts";
+export type { OverlayCtor } from "../components/overlay/overlay-component.tsx";
 
 /**
  * Main overlay that displays block options in the editor.

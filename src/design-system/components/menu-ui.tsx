@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h, keyboard, dom } from "../../plugins/index.ts";
 import type { DefaultProps, DefaultState } from "../../components/types.ts";
-import { OverlayComponent } from "../../components/overlay/overlay-component.ts";
+import { OverlayComponent } from "../../components/overlay/overlay-component.tsx";
 
 export interface MenuUIProps extends DefaultProps {
     anchor?: HTMLElement;

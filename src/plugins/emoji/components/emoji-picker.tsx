@@ -2,7 +2,7 @@
 /** @jsxFrag Fragment */
 
 import { h, dom, keyboard, Fragment } from "../../index.ts";
-import { OverlayComponent } from "../../../components/overlay/overlay-component.ts";
+import { OverlayComponent } from "../../../components/overlay/overlay-component.tsx";
 import { EmojiClapIcon, EmojiHeartIcon, EmojiSmileyIcon } from "../../../design-system/components/icons.tsx";
 
 interface EmojiPickerOverlayProps {

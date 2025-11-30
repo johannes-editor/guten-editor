@@ -1,7 +1,7 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
-import { OverlayComponent } from "../../components/overlay/overlay-component.ts";
+import { OverlayComponent } from "../../components/overlay/overlay-component.tsx";
 import { DefaultProps, DefaultState } from "../../components/types.ts";
 import { Fragment, KeyboardKeys, t } from "../../plugins/index.ts";
 
@@ -70,7 +70,7 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
 
     override connectedCallback(): void {
         super.connectedCallback();
-        this.setAttribute("class", "guten-input-popover card animate-overlay");
+        this.setAttribute("class", "guten-input-popover modal--sheet-mobile card animate-overlay");
 
         this.registerEvent(this.input, dom.EventTypes.KeyDown, ((event: KeyboardEvent) => this.handleKeydown(event)) as EventListener);
     }
@@ -78,8 +78,8 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
     override render(): HTMLElement {
         return (
             <Fragment>
-                <input type={this.props.inputType} placeholder={this.props.inputPlaceholder} {...(this.props.inputProps)} ref={(input: HTMLInputElement | null) => { this._input = input }}></input>
-                <button class="block" type="button" onClick={() => this.handleInsert()} ref={(button: HTMLButtonElement | null) => { this._button = button }}> {this.props.buttonText ?? t("insert")}</button>
+                <input class="modal__input" type={this.props.inputType} placeholder={this.props.inputPlaceholder} {...(this.props.inputProps)} ref={(input: HTMLInputElement | null) => { this._input = input }}></input>
+                <button class="block modal__button" type="button" onClick={() => this.handleInsert()} ref={(button: HTMLButtonElement | null) => { this._button = button }}> {this.props.buttonText ?? t("insert")}</button>
             </Fragment>
         );
     }

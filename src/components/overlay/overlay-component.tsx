@@ -1,3 +1,7 @@
+/**@jsx h */
+
+import { ArrowLeftIcon, CloseIcon } from "../../design-system/components/icons.tsx";
+import { h } from "../../jsx.ts";
 import { Component } from "../component.ts";
 import { DefaultProps, DefaultState } from "../types.ts";
 import { pushOverlay, removeOverlay } from "./index.ts";
@@ -31,6 +35,16 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
     positionToAnchorVerticalGap: number = 2;
     positionToAnchorHorizontalGap: number = 2;
 
+    /** Controls whether a mobile back action should be rendered. */
+    protected mobileBackActionEnabled: boolean = true;
+
+    /** Controls whether a mobile close action should be rendered. */
+    protected mobileCloseActionEnabled: boolean = true;
+
+    private mobileChrome: HTMLDivElement | null = null;
+    private mobileBackButton: HTMLButtonElement | null = null;
+    private mobileCloseButton: HTMLButtonElement | null = null;
+
     /**
     * Defines which overlay classes are allowed to appear above this one.
     * Used to control overlay stacking behavior.
@@ -43,8 +57,12 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
     // Internal flag to ignore the first outside click after rendering
     private listenClickOutside: boolean = false;
 
+    private cleanupKeyboardInset?: () => void;
+
     /** Called when the element is added to the DOM */
     override connectedCallback(): void {
+        this.classList.add("modal", "modal--sheet-mobile");
+
         super.connectedCallback();
 
         this.style.position = "absolute";
@@ -98,9 +116,92 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
 
     /** Adds entry animation after rendering */
     override afterRender(): void {
+        this.ensureMobileChrome();
+
         requestAnimationFrame(() => {
             this.classList.add("show-overlay");
         });
+    }
+
+    /** Allows subclasses to toggle mobile-only action visibility. */
+    protected setMobileActions(actions: { back?: boolean; close?: boolean; }) {
+        if (typeof actions.back === "boolean") this.mobileBackActionEnabled = actions.back;
+        if (typeof actions.close === "boolean") this.mobileCloseActionEnabled = actions.close;
+        this.updateMobileActionsVisibility();
+    }
+
+    private ensureMobileChrome() {
+        if (!this.mobileChrome) {
+            const chrome = (
+                <div className="modal__chrome">
+                    <div className="modal__actions modal__actions--left">
+                        <button
+                            type="button"
+                            className="modal__action modal__action--back"
+                            aria-label="Voltar"
+                            onClick={this.handleMobileBackClick}
+                            ref={(el: HTMLButtonElement) => { this.mobileBackButton = el; }}
+                        >
+                            <ArrowLeftIcon />
+                        </button>
+                    </div>
+                    <div className="modal__actions modal__actions--right">
+                        <button
+                            type="button"
+                            className="modal__action modal__action--close"
+                            aria-label="Fechar"
+                            onClick={this.handleMobileCloseClick}
+                            ref={(el: HTMLButtonElement) => { this.mobileCloseButton = el; }}
+                        >
+                            <CloseIcon />
+                        </button>
+                    </div>
+                </div>
+            ) as HTMLDivElement;
+
+            this.mobileChrome = chrome;
+        }
+
+        if (!this.contains(this.mobileChrome)) {
+            this.prepend(this.mobileChrome!);
+        }
+
+        this.updateMobileActionsVisibility();
+    }
+
+    private updateMobileActionsVisibility() {
+        if (!this.mobileChrome) return;
+
+        const showBack = Boolean(this.mobileBackActionEnabled);
+        const showClose = Boolean(this.mobileCloseActionEnabled);
+
+        this.mobileChrome.hidden = !(showBack || showClose);
+        if (this.mobileBackButton) this.mobileBackButton.hidden = !showBack;
+        if (this.mobileCloseButton) this.mobileCloseButton.hidden = !showClose;
+    }
+
+    private readonly handleMobileBackClick = (event: MouseEvent) => {
+        event.stopPropagation();
+        const customEvent = new CustomEvent("overlay:back", { bubbles: true, cancelable: true });
+        this.dispatchEvent(customEvent);
+        if (!customEvent.defaultPrevented) {
+            this.onMobileBack();
+        }
+    };
+
+    private readonly handleMobileCloseClick = (event: MouseEvent) => {
+        event.stopPropagation();
+        this.onMobileClose();
+    };
+
+    /** Default back action: remove the overlay. Subclasses may override. */
+    protected onMobileBack(): void {
+        this.remove();
+    }
+
+    /** Default close action: remove the overlay. Subclasses may override. */
+    protected onMobileClose(): void {
+        this.remove();
     }
 
     /**
@@ -138,6 +239,11 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
     }
 
     positionToAnchor(anchorOrRect: Node | DOMRect): void {
+
+        if (this.isMobileSheetViewport()) {
+            return;
+        }
+
         const rect =
             anchorOrRect instanceof Node
                 ? (this as any).getAnchorRect(anchorOrRect)
@@ -181,7 +287,7 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         const spaceLeft = rect.left;
         const showRight = spaceRight >= menuWidth || spaceRight >= spaceLeft;
 
-        
+
         if (showRight) {
             this.style.left = `${rect.right + this.positionToAnchorHorizontalGap - pad.left}px`;
             this.style.right = "";
@@ -192,6 +298,11 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
     }
 
     public positionRelativeToMenu(anchorOrRect: HTMLElement | DOMRect, gap: number = 8): void {
+
+        if (this.isMobileSheetViewport()) {
+            return;
+        }
+        
         const anchorRect = anchorOrRect instanceof HTMLElement
             ? anchorOrRect.getBoundingClientRect()
             : anchorOrRect;
@@ -267,5 +378,9 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
             width: viewportWidth,
             height: viewportHeight,
         };
+    }
+
+    public isMobileSheetViewport(): boolean {
+        return globalThis.matchMedia?.("(max-width: 720px)").matches ?? false;
     }
 }

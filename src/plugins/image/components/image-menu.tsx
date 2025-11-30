@@ -1,6 +1,6 @@
 /** @jsx h */
 
-import { OverlayComponent } from "../../../components/overlay/overlay-component.ts";
+import { OverlayComponent } from "../../../components/overlay/overlay-component.tsx";
 import { DefaultProps, DefaultState } from "../../../components/types.ts";
 import { h, runCommand, t } from "../../index.ts";
 import { ImagePlugin, type ImageUploadResult } from "../extensions/image-plugin.ts";

@@ -1,7 +1,7 @@
 /** @jsx h */
-import { DefaultState } from "../../components/types.ts";
+import { DefaultState, DefaultProps } from "../../components/types.ts";
 import { h } from "../../jsx.ts";
-import { DefaultProps, OverlayComponent } from "../../plugins/index.ts";
+import { OverlayComponent } from "../../components/overlay/overlay-component.tsx";
 
 export class ToolbarUI<P extends DefaultProps = DefaultProps, S = DefaultState> extends OverlayComponent<P, S> {
 
