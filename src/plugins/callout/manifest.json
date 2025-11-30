@@ -17,6 +17,12 @@
             "active": true
         },
         {
+            "path": "./extensions/mobile-toolbar-callout-extension.tsx",
+            "class": "CalloutMobileToolbarExtension",
+            "description": "Adds a mobile toolbar button for selecting callout colors.",
+            "active": true
+        },
+        {
             "path": "./extensions/callout-command-extension.ts",
             "class": "CalloutCommandExtension",
             "description": "Adds callout commands. E.g., openCalloutColorOptions.",

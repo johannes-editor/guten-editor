@@ -11,6 +11,7 @@ export type MobileToolbarButton = {
     label: string;
     onClick: () => void;
     isActive?: () => boolean;
+    sort?: number;
 };
 
 interface MobileToolbarProps {
