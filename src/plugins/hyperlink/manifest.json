@@ -15,6 +15,12 @@
             "class": "CommandHyperlinkExtensionPlugin",
             "active": true,
             "description": "Registers hyperlink commands: openLinkPopover and createLink."
+        },
+        {
+            "path": "./extensions/mobile-toolbar-hyperlink-extension.tsx",
+            "class": "HyperlinkMobileToolbarExtension",
+            "active": true,
+            "description": "Adds the insert link button to the mobile toolbar when selecting text."
         }
     ]
 }
