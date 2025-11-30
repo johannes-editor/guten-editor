@@ -218,7 +218,12 @@ hr.block {
         overflow: auto;
         border-radius: var(--radius-xl) var(--radius-xl) 0 0;
         box-shadow: var(--shadow-lg);
+        width: 100% !important;
 
+    }
+
+    .modal--sheet-mobile-w100{
+        width: 100% !important;
     }
 
     .modal--sheet-mobile .emoji-wrap,
