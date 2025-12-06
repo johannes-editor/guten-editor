@@ -5,6 +5,9 @@ import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } fro
 export class CalloutMobileToolbarExtension extends MobileToolbarButtonExtensionPlugin {
 
     override buttons(context: MobileToolbarExtensionContext) {
+
+        if (context.mode === "selection") return [];
+        
         const callout = this.findActiveCallout(context);
         if (!callout) return [];
 
