@@ -270,4 +270,14 @@ hr.block {
         width: 85%;
         margin-bottom: 12px;
     }
+
+    .modal--sheet-mobile .guten-menu-item-x,
+    .modal--sheet-mobile .guten-menu-item{
+        font-weight: bold;
+    }
+
+    .modal--sheet-mobile .guten-menu-item-x button,
+    .modal--sheet-mobile .guten-menu-item button{
+        padding: var(--space-sm) var(--space-md) !important;
+    }
 }

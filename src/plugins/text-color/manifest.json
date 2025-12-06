@@ -15,6 +15,12 @@
       "class": "CommandTextColorExtension",
       "active": true,
       "description": "Registers text color–related commands: openTextColorMenu, setTextColor, and setHighlightColor."
+    },
+    {
+      "path": "./extensions/mobile-toolbar-text-color-extension.tsx",
+      "class": "MobileToolbarTextColorExtension",
+      "active": true,
+      "description": "Adds the text color button to the mobile selection toolbar."
     }
   ]
 }

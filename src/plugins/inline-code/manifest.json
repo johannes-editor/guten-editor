@@ -11,6 +11,12 @@
             "path": "./extensions/inline-code-command-extension.ts",
             "class": "InlineCodeCommandExtension",
             "active": true
+        },
+        {
+            "path": "./extensions/mobile-toolbar-inline-code-extension.tsx",
+            "class": "MobileToolbarInlineCodeExtension",
+            "active": true,
+            "description": "Adds the inline code toggle to the mobile selection toolbar."
         }
     ]
 }
