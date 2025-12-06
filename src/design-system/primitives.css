@@ -222,7 +222,7 @@ hr.block {
 
     }
 
-    .modal--sheet-mobile-w100{
+    .modal--sheet-mobile-w100 {
         width: 100% !important;
     }
 
@@ -256,7 +256,7 @@ hr.block {
 
     }
 
-    .modal--sheet-mobile .modal__input{
+    .modal--sheet-mobile .modal__input {
         margin-left: auto;
         margin-right: auto;
         width: 85%;
@@ -264,7 +264,7 @@ hr.block {
         margin-top: 6px;
     }
 
-    .modal--sheet-mobile .modal__button{
+    .modal--sheet-mobile .modal__button {
         margin-left: auto;
         margin-right: auto;
         width: 85%;
@@ -272,12 +272,82 @@ hr.block {
     }
 
     .modal--sheet-mobile .guten-menu-item-x,
-    .modal--sheet-mobile .guten-menu-item{
+    .modal--sheet-mobile .guten-menu-item {
         font-weight: bold;
     }
 
     .modal--sheet-mobile .guten-menu-item-x button,
-    .modal--sheet-mobile .guten-menu-item button{
+    .modal--sheet-mobile .guten-menu-item button {
         padding: var(--space-sm) var(--space-md) !important;
     }
+}
+
+
+/**  TABLE **/
+.table-block {
+    position: relative;
+    width: fit-content;
+    margin-bottom: 18px;    
+    max-width: calc(100vw - 90px);
+}
+
+.table-block table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    width: max-content;
+}
+
+.table-add-column-area {
+    top: 0;
+    right: -18px;
+    bottom: 0;
+    width: 14px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.table-add-row-area {
+    left: 0;
+    right: 0;
+    bottom: -18px;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.table-add-column-area,
+.table-add-row-area {
+    opacity: 0;
+    position: absolute;
+    cursor: pointer;
+    z-index: 2;
+    background-color: rgba(126, 131, 139, 0.1);
+    display: flex;
+    border-radius: 2px
+}
+
+.table-add-column-area button {
+    all: unset;
+    height: 100% !important;
+}
+
+.table-add-row-area button {
+    all: unset;
+    width: 100%;
+    line-height: 1;
+    font-size: 14px;
+    text-align: center;
+}
+
+.table-add-column-area:hover,
+.table-add-row-area:hover {
+    opacity: 1;
+}
+
+.table-add-column-area button {
+    all: unset;
 }
