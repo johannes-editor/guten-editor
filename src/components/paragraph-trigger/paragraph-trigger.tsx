@@ -15,7 +15,7 @@ export class ParagraphTrigger extends Component {
 
     static override styles = /*css*/ `
         #paragraphTriggerArea {
-            height: 3rem;
+            height: 7rem;
             width: 100%;
         }
     `;
