@@ -10,6 +10,8 @@ export class TableMobileToolbarExtension extends MobileToolbarButtonExtensionPlu
         const selectionTable = findTableFromSelection(context.selection);
         if (!selectionTable) return [];
 
+        const selection = context.selection ?? undefined;
+
         return [
             {
                 id: "table-add-row",
@@ -30,14 +32,14 @@ export class TableMobileToolbarExtension extends MobileToolbarButtonExtensionPlu
                 icon: () => <icons.DeleteRow />,
                 label: t("delete_row"),
                 sort: 130,
-                onClick: () => runCommand("table.deleteRow", { content: selectionTable }),
+                onClick: () => runCommand("table.deleteRow", { content: selectionTable, selection }),
             },
             {
                 id: "table-delete-column",
                 icon: () => <icons.DeleteColumn />,
                 label: t("delete_column"),
                 sort: 140,
-                onClick: () => runCommand("table.deleteColumn", { content: selectionTable }),
+                onClick: () => runCommand("table.deleteColumn", { content: selectionTable, selection }),
             },
         ];
     }
