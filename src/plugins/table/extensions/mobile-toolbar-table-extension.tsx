@@ -27,14 +27,14 @@ export class TableMobileToolbarExtension extends MobileToolbarButtonExtensionPlu
             },
             {
                 id: "table-delete-row",
-                icon: () => <icons.TrashIcon />,
+                icon: () => <icons.DeleteRow />,
                 label: t("delete_row"),
                 sort: 130,
                 onClick: () => runCommand("table.deleteRow", { content: selectionTable }),
             },
             {
                 id: "table-delete-column",
-                icon: () => <icons.TrashIcon />,
+                icon: () => <icons.DeleteColumn />,
                 label: t("delete_column"),
                 sort: 140,
                 onClick: () => runCommand("table.deleteColumn", { content: selectionTable }),

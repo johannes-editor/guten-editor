@@ -25,6 +25,13 @@ interface MobileToolbarState {
 
 export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarState> {
 
+    private contentElement: HTMLDivElement | null = null;
+    private touchDragDistanceX = 0;
+    private touchDragDistanceY = 0;
+    private isTouchDragging = false;
+    private ignoreNextClick = false;
+    private savedScrollLeft = 0;
+
     MobileToolbarState = {
         buttons: [],
         visible: false,
@@ -37,21 +44,23 @@ export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarSt
     }
 
     override afterRender(): void {
+        this.contentElement = this.querySelector(".mobile-toolbar__content");
         this.classList.toggle("is-visible", this.state.visible);
         this.setAttribute("role", "presentation");
+        this.restoreScrollPosition();
     }
 
     setButtons(buttons: MobileToolbarButton[]): void {
-        this.setState({ buttons: [...buttons] });
+        this.setStatePreservingScroll({ buttons: [...buttons] });
     }
 
     setVisible(visible: boolean): void {
         if (this.state.visible === visible) return;
-        this.setState({ visible });
+        this.setStatePreservingScroll({ visible });
     }
 
     refreshActiveStates(): void {
-        this.setState({ buttons: [...this.state.buttons] });
+        this.setStatePreservingScroll({ buttons: [...this.state.buttons] });
     }
 
     override render(): HTMLElement {
@@ -66,6 +75,8 @@ export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarSt
                         aria-label={button.label}
                         title={button.label}
                         onPointerDown={(event: PointerEvent) => this.handleButtonPointerDown(event)}
+                        onPointerMove={(event: PointerEvent) => this.handleButtonPointerMove(event)}
+                        onPointerUp={(event: PointerEvent) => this.handleButtonPointerUp(event)}
                         onClick={(event: MouseEvent) => this.handleButtonClick(event, button)}
                     >
                         {button.icon()}
@@ -76,6 +87,11 @@ export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarSt
     }
 
     private handleButtonClick(event: MouseEvent, button: MobileToolbarButton) {
+        if (this.ignoreNextClick) {
+            this.ignoreNextClick = false;
+            return;
+        }
+
         event.preventDefault();
         button.onClick();
         this.props.onAction?.();
@@ -83,7 +99,53 @@ export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarSt
     }
 
     private handleButtonPointerDown(event: PointerEvent) {
-        // Prevent the button from stealing focus and clearing the current selection
-        event.preventDefault();
+        // Prevent the button from stealing focus and clearing the current selection on desktop
+        if (event.pointerType === "mouse") {
+            event.preventDefault();
+            return;
+        }
+
+        this.touchDragDistanceX = event.clientX;
+        this.touchDragDistanceY = event.clientY;
+        this.isTouchDragging = false;
+        this.ignoreNextClick = false;
+    }
+
+    private handleButtonPointerMove(event: PointerEvent) {
+        if (event.pointerType === "mouse") return;
+
+        const deltaX = Math.abs(event.clientX - this.touchDragDistanceX);
+        const deltaY = Math.abs(event.clientY - this.touchDragDistanceY);
+
+        if (!this.isTouchDragging && (deltaX > 4 || deltaY > 4)) {
+            this.isTouchDragging = true;
+            this.ignoreNextClick = true;
+        }
+    }
+
+    private handleButtonPointerUp(event: PointerEvent) {
+        if (event.pointerType === "mouse") return;
+
+        this.ignoreNextClick = this.isTouchDragging;
+        this.isTouchDragging = false;
+        this.touchDragDistanceX = 0;
+        this.touchDragDistanceY = 0;
+    }
+
+    private setStatePreservingScroll(partial: Partial<MobileToolbarState>): void {
+        this.captureScrollPosition();
+        this.setState(partial);
+    }
+
+    private captureScrollPosition(): void {
+        if (this.contentElement) {
+            this.savedScrollLeft = this.contentElement.scrollLeft;
+        }
+    }
+
+    private restoreScrollPosition(): void {
+        if (this.contentElement) {
+            this.contentElement.scrollLeft = this.savedScrollLeft;
+        }
     }
 }
