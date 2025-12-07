@@ -24,6 +24,23 @@ function findClosestTable(node: Node | null | undefined): HTMLTableElement | nul
     return null;
 }
 
+function findClosestCell(node: Node | null | undefined): HTMLTableCellElement | null {
+    let current: Node | null | undefined = node;
+
+    while (current) {
+        if (current instanceof HTMLTableCellElement) return current;
+
+        if (current instanceof Element) {
+            const cell = current.closest<HTMLTableCellElement>("td,th");
+            if (cell) return cell;
+        }
+
+        current = current.parentNode;
+    }
+
+    return null;
+}
+
 export function findTableFromSelection(selection?: Selection | null): HTMLTableElement | null {
     const sel = selection ?? globalThis.getSelection?.() ?? null;
     if (!sel) return null;
@@ -47,6 +64,29 @@ export function resolveTableFromContext(context?: CommandContext): HTMLTableElem
     for (const node of candidates) {
         const table = findClosestTable(node);
         if (table) return table;
+    }
+
+    return null;
+}
+
+function resolveCellFromContext(
+    context?: CommandContext,
+    table?: HTMLTableElement | null,
+): HTMLTableCellElement | null {
+    const content = context?.content;
+    if (content instanceof HTMLTableCellElement) return content;
+
+    const candidates: Array<Node | null | undefined> = [
+        context?.event?.target as Node | null,
+        context?.target as Node | null,
+        context?.selection?.anchorNode,
+        context?.selection?.focusNode,
+        globalThis.document?.activeElement ?? null,
+    ];
+
+    for (const node of candidates) {
+        const cell = findClosestCell(node);
+        if (cell && (!table || cell.closest("table") === table)) return cell;
     }
 
     return null;
@@ -99,6 +139,63 @@ export function addColumnToTable(table: HTMLTableElement): boolean {
     const firstNewCell = rows[0].cells[newColumnIndex];
     if (firstNewCell) {
         focusOnElement(firstNewCell as HTMLElement);
+    }
+
+    return true;
+}
+
+export function deleteRowFromTable(
+    table: HTMLTableElement,
+    context?: CommandContext,
+): boolean {
+    const targetCell = resolveCellFromContext(context, table);
+    const targetRow = targetCell?.closest<HTMLTableRowElement>("tr");
+    if (!targetRow) return false;
+
+    const allRows = Array.from(table.querySelectorAll<HTMLTableRowElement>("tr"));
+    if (allRows.length <= 1) return false;
+
+    const rowIndex = allRows.indexOf(targetRow);
+    if (rowIndex === -1) return false;
+
+    const focusRow = allRows[rowIndex + 1] ?? allRows[rowIndex - 1];
+
+    targetRow.remove();
+
+    const focusCell = focusRow?.cells[Math.min(targetCell?.cellIndex ?? 0, Math.max(0, focusRow.cells.length - 1))]
+        ?? focusRow?.cells[0];
+
+    if (focusCell) {
+        focusOnElement(focusCell as HTMLElement);
+    }
+
+    return true;
+}
+
+export function deleteColumnFromTable(
+    table: HTMLTableElement,
+    context?: CommandContext,
+): boolean {
+    const targetCell = resolveCellFromContext(context, table);
+    if (!targetCell) return false;
+
+    const targetColumnIndex = targetCell.cellIndex;
+    const rows = Array.from(table.querySelectorAll<HTMLTableRowElement>("tr"));
+    const columnCount = rows[0]?.cells.length ?? 0;
+    if (!columnCount || columnCount <= 1) return false;
+
+    for (const row of rows) {
+        const cell = row.cells[targetColumnIndex];
+        cell?.remove();
+    }
+
+    const focusRow = targetCell.closest<HTMLTableRowElement>("tr");
+    const fallbackRow = rows.find((row) => row.cells.length > 0);
+    const focusCell = focusRow?.cells[Math.min(targetColumnIndex, Math.max(0, (focusRow.cells.length - 1)))]
+        ?? fallbackRow?.cells[0];
+
+    if (focusCell) {
+        focusOnElement(focusCell as HTMLElement);
     }
 
     return true;

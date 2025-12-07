@@ -17,7 +17,7 @@
             "path": "./extensions/table-command-extension.ts",
             "class": "TableCommandExtension",
             "active": true,
-            "description": "Registers table commands to add rows and columns."
+            "description": "Registers table commands to manage rows and columns."
         }, {
             "path": "./extensions/mobile-toolbar-table-extension.tsx",
             "class": "TableMobileToolbarExtension",
