@@ -20,6 +20,17 @@
     visibility: visible;
 }
 
+p.placeholder.empty::before {
+    visibility: hidden;
+}
+
+p.placeholder.empty:hover::before,
+p.placeholder.empty:focus::before,
+p.placeholder.empty:focus-within::before,
+p.placeholder.empty.has-caret::before {
+    visibility: visible;
+}
+
 table {
     border-collapse: collapse;
 }

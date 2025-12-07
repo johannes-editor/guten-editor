@@ -1,5 +1,10 @@
+import { findClosestBlockBySelection } from "../../utils/selection/selection-utils.ts";
+
+
 export class PlaceholderObserver {
     private observer: MutationObserver | null = null;
+
+    private selectionChangeHandler = () => this.updateCaretState();
 
     constructor(private target: HTMLElement) { }
 
@@ -19,11 +24,18 @@ export class PlaceholderObserver {
             subtree: true,
             characterData: true
         });
+
+        this.target.ownerDocument.addEventListener("selectionchange", this.selectionChangeHandler);
+
+        this.updateEmptyClass();
+        this.updateCaretState();
     }
 
     public stop() {
         this.observer?.disconnect();
         this.observer = null;
+
+        this.target.ownerDocument.removeEventListener("selectionchange", this.selectionChangeHandler);
     }
 
     private updateEmptyClass() {
@@ -35,5 +47,18 @@ export class PlaceholderObserver {
                 element.classList.remove('empty');
             }
         });
+    }
+
+    private updateCaretState() {
+        const placeholders = this.target.ownerDocument.querySelectorAll<HTMLElement>('p.placeholder');
+        placeholders.forEach((element) => element.classList.remove('has-caret'));
+
+        const selection = this.target.ownerDocument.getSelection?.();
+        if (!selection || selection.rangeCount === 0) return;
+
+        const currentBlock = findClosestBlockBySelection(selection);
+        if (currentBlock?.matches('p.placeholder')) {
+            currentBlock.classList.add('has-caret');
+        }
     }
 }
