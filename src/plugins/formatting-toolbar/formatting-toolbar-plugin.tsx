@@ -30,6 +30,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         this.extensionPlugins = extensions ?? [];
 
         document.addEventListener(dom.EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
+        document.addEventListener(dom.EventTypes.SelectionChange, debounce(() => this.handleSelection(), 100) as EventListener);
 
         document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
             if (event.key === keyboard.KeyboardKeys.Shift) {
