@@ -13,7 +13,7 @@ export const DeleteBlock: Command = {
         context.content?.blockOptions.remove();
 
         const currentBlock =
-            context.content?.block ?? selection.findClosestBlockBySelection();
+            context.content?.block ?? selection.findClosestBlockBySelection(context.selection ?? null);
 
         if (!currentBlock || !currentBlock.parentElement) return false;
 

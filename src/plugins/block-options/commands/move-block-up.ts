@@ -11,7 +11,7 @@ export const MoveBlockUp: Command = {
         context.content?.blockOptions.remove();
 
         const currentBlock =
-            context.content?.block ?? selection.findClosestBlockBySelection();
+            context.content?.block ?? selection.findClosestBlockBySelection(context.selection ?? null);
             
         if (!currentBlock) return false;
 

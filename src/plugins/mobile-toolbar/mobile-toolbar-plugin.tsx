@@ -123,7 +123,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
 
         const baseButtons = mode === "selection"
             ? this.buildFormattingButtons()
-            : this.defaultButtons();
+            : this.defaultButtons(context);
 
         const extensionButtons = this.collectExtensionButtons(context);
 
@@ -151,7 +151,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
         return buttons;
     }
 
-    private defaultButtons(): MobileToolbarButton[] {
+    private defaultButtons(context: MobileToolbarExtensionContext): MobileToolbarButton[] {
         return [
             {
                 id: "slash-menu",
@@ -164,21 +164,21 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
                 id: "move-up",
                 icon: () => <icons.ArrowUpIcon />,
                 label: t("move_up"),
-                onClick: () => runCommand("moveBlockUp"),
+                onClick: () => runCommand("moveBlockUp", { selection: context.selection ?? undefined }),
                 sort: 20,
             },
             {
                 id: "move-down",
                 icon: () => <icons.ArrowDownIcon />,
                 label: t("move_down"),
-                onClick: () => runCommand("moveBlockDown"),
+                onClick: () => runCommand("moveBlockDown", { selection: context.selection ?? undefined }),
                 sort: 30,
             },
             {
                 id: "delete-block",
                 icon: () => <icons.TrashIcon />,
                 label: t("delete"),
-                onClick: () => runCommand("deleteBlock"),
+                onClick: () => runCommand("deleteBlock", { selection: context.selection ?? undefined }),
                 sort: 40,
             },
         ];

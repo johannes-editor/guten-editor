@@ -14,11 +14,6 @@ export class SelectionUtils {
     }
 }
 
-// export function hasSelection(): boolean {
-//     const selection = globalThis.getSelection();
-//     return (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") ?? false;
-// }
-
 
 export function hasSelection(
     container: HTMLElement = document.getElementById('contentArea')!
@@ -68,12 +63,12 @@ export function clearSelection(): void {
     }
 }
 
-export function findClosestBlockBySelection(): HTMLElement | null {
-    const sel = globalThis.getSelection?.() || null;
+export function findClosestBlockBySelection(sel: Selection | null = null): HTMLElement | null {
+    const selection = sel ?? globalThis.getSelection?.() ?? null;
 
     let node: Node | null = null;
-    if (sel && sel.rangeCount > 0) {
-        node = sel.focusNode || sel.anchorNode || sel.getRangeAt(0).startContainer;
+    if (selection && selection.rangeCount > 0) {
+        node = selection.focusNode || selection.anchorNode || selection.getRangeAt(0).startContainer;
     }
 
     let el: Element | null = null;

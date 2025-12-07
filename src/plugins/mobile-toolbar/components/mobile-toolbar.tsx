@@ -65,6 +65,7 @@ export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarSt
                         class={`mobile-toolbar__button${button.isActive?.() ? " is-active" : ""}`}
                         aria-label={button.label}
                         title={button.label}
+                        onPointerDown={(event: PointerEvent) => this.handleButtonPointerDown(event)}
                         onClick={(event: MouseEvent) => this.handleButtonClick(event, button)}
                     >
                         {button.icon()}
@@ -79,5 +80,10 @@ export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarSt
         button.onClick();
         this.props.onAction?.();
         this.refreshActiveStates();
+    }
+
+    private handleButtonPointerDown(event: PointerEvent) {
+        // Prevent the button from stealing focus and clearing the current selection
+        event.preventDefault();
     }
 }
