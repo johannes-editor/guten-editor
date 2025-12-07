@@ -12,6 +12,17 @@
             "path": "./extensions/table-navigation-plugin.ts",
             "class": "TableNavigationPlugin",
             "active": true
+        },
+        {
+            "path": "./extensions/table-command-extension.ts",
+            "class": "TableCommandExtension",
+            "active": true,
+            "description": "Registers table commands to add rows and columns."
+        }, {
+            "path": "./extensions/mobile-toolbar-table-extension.tsx",
+            "class": "TableMobileToolbarExtension",
+            "active": true,
+            "description": "Adds table actions to the mobile toolbar when a table is focused."
         }
     ]
 }

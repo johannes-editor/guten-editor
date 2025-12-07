@@ -202,7 +202,6 @@ hr.block {
 }
 
 
-
 @media (max-width: 720px) {
     .modal--sheet-mobile {
         padding: 0 !important;
@@ -280,6 +279,19 @@ hr.block {
     .modal--sheet-mobile .guten-menu-item button {
         padding: var(--space-sm) var(--space-md) !important;
     }
+
+
+    .table-add-row-area,
+    .table-add-column-area {
+        display: none !important;
+    }
+
+    .table-block {
+        position: relative;
+        width: fit-content;
+        margin-bottom: 18px;
+        max-width: calc(100vw - 10px) !important;
+    }
 }
 
 
@@ -287,7 +299,7 @@ hr.block {
 .table-block {
     position: relative;
     width: fit-content;
-    margin-bottom: 18px;    
+    margin-bottom: 18px;
     max-width: calc(100vw - 90px);
 }
 
