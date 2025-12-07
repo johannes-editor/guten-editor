@@ -161,7 +161,8 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
         }
     };
 
-    private selectCategory = (catId: string) => {
+    private selectCategory = (event: MouseEvent, catId: string) => {
+        event.stopPropagation();
         if (catId === this.state.selectedCategory) return;
         this.setState({ selectedCategory: catId, selectedIndex: 0 });
         queueMicrotask(() => this.scrollSelectedIntoView());
@@ -235,7 +236,7 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
                             <button
                                 type="button"
                                 class={cat.id === this.state.selectedCategory ? "active" : ""}
-                                onClick={() => this.selectCategory(cat.id)}
+                                onClick={(event: MouseEvent) => this.selectCategory(event, cat.id)}
                                 title={cat.id}
                                 aria-label={cat.id}
                             >
