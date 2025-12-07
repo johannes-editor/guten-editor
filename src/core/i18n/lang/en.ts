@@ -39,6 +39,8 @@ const en: TranslationSchema = {
     move_down: 'Move down',
     comment: 'Comment',
     delete: 'Delete',
+    undo: 'Undo',
+    redo: 'Redo',
 
     add_table_header: 'Add header row',
     remove_table_header: 'Remove header row',

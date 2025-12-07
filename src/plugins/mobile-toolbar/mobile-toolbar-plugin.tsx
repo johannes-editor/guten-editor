@@ -161,6 +161,20 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
                 sort: 10,
             },
             {
+                id: "undo",
+                icon: () => <icons.UndoIcon />,
+                label: t("undo"),
+                onClick: () => runCommand("editor.undo"),
+                sort: 15,
+            },
+            {
+                id: "redo",
+                icon: () => <icons.RedoIcon />,
+                label: t("redo"),
+                onClick: () => runCommand("editor.redo"),
+                sort: 16,
+            },
+            {
                 id: "move-up",
                 icon: () => <icons.ArrowUpIcon />,
                 label: t("move_up"),
