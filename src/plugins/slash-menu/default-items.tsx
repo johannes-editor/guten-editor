@@ -1,18 +1,8 @@
 /** @jsx h */
 
-import { h, t, focusOnElement } from "../index.ts";
+import { h, t, runCommand } from "../index.ts";
 import { SlashMenuItemData } from "./components/types.ts";
-import { ParagraphBlock } from "../../components/blocks/paragraph.tsx";
-import { Heading1Block } from "../../components/blocks/header1.tsx";
-import { Heading2Block } from "../../components/blocks/header2.tsx";
-import { Heading3Block } from "../../components/blocks/header3.tsx";
-import { Heading4Block } from "../../components/blocks/header4.tsx";
-import { Heading5Block } from "../../components/blocks/header5.tsx";
-import { BlockquoteBlock } from "../../components/blocks/blockquote.tsx";
-import { BulletedListBlock } from "../../components/blocks/bulleted-list.tsx";
-import { NumberedListBlock } from "../../components/blocks/numbered-list.tsx";
 import { Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon, ParagraphIcon, SeparatorIcon } from "../../design-system/components/icons.tsx";
-import { SeparatorBlock } from "../../components/blocks/separator.tsx";
 
 export function defaultSlashMenuItems(): SlashMenuItemData[] {
     return [
@@ -22,9 +12,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("paragraph"),
             synonyms: [t("text")],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <ParagraphBlock />;
-                focusedBlock.after(element);
-                focusOnElement(element);
+                runCommand("insertParagraph", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -33,9 +21,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("heading_1"),
             synonyms: [t("title"), "h1"],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading1Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
+                runCommand("insertHeading1", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -44,9 +30,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("heading_2"),
             synonyms: [t("title"), "h2"],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading2Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
+                runCommand("insertHeading2", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -55,9 +39,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("quotation"),
             synonyms: ["cite", "quote", "blockquote"],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <BlockquoteBlock />;
-                focusedBlock.after(element);
-                focusOnElement(element);
+                runCommand("insertBlockquote", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -66,10 +48,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("bulleted_list"),
             synonyms: [t("list"), t("bulleted_list")],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <BulletedListBlock />;
-                focusedBlock.after(element);
-                const item = element.querySelector("li");
-                focusOnElement(item);
+                runCommand("insertBulletedList", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -78,10 +57,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("numbered_list"),
             synonyms: [t("list"), t("numbered"), t("ordered")],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <NumberedListBlock />;
-                focusedBlock.after(element);
-                const item = element.querySelector("li");
-                focusOnElement(item);
+                runCommand("insertNumberedList", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -90,9 +66,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("heading_3"),
             synonyms: [t("title"), "h3"],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading3Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
+                runCommand("insertHeading3", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -101,9 +75,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("heading_4"),
             synonyms: [t("title"), "h4"],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading4Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
+                runCommand("insertHeading4", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -112,9 +84,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("heading_5"),
             synonyms: [t("title"), "h5"],
             onSelect: (focusedBlock: HTMLElement) => {
-                const element = <Heading5Block />;
-                focusedBlock.after(element);
-                focusOnElement(element);
+                runCommand("insertHeading5", { content: { afterBlock: focusedBlock } });
             }
         },
         {
@@ -123,11 +93,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             label: t("separator"),
             synonyms: [t("divider"), t("line")],
             onSelect: (focusedBlock: HTMLElement) => {
-                const separator = <SeparatorBlock />;
-                const paragraph = <ParagraphBlock />;
-                focusedBlock.after(separator);
-                separator.after(paragraph);
-                focusOnElement(paragraph);
+                runCommand("insertSeparator", { content: { afterBlock: focusedBlock } });
             }
         }
     ];

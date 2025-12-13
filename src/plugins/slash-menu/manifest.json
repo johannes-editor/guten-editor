@@ -6,6 +6,11 @@
             "path": "./slash-menu-plugin.tsx",
             "class": "SlashMenuPlugin",
             "active": true
+        },
+        {
+            "path": "./extensions/slash-menu-command-extension.ts",
+            "class": "SlashMenuCommandExtension",
+            "active": true
         }
     ]
 }

@@ -1,26 +1,27 @@
 
 import { SelectionUtils } from "../../../utils/selection/index.ts";
 import { isEquationElement } from "../../equation/utils/equation-element.ts";
-import {  Plugin } from "../../index.ts";
-
-
-export type PasteBlockInstruction = {
-    type: string;
-    content?: string;
-    items?: Array<{ text: string; checked?: boolean }>;
-    rows?: string[][];
-    attrs?: Record<string, string>;
-};
-
-export type PasteBlocksEventDetail = {
-    instructions: PasteBlockInstruction[];
-};
+import {  Plugin, runCommand, selection } from "../../index.ts";
+import { InsertResultContext, PasteBlockInstruction, PasteBlocksEventDetail } from "../../../core/command/types.ts";
 
 export const PASTE_BLOCKS_EVENT = "guten:paste-blocks";
 
 export class PasteHandlerPlugin extends Plugin {
 
     private contentArea: HTMLElement | null = null;
+
+    private readonly instructionCommandMap: Record<string, string> = {
+        paragraph: "insertParagraph",
+        h1: "insertHeading1",
+        h2: "insertHeading2",
+        h3: "insertHeading3",
+        h4: "insertHeading4",
+        h5: "insertHeading5",
+        blockquote: "insertBlockquote",
+        "unordered-list": "insertBulletedList",
+        "ordered-list": "insertNumberedList",
+        separator: "insertSeparator",
+    };
 
     private readonly onPaste = (event: ClipboardEvent) => {
         const clipboard = event.clipboardData;
@@ -48,6 +49,8 @@ export class PasteHandlerPlugin extends Plugin {
         event.preventDefault();
         const instructions = this.extractBlockInstructions(body);
 
+        this.applyBlockInstructions(instructions);
+
         const detail: PasteBlocksEventDetail = { instructions };
         const target = this.contentArea ?? document;
 
@@ -62,6 +65,22 @@ export class PasteHandlerPlugin extends Plugin {
         this.contentArea = root.querySelector("#contentArea") ?? document.getElementById("contentArea");
         const target = this.contentArea ?? root;
         target.addEventListener("paste", this.onPaste);
+    }
+
+    private applyBlockInstructions(instructions: PasteBlockInstruction[]) {
+        if (!instructions.length) return;
+
+        const context: InsertResultContext = { afterBlock: selection.findClosestBlockBySelection() };
+
+        instructions.forEach((instruction, index) => {
+            const commandId = this.instructionCommandMap[instruction.type];
+            if (!commandId) return;
+
+            context.instruction = instruction;
+            context.focus = index === instructions.length - 1;
+
+            runCommand(commandId, { content: context, selection: globalThis.getSelection?.() ?? undefined, root: this.contentArea ?? undefined });
+        });
     }
 
     private insertPlainText(text: string) {
