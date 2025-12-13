@@ -21,3 +21,7 @@ export function isApplePlatform(): boolean {
 
     return false;
 }
+
+export function isMobileSheetViewport(): boolean {
+    return globalThis.matchMedia?.("(max-width: 720px)").matches ?? false;
+}

@@ -6,6 +6,7 @@ import { findClosestAncestorOfSelectionByClass } from "../../../utils/dom-utils.
 import { SelectionUtils } from "../../../utils/selection/selection-utils.ts";
 
 import { SlashMenuItemData } from "./types.ts";
+import { isMobileSheetViewport } from "../../../utils/platform/index.ts";
 
 interface SlashMenuProps {
     items: SlashMenuItemData[];
@@ -120,7 +121,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         this.registerEvent(this, dom.EventTypes.MouseMove, this.handleMouse as EventListener)
         this.setState({ items: this.props.items });
 
-        if (!this.isMobileSheetViewport()) {
+        if (!isMobileSheetViewport()) {
             this.positionToAnchor(this.props.anchorNode);
         }
 

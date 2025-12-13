@@ -6,6 +6,7 @@ import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
 import { dom, keyboard } from "../index.ts";
+import { isMobileSheetViewport } from "../../utils/platform/index.ts";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
 
@@ -30,7 +31,10 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
         this.extensionPlugins = extensions ?? [];
 
         document.addEventListener(dom.EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
-        document.addEventListener(dom.EventTypes.SelectionChange, debounce(() => this.handleSelection(), 100) as EventListener);
+
+        if (isMobileSheetViewport()) {
+            document.addEventListener(dom.EventTypes.SelectionChange, debounce(() => this.handleSelection(), 100) as EventListener);
+        }
 
         document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
             if (event.key === keyboard.KeyboardKeys.Shift) {

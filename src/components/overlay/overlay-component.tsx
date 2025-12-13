@@ -2,6 +2,7 @@
 
 import { ArrowLeftIcon, CloseIcon } from "../../design-system/components/icons.tsx";
 import { h } from "../../jsx.ts";
+import { isMobileSheetViewport } from "../../utils/platform/index.ts";
 import { Component } from "../component.ts";
 import { DefaultProps, DefaultState } from "../types.ts";
 import { pushOverlay, removeOverlay } from "./index.ts";
@@ -240,7 +241,7 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
 
     positionToAnchor(anchorOrRect: Node | DOMRect): void {
 
-        if (this.isMobileSheetViewport()) {
+        if (isMobileSheetViewport()) {
             return;
         }
 
@@ -299,7 +300,7 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
 
     public positionRelativeToMenu(anchorOrRect: HTMLElement | DOMRect, gap: number = 8): void {
 
-        if (this.isMobileSheetViewport()) {
+        if (isMobileSheetViewport()) {
             return;
         }
         
@@ -378,9 +379,5 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
             width: viewportWidth,
             height: viewportHeight,
         };
-    }
-
-    public isMobileSheetViewport(): boolean {
-        return globalThis.matchMedia?.("(max-width: 720px)").matches ?? false;
     }
 }
