@@ -1,0 +1,12 @@
+{
+    "name": "Paste Handler",
+    "author": "Alexandre Tavares",
+    "entries": [
+        {
+            "path": "./extensions/paste-handler-plugin.ts",
+            "class": "PasteHandlerPlugin",
+            "active": true,
+            "description": "Normaliza colagens de texto, conteúdo inline e blocos estruturados."
+        }
+    ]
+}
