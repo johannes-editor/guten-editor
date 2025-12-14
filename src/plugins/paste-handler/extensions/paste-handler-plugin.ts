@@ -82,6 +82,9 @@ export class PasteHandlerPlugin extends Plugin {
             context.instruction = instruction;
             context.focus = index === instructions.length - 1;
 
+            // For separators, we don't want a trailing paragraph.
+            context.createTrailingParagraph = instruction.type === "separator" ? false : undefined;
+
             runCommand(commandId, { content: context, selection: globalThis.getSelection?.() ?? undefined, root: this.contentArea ?? undefined });
         });
     }

@@ -2,6 +2,9 @@ export type InsertBlockPayload = {
     /** Block after which new content should be inserted. */
     afterBlock?: HTMLElement | null;
 
+    /** Whether to insert a trailing paragraph after creating the block, when applicable. */
+    createTrailingParagraph?: boolean;
+
     /** Parsed paste instruction with content for the block. */
     instruction?: PasteBlockInstruction;
 

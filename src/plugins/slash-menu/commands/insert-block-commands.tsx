@@ -120,8 +120,10 @@ export const InsertSeparatorCommand: Command<InsertResultContext> = {
         const insertedSeparator = appendAfter(afterBlock, separator);
         if (!insertedSeparator) return false;
 
-        const paragraph = <ParagraphBlock />;
-        const insertedParagraph = appendAfter(insertedSeparator, paragraph);
+        const shouldCreateParagraph = payload?.createTrailingParagraph ?? true;
+
+        const paragraph = shouldCreateParagraph ? <ParagraphBlock /> : null;
+        const insertedParagraph = paragraph ? appendAfter(insertedSeparator, paragraph) : null;
         updateLastInserted(insertedParagraph ?? insertedSeparator, payload);
 
         focusIfNeeded(insertedParagraph ?? insertedSeparator, payload);
