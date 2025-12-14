@@ -11,6 +11,12 @@
             "path": "./extensions/code-block-enter-plugin.ts",
             "class": "CodeBlockEnterPlugin",
             "active": true
+        },
+        {
+            "path": "./extensions/code-command-extension.ts",
+            "class": "CodeCommandExtension",
+            "description": "Adds code commands. E.g., insertCodeBlock.",
+            "active": true
         }
     ]
 }

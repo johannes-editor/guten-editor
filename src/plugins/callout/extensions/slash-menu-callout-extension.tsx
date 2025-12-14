@@ -1,7 +1,6 @@
 /** @jsx h */
-import { h, focusOnElement, icons } from "../../index.ts";
+import { h, icons, runCommand } from "../../index.ts";
 import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
-import { CalloutBlock } from "../components/callout-block.tsx";
 
 export class SlashMenuCalloutExtension extends SlashMenuExtensionPlugin {
 
@@ -18,9 +17,6 @@ export class SlashMenuCalloutExtension extends SlashMenuExtensionPlugin {
     }
 
     override onSelect(currentBlock: HTMLElement): void {
-        const callout = <CalloutBlock />;
-        currentBlock.after(callout);
-        const paragraph = callout.querySelector("p");
-        focusOnElement(paragraph);
+        runCommand("insertCallout", { content: { afterBlock: currentBlock } });
     }
 }

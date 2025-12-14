@@ -1,9 +1,8 @@
 /** @jsx h */
 
 import { CodeBlockIcon } from "../../../design-system/components/icons.tsx";
-import { focusOnElement, h, t } from "../../index.ts";
+import { h, runCommand, t } from "../../index.ts";
 import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
-import { CodeBlock } from "../components/code-block.tsx";
 
 
 export class SlashMenuCodeBlockExtension extends SlashMenuExtensionPlugin {
@@ -21,9 +20,6 @@ export class SlashMenuCodeBlockExtension extends SlashMenuExtensionPlugin {
     }
 
     override onSelect(currentBlock: HTMLElement): void {
-        const codeBlock = <CodeBlock />;
-        currentBlock.after(codeBlock);
-        const code = codeBlock.querySelector("code");
-        focusOnElement(code);
+        runCommand("insertCodeBlock", { content: { afterBlock: currentBlock } });
     }
 }

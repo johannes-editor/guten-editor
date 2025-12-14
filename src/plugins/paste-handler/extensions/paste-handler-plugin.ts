@@ -21,6 +21,9 @@ export class PasteHandlerPlugin extends Plugin {
         "unordered-list": "insertBulletedList",
         "ordered-list": "insertNumberedList",
         separator: "insertSeparator",
+        callout: "insertCallout",
+        image: "insertImageBlock",
+        "code-block": "insertCodeBlock",
     };
 
     private readonly onPaste = (event: ClipboardEvent) => {

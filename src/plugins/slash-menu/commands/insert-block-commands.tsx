@@ -12,24 +12,9 @@ import { NumberedListBlock } from "../../../components/blocks/numbered-list.tsx"
 import { ParagraphBlock } from "../../../components/blocks/paragraph.tsx";
 import { SeparatorBlock } from "../../../components/blocks/separator.tsx";
 import { InsertResultContext } from "../../../core/command/types.ts";
+import { appendAfter, getInstructionText, resolveAfterBlock } from "../../../utils/dom/index.ts";
 
-function resolveAfterBlock(context?: InsertResultContext): HTMLElement | null {
-    if (context?.lastInsertedBlock) return context.lastInsertedBlock;
-    if (context?.afterBlock) return context.afterBlock;
-    return selection.findClosestBlockBySelection();
-}
 
-function appendAfter(afterBlock: HTMLElement | null, element: HTMLElement): HTMLElement | null {
-    if (afterBlock?.parentElement) {
-        afterBlock.after(element);
-        return element;
-    }
-
-    const contentArea = document.getElementById("contentArea");
-    if (!contentArea) return null;
-    contentArea.appendChild(element);
-    return element;
-}
 
 function focusIfNeeded(element: HTMLElement | null, context?: InsertResultContext) {
     if (!element) return;
@@ -39,11 +24,6 @@ function focusIfNeeded(element: HTMLElement | null, context?: InsertResultContex
 
 function updateLastInserted(element: HTMLElement | null, context?: InsertResultContext) {
     if (context) context.lastInsertedBlock = element;
-}
-
-function getInstructionText(context?: InsertResultContext): string | undefined {
-    const text = context?.instruction?.content ?? undefined;
-    return text ? text : undefined;
 }
 
 function createListItems(context?: InsertResultContext): HTMLElement[] | undefined {

@@ -1,3 +1,7 @@
+import { InsertResultContext } from "../../core/command/types.ts";
+import { focusOnElement } from "../dom-utils.ts";
+import { selection } from "../index.ts";
+
 const BLOCK_ID_PREFIX = "block-";
 
 export function generateBlockId(): string {
@@ -341,4 +345,48 @@ export function findCodeAncestor(node: Node | null): HTMLElement | null {
     }
 
     return null;
+}
+
+
+
+export function applyInstructionText(target: HTMLElement | null, text: string | undefined) {
+    if (!target || !text) return;
+    target.textContent = text;
+    target.classList.remove("empty", "placeholder");
+    target.removeAttribute("data-placeholder");
+}
+
+export function getInstructionText(context?: InsertResultContext): string | undefined {
+    const text = context?.instruction?.content ?? undefined;
+    return text ? text : undefined;
+}
+
+export function resolveAfterBlock(context?: InsertResultContext): HTMLElement | null {
+    if (context?.lastInsertedBlock) return context.lastInsertedBlock;
+    if (context?.afterBlock) return context.afterBlock;
+    return selection.findClosestBlockBySelection();
+}
+
+
+export function appendAfter(afterBlock: HTMLElement | null, element: HTMLElement): HTMLElement | null {
+    if (afterBlock?.parentElement) {
+        afterBlock.after(element);
+        return element;
+    }
+
+    const contentArea = document.getElementById("contentArea");
+    if (!contentArea) return null;
+    contentArea.appendChild(element);
+    return element;
+}
+
+
+export function focusIfNeeded(element: HTMLElement | null, context?: InsertResultContext) {
+    if (!element) return;
+    if (context?.focus === false) return;
+    focusOnElement(element);
+}
+
+export function updateLastInserted(element: HTMLElement | null, context?: InsertResultContext) {
+    if (context) context.lastInsertedBlock = element;
 }
