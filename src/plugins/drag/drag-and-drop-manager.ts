@@ -4,6 +4,7 @@ import { Tooltip } from "../../design-system/components/tooltip.tsx";
 
 export class DragAndDropManager {
     private mutationObserver: MutationObserver | null = null;
+    private overlayObserver: MutationObserver | null = null;
     private currentDrag: HTMLElement | null = null;
     private currentTarget: HTMLElement | null = null;
     private handleWrap: HTMLElement | null = null;
@@ -17,26 +18,23 @@ export class DragAndDropManager {
     start() {
         this.setupOverlayArea();
         this.createHandle();
+        this.bindHandleEvents();
+        this.observeOverlay();
         this.updateTargets();
         this.mutationObserver = new MutationObserver(() => this.updateTargets());
         this.mutationObserver.observe(this.content, { childList: true, subtree: true });
         window.addEventListener(EventTypes.Scroll, () => this.updateHandlePosition());
         window.addEventListener(EventTypes.Resize, () => this.updateHandlePosition());
-        this.handle?.addEventListener(EventTypes.PointerDown, (e) => this.onPointerDown(e as PointerEvent));
-        this.handleWrap?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.handleWrap?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
-        this.handle?.addEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
     }
 
     stop() {
         this.mutationObserver?.disconnect();
         this.mutationObserver = null;
+        this.overlayObserver?.disconnect();
+        this.overlayObserver = null;
         document.removeEventListener(EventTypes.PointerMove, this.onPointerMove);
         document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
-        this.handle?.removeEventListener(EventTypes.PointerDown, this.onPointerDown);
-        this.handleWrap?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.handleWrap?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
-        this.handle?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
+        this.unbindHandleEvents();
         this.handleWrap?.remove();
         this.handleWrap = null;
         this.handle = null;
@@ -45,6 +43,10 @@ export class DragAndDropManager {
     }
 
     private setupOverlayArea() {
+
+        const overlayRoot = this.resolveOverlayRoot();
+        if (!overlayRoot) return;
+
         this.layer = document.createElement('div');
         const layer = this.layer;
         layer.style.position = 'fixed';
@@ -52,10 +54,13 @@ export class DragAndDropManager {
         layer.style.left = '0';
         layer.style.pointerEvents = 'none';
         layer.style.overflow = 'visible';
-        this.overlay.appendChild(layer);
+        overlayRoot.appendChild(layer);
     }
 
     private createHandle() {
+
+        if (!this.layer || !this.layer.isConnected) return;
+        
         const handle = document.createElement('div');
         handle.className = 'drag-handle';
         handle.textContent = '⠿';
@@ -80,6 +85,77 @@ export class DragAndDropManager {
         this.layer?.appendChild(wrap);
         this.handle = handle;
         this.handleWrap = wrap;
+    }
+
+    private bindHandleEvents() {
+        this.handle?.addEventListener(EventTypes.PointerDown, this.onPointerDown);
+        this.handleWrap?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
+        this.handleWrap?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
+        this.handle?.addEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
+    }
+
+    private unbindHandleEvents() {
+        this.handle?.removeEventListener(EventTypes.PointerDown, this.onPointerDown);
+        this.handleWrap?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
+        this.handleWrap?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
+        this.handle?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
+    }
+
+    private observeOverlay() {
+        this.overlayObserver?.disconnect();
+        const overlayRoot = this.resolveOverlayRoot();
+        if (!overlayRoot) return;
+
+        this.overlayObserver = new MutationObserver(() => this.ensureOverlayIntegrity());
+        this.overlayObserver.observe(overlayRoot, { childList: true, subtree: false });
+    }
+
+    private resolveOverlayRoot(): HTMLElement | null {
+        if (this.overlay?.isConnected) return this.overlay;
+
+        if (this.overlay?.id) {
+            const next = document.getElementById(this.overlay.id);
+            if (next) {
+                this.overlay = next;
+                return next;
+            }
+        }
+
+        const fallback = document.getElementById('overlayArea');
+        if (fallback) {
+            this.overlay = fallback;
+            return fallback;
+        }
+
+        return null;
+    }
+
+    private ensureOverlayIntegrity() {
+        const overlayRoot = this.resolveOverlayRoot();
+        if (!overlayRoot) return;
+
+        const layerMissing = !this.layer || !this.layer.isConnected || !overlayRoot.contains(this.layer);
+        const handleMissing = !this.handleWrap || !this.handleWrap.isConnected || !this.handle || !this.handle.isConnected;
+        this.observeOverlay();
+
+        if (layerMissing) {
+            this.layer?.remove();
+            this.handleWrap?.remove();
+            this.handle = null;
+            this.handleWrap = null;
+            this.setupOverlayArea();
+            this.createHandle();
+            this.bindHandleEvents();
+            return;
+        }
+
+        if (handleMissing) {
+            this.handleWrap?.remove();
+            this.handle = null;
+            this.handleWrap = null;
+            this.createHandle();
+            this.bindHandleEvents();
+        }
     }
 
     private updateTargets() {
@@ -136,6 +212,7 @@ export class DragAndDropManager {
     }
 
     private showHandle() {
+        this.ensureOverlayIntegrity();
         if (!this.currentTarget || !this.handleWrap) return;
         this.handleWrap.style.display = 'block';
         this.updateHandlePosition();
