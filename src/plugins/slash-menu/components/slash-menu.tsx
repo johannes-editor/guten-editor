@@ -88,13 +88,26 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             all: unset;
             display: flex;
             padding: .25rem 10px;
-            border-radius: 5px;
+            border-radius: var(--menu-item-radius);
             width: 100%;
             box-sizing: border-box;
+            color: var(--menu-item-color);
+            background: var(--menu-item-bg);
+            border: var(--menu-item-border);
+            box-shadow: var(--menu-item-shadow, none);
+        }
+
+        .guten-menu button:hover,
+        .guten-menu button:focus {
+            background-color: var(--menu-item-bg-hover);
+            border: var(--menu-item-border-hover);
+            color: var(--menu-item-color-hover);
         }
 
         .guten-menu button.selected {
-            background-color: var(--color-surface-muted);
+            background-color: var(--menu-item-bg-selected);
+            border: var(--menu-item-border-selected);
+            color: var(--menu-item-color-selected);
         }
 
         .guten-menu.no-items-found {

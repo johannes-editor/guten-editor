@@ -36,7 +36,9 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
           --menu-indicator-w: 20px;
           all: unset;
           padding: var(--space-xs) var(--space-md);
-          font-size: var(--font-size);
+          font-size: var(--button-font-size);
+          font-family: var(--button-font-family);
+          font-weight: var(--button-font-weight);
           display: grid;
           grid-template-columns: 1fr var(--menu-indicator-w);
           align-items: center;
@@ -53,8 +55,16 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
         .guten-menu-item button:hover,
         .guten-menu-item button.selected,
         .guten-menu-item button:focus {
-          background-color: var(--color-surface-muted);
+          background-color: var(--menu-item-bg-hover);
+          border: var(--menu-item-border-hover);
+          color: var(--menu-item-color-hover);
           cursor: pointer;
+        }
+
+        .guten-menu-item button.selected {
+          background-color: var(--menu-item-bg-selected);
+          border: var(--menu-item-border-selected);
+          color: var(--menu-item-color-selected);
         }
 
         .guten-menu-item-left  { display: inline-flex; align-items: center; gap: var(--space-custom-10); min-width: 0; }
@@ -80,7 +90,7 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
         }
         .guten-menu-separator{
           border: none;
-          border-top: 1px solid var(--color-border);
+          border-top: var(--border-default);
           margin: var(--space-xs) var(--space-sm);
           height:0;
         }

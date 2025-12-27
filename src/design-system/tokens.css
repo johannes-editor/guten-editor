@@ -7,6 +7,7 @@
 
     /* === TYPOGRAPHY === */
     --font-family: system-ui, sans-serif;
+    --button-font-family: var(--font-family);
 
     --font-size-xxs: 0.625rem;
     --font-size-xs: 0.75rem;
@@ -39,9 +40,66 @@
     --radius-lg: .75rem;  /* 12px */
     --radius-xl: 1rem;    /* 16px */
 
+    --toolbar-radius: 1.125rem;
+
+    --border-width: 1px;
+    --border-style: solid;
+    --border-color: var(--color-border);
+    --border-default: var(--border-width) var(--border-style) var(--border-color);
+
     --shadow-sm: 0 1px 2px rgba(97, 63, 63, 0.05);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.2);
+
+        /* === BUTTONS === */
+    --button-padding-y: 0.35rem;
+    --button-padding-x: 0.75rem;
+    --button-radius: var(--radius-sm);
+    --button-bg: var(--color-surface);
+    --button-bg-hover: var(--color-surface-muted);
+    --button-bg-active: var(--color-surface-muted);
+    --button-color: var(--color-ui-text);
+    --button-border: var(--border-default);
+    --button-shadow: none;
+    --button-shadow-hover: var(--button-shadow);
+    --button-shadow-active: var(--button-shadow);
+
+    --button-primary-bg: var(--color-primary);
+    --button-primary-bg-hover: var(--color-primary-hover);
+    --button-primary-bg-active: var(--color-primary-hover);
+    --button-primary-color: var(--color-light);
+    --button-primary-border: 1px solid var(--color-primary);
+    --button-primary-shadow: none;
+
+    --toolbar-button-padding: var(--space-xs);
+    --toolbar-button-radius: var(--radius-sm);
+    --toolbar-button-bg: transparent;
+    --toolbar-button-bg-hover: var(--color-surface-muted);
+    --toolbar-button-bg-active: var(--toolbar-button-bg-hover);
+    --toolbar-button-border: 1px solid transparent;
+    --toolbar-button-border-hover: 1px solid transparent;
+    --toolbar-button-border-active: var(--toolbar-button-border-hover);
+    --toolbar-button-shadow: none;
+    --toolbar-button-shadow-hover: var(--toolbar-button-shadow);
+    --toolbar-button-shadow-active: var(--toolbar-button-shadow-hover);
+    --toolbar-button-color: var(--color-ui-text);
+
+    --menu-item-bg: transparent;
+    --menu-item-bg-hover: var(--color-surface-muted);
+    --menu-item-bg-selected: var(--color-surface-muted);
+    --menu-item-border: 1px solid transparent;
+    --menu-item-border-hover: 1px solid transparent;
+    --menu-item-border-selected: 1px solid transparent;
+    --menu-item-radius: var(--radius-sm);
+    --menu-item-color: var(--color-ui-text);
+    --menu-item-color-hover: var(--color-ui-text);
+    --menu-item-color-selected: var(--color-ui-text);
+
+    /* === INPUTS === */
+    --input-radius: var(--radius-sm);
+    --input-border: var(--border-default);
+    --input-bg: var(--color-surface-muted);
+    --input-color: var(--color-text);
 
     /* === ICONS === */
     --icon-size-sm: 1rem;     /* 16px */

@@ -44,28 +44,37 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
             padding: var(--space-md) var(--space-md);
         }
         
-        .guten-input-popover button{
+        .guten-input-popover button {
             display: block;
-            background-color: var(--color-primary);
-            border-radius: var(--radius-sm);
-            border-color: var(--color-primary);
+            background-color: var(--button-primary-bg);
+            border-radius: var(--button-radius);
+            border: var(--button-primary-border);
             width: 100%;
-            color: var(--color-light);
-            border: none;
+            color: var(--button-primary-color);
             padding: var(--space-sm);
+            font-family: var(--button-font-family);
+            font-weight: var(--button-font-weight);
+            font-size: var(--button-font-size);
+            box-shadow: var(--button-primary-shadow);
+        }
+
+        .guten-input-popover button:hover {
+            background-color: var(--button-primary-bg-hover);
+        }
+
+        .guten-input-popover button:active {
+            background-color: var(--button-primary-bg-active, var(--button-primary-bg-hover));
         }
 
         .guten-input-popover input {
             width: 100%;
             box-sizing: border-box;
-            border-radius: var(--radius-sm);
+            border-radius: var(--input-radius);
             padding: var(--space-sm);
-            border-color: var(--color-border);
             box-shadow: none;
-            border: none;
-            border: 1px solid var(--color-border);
-            background-color: var(--color-surface-muted);
-            color: var(--color-text);
+            border: var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--input-color);
             width: 330px;
         }
     `);

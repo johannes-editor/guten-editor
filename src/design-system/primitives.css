@@ -65,20 +65,20 @@ blockquote::before {
 
 hr.block {
     border: none;
-    border-top: 1px solid var(--color-border);
+    border-top: var(--border-default);;
     margin: var(--space-lg) 0;
     height: 2px;
 }
 
 .surface {
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    border: var(--border-default);;
 }
 
 .card {
     color: var(--color-ui-text);
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    border: var(--border-default);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     font-size: var(--font-size-sm);
@@ -97,7 +97,7 @@ hr.block {
     justify-content: space-between;
     gap: var(--space-xs);
     padding: var(--space-sm) var(--space-md);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: var(--border-default);;
     background: var(--color-surface);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
@@ -121,13 +121,15 @@ hr.block {
     align-items: center;
     justify-content: center;
     gap: var(--space-xxs);
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    color: var(--color-ui-text);
-    font-size: var(--font-size-xs);
-    font-weight: 600;
+    padding: var(--button-padding-y) var(--button-padding-x);
+    border-radius: var(--button-radius);
+    border: var(--button-border);
+    background: var(--button-bg);
+    color: var(--button-color);
+    font-size: var(--button-font-size);
+    font-weight: var(--button-font-weight);
+    font-family: var(--button-font-family);
+    box-shadow: var(--button-shadow);
     cursor: pointer;
 }
 
@@ -138,6 +140,16 @@ hr.block {
 
 .modal__action[hidden] {
     display: none !important;
+}
+
+.modal__action:hover {
+    background: var(--button-bg-hover);
+    box-shadow: var(--button-shadow-hover);
+}
+
+.modal__action:active {
+    background: var(--button-bg-active);
+    box-shadow: var(--button-shadow-active);
 }
 
 .animate-overlay {

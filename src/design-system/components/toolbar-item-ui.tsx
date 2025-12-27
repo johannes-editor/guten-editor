@@ -21,9 +21,15 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
 
         .guten-toolbar-item button {
             all: unset;
-            padding: var(--space-xs);
-            font-size: var(--font-size);
-            color: var(--color-ui-text);
+            padding: var(--toolbar-button-padding);
+            font-size: var(--button-font-size);
+            font-family: var(--button-font-family);
+            font-weight: var(--button-font-weight);
+            color: var(--toolbar-button-color);
+            background: var(--toolbar-button-bg);
+            border: var(--toolbar-button-border);
+            border-radius: var(--toolbar-button-radius);
+            box-shadow: var(--toolbar-button-shadow);
         }
 
         .guten-toolbar-item button svg {
@@ -33,9 +39,16 @@ export class ToolbarItemUI<P extends ToolbarItemUIProps = DefaultProps, S = Defa
         }
 
         .guten-toolbar-item button:hover {
-            background-color: var(--color-surface-muted);
+            background-color: var(--toolbar-button-bg-hover);
+            border: var(--toolbar-button-border-hover);
+            box-shadow: var(--toolbar-button-shadow-hover);
             cursor: pointer;
-            border-radius: var(--radius-sm);
+        }
+
+        .guten-toolbar-item button:active {
+            background-color: var(--toolbar-button-bg-active);
+            border: var(--toolbar-button-border-active);
+            box-shadow: var(--toolbar-button-shadow-active);
         }
 
         .active button svg{

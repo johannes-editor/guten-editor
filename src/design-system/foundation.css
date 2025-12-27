@@ -50,7 +50,7 @@ p code {
     background-color: var(--color-surface-muted);
     padding: 0 3px;
     border-radius: 4px;
-    border: 1px solid var(--color-border);
+    border: var(--border-default);
 }
 
 .code-block {
