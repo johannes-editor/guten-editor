@@ -1,1 +1,1 @@
-export { initEditor } from "./main.tsx";
+export { getEditorThemes, initEditor } from "./main.tsx";

@@ -1,5 +1,6 @@
 // demo/main.ts
-import { initEditor } from "../src/main.tsx";
+import { getEditorThemes, initEditor } from "../src/main.tsx";
 
 const root = document.getElementById("editor")!;
+console.log("Available editor themes:", getEditorThemes());
 initEditor(root);
