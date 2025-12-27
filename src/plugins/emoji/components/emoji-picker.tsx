@@ -54,13 +54,17 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
             padding: 6px 8px;
             text-align: center;
             line-height: 1;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
         }
 
-        .emoji-picker button:hover,
+        .emoji-picker button:hover {
+            background: var(--color-surface-muted);
+        }
+
         .emoji-picker button.selected {
             background: var(--color-surface-muted);
+            color: var(--color-selection-text);
         }
 
         .emoji-categories {
@@ -74,23 +78,29 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
         .emoji-categories button {
             all: unset;
             padding: 6px 10px;
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            color: var(--color-ui-text);
         }
 
         .emoji-categories button.active {
             background: var(--color-surface-muted);
+            color: var(--color-selection-text);
             font-weight: 600;
-            // color: var(--color-ui-text);
+            color: var(--color-ui-text);
+        }
+
+        .emoji-categories button:hover {
+            background: var(--color-surface-muted);            
         }
 
         .emoji-categories button svg {
             width: var(--font-size-xl);
             height: var(--font-size-xl);
-            color: var(--color-ui-text);
+            color: currentColor;
             display: block;
         }
     `);
