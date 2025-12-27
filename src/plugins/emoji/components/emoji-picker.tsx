@@ -60,7 +60,7 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
 
         .emoji-picker button:hover,
         .emoji-picker button.selected {
-            background: #e6e6e6;
+            background: var(--color-surface-muted);
         }
 
         .emoji-categories {
@@ -69,7 +69,7 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
             flex-wrap: wrap;
             padding-top: 8px;
             margin-top: 8px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--color-border);
         }
         .emoji-categories button {
             all: unset;
@@ -82,8 +82,9 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
         }
 
         .emoji-categories button.active {
-            background: #e6e6e6;
+            background: var(--color-surface-muted);
             font-weight: 600;
+            // color: var(--color-ui-text);
         }
 
         .emoji-categories button svg {

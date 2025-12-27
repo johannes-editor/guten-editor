@@ -49,11 +49,10 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
             background-color: var(--color-primary);
             border-radius: var(--radius-sm);
             border-color: var(--color-primary);
-            width: 330px;
-            color: white;
+            width: 100%;
+            color: var(--color-light);
             border: none;
-            padding: var(--space-xs);
-            
+            padding: var(--space-sm);
         }
 
         .guten-input-popover input {
@@ -65,12 +64,15 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
             box-shadow: none;
             border: none;
             border: 1px solid var(--color-border);
+            background-color: var(--color-surface-muted);
+            color: var(--color-text);
+            width: 330px;
         }
     `);
 
     override connectedCallback(): void {
         super.connectedCallback();
-        this.setAttribute("class", "guten-input-popover modal--sheet-mobile card animate-overlay");
+        this.setAttribute("class", "guten-input-popover modal--sheet-mobile card outline-none animate-overlay");
 
         this.registerEvent(this.input, dom.EventTypes.KeyDown, ((event: KeyboardEvent) => this.handleKeydown(event)) as EventListener);
     }

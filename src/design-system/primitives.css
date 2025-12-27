@@ -280,7 +280,6 @@ hr.block {
         padding: var(--space-sm) var(--space-md) !important;
     }
 
-
     .table-add-row-area,
     .table-add-column-area {
         display: none !important;
@@ -289,7 +288,7 @@ hr.block {
     .table-block {
         position: relative;
         width: fit-content;
-        margin-bottom: 22px;
+        margin-bottom: 24px;
         max-width: calc(100vw - 10px) !important;
     }
 }
@@ -299,7 +298,7 @@ hr.block {
 .table-block {
     position: relative;
     width: fit-content;
-    margin-bottom: 18px;
+    margin-bottom: 24px;
     max-width: calc(100vw - 90px);
 }
 
@@ -337,9 +336,8 @@ hr.block {
     position: absolute;
     cursor: pointer;
     z-index: 2;
-    background-color: rgba(126, 131, 139, 0.1);
+    background-color: var(--color-surface-muted);
     display: flex;
-    border-radius: 2px
 }
 
 .table-add-column-area button {
@@ -362,4 +360,13 @@ hr.block {
 
 .table-add-column-area button {
     all: unset;
+}
+
+
+.outline-none:focus,
+.outline-none input:focus,
+.outline-none select:focus,
+.outline-none textarea:focus,
+.outline-none button:focus {
+    outline: none;
 }

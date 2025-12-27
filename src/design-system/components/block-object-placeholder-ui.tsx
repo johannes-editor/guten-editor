@@ -17,6 +17,13 @@ export abstract class BlockObjectPlaceholderUI extends Component {
             background: var(--placeholder-bg);
             border-radius: var(--radius-sm);
             gap: var(--space-sm);
+
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
+                "Noto Sans", "Helvetica Neue", Arial, sans-serif,
+                "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            
+            font-size: var(--font-size-sm);
+            margin: var(--space-sm) 0;
         }
 
         .object-placeholder div {

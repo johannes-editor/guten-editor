@@ -42,7 +42,6 @@ export class TextColorMenu extends MenuUI<TextColorMenuProps, TextColorMenuState
         guten-formatting-highlight-color-menu .guten-menu {
             max-height: inherit;
             overflow-y: auto;
-            scrollbar-gutter: stable;
         }
     `);
 

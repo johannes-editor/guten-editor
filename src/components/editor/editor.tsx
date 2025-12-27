@@ -8,6 +8,9 @@ import { Component } from "../../plugins/index.ts";
 import { ParagraphTrigger } from "../paragraph-trigger/paragraph-trigger.tsx";
 
 import tokens from "../../design-system/tokens.css?inline";
+import lightTheme from "../../design-system/themes/light.css?inline";
+import darkTheme from "../../design-system/themes/dark.css?inline";
+import draculaTheme from "../../design-system/themes/dracula.css?inline";
 import primitives from "../../design-system/primitives.css?inline";
 import foundation from "../../design-system/foundation.css?inline";
 
@@ -17,7 +20,7 @@ export class Editor extends Component {
         return "x-guten-editor";
     }
 
-    static override styles = [foundation, tokens, primitives];
+    static override styles = [tokens, lightTheme, darkTheme, draculaTheme, foundation, primitives];
 
     private contentArea: HTMLElement | null = null;
     private overlayArea: HTMLElement | null = null;
@@ -48,6 +51,7 @@ export class Editor extends Component {
             this.overlayArea.style.height = "0";
             this.overlayArea.style.overflow = "visible";
             this.overlayArea.style.pointerEvents = "none";
+            this.overlayArea.style.zIndex = "1000";
         }
 
         if (this.contentArea) {

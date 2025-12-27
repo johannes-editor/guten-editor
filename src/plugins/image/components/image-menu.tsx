@@ -34,6 +34,8 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
     private anchorRect: DOMRect | null = null;
     private urlInput: HTMLInputElement | null = null;
     private fileInput: HTMLInputElement | null = null;
+    private uploadButton: HTMLButtonElement | null = null;
+
     private readonly reservedDatasetKeys = new Set(["imageSource", "imageAlt", "imagePlaceholder", "imageEmbed"]);
 
     static override styles = this.extendStyles(/*css*/`
@@ -41,7 +43,7 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
             width: 340px;
             display: flex;
             flex-direction: column;
-            background: var(--color-surface, #fff);
+            background: var(--color-surface);
             border-radius: var(--radius-md);
             overflow: hidden;
         }
@@ -81,15 +83,12 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
             justify-content: center;
             padding: var(--space-sm);
             border-radius: var(--radius-sm);
-            border: 1px dashed var(--color-border-strong, var(--color-border));
-            background: var(--color-muted-bg, rgba(0,0,0,0.02));
+            border: 1px solid var(--color-primary);
+            background: var(--color-primary);
             cursor: pointer;
             transition: background 0.2s ease;
             font-weight: 500;
-        }
-
-        .image-menu__upload-button:hover:not([disabled]) {
-            background: var(--color-border-subtle, rgba(0,0,0,0.04));
+            color: var(--color-light);
         }
 
         .image-menu__upload-button[disabled] {
@@ -114,6 +113,8 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
             border-radius: var(--radius-sm);
             padding: var(--space-sm);
             font-size: var(--font-size-sm);
+            background-color: var(--color-surface-muted);
+            color: var(--color-text);
         }
 
         .image-menu__actions {
@@ -124,12 +125,13 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
 
         .image-menu__primary-button {
             background: var(--color-primary);
-            color: var(--color-on-primary, #fff);
+            color: var(--color-light);
             border: none;
             border-radius: var(--radius-sm);
             padding: var(--space-sm);
-            font-weight: 600;
             cursor: pointer;
+            width: 100%;
+            margin: 0 auto;
         }
 
         .image-menu__primary-button[disabled] {
@@ -194,11 +196,15 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
         if (this.anchorRect) {
             this.ensureWithinViewport(this.anchorRect);
         }
+
+        if (this.uploadButton) {
+            this.uploadButton.focus();
+        }
     }
 
     override render(): HTMLElement {
         return (
-            <div class="image-menu modal--sheet-mobile-w100">
+            <div class="image-menu modal--sheet-mobile-w100 outline-none">
                 <div class="image-menu__tabs " role="tablist">
                     {this.renderTabButton("upload", t("image_tab_upload"))}
                     {this.renderTabButton("embed", t("image_tab_embed"))}
@@ -239,6 +245,7 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
                     onChange={(event: Event) => this.handleFileChange(event)}
                 />
                 <button
+                    ref={(el: HTMLButtonElement | null) => { this.uploadButton = el; }}
                     type="button"
                     class="image-menu__upload-button"
                     onClick={() => this.openFilePicker()}

@@ -64,6 +64,12 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             max-height: 12rem;
             padding: 0 .5rem;
             width: max-content;
+            
+            @-moz-document url-prefix() {
+                .slash-menu-wrapper {
+                    padding-right: 12px !important;
+                }
+            }
         }
 
         .guten-menu li{
@@ -81,14 +87,14 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         .guten-menu button {
             all: unset;
             display: flex;
-            padding: .25rem 1rem;
+            padding: .25rem 10px;
             border-radius: 5px;
             width: 100%;
             box-sizing: border-box;
         }
 
         .guten-menu button.selected {
-            background-color: #f5f5f5;
+            background-color: var(--color-surface-muted);
         }
 
         .guten-menu.no-items-found {

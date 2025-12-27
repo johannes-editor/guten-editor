@@ -303,7 +303,7 @@ export class DragAndDropManager {
         const ph = this.placeholder;
         ph.className = 'drag-placeholder';
         ph.style.height = '2px';
-        ph.style.background = '#0078d4';
+        ph.style.background = 'var(--color-primary, #0078d4)';
         ph.style.margin = '4px 0';
         ph.style.pointerEvents = 'none';
         ph.contentEditable = 'false';

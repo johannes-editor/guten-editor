@@ -11,7 +11,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    color: #9ca3af;
+    color: var(--color-text-placeholder);
     pointer-events: none;
     visibility: hidden;
 }
@@ -32,15 +32,16 @@ p.placeholder.empty.has-caret::before {
 }
 
 table {
-    border-collapse: collapse;
+    border-collapse:collapse;
 }
 
 th,
 td {
-    border: 1px solid rgb(233, 233, 231);
+    border: 1px solid var(--color-text);
     text-align: left;
     vertical-align: top;
     padding: .375rem .625rem;
+    outline: none;
 }
 
 th {
@@ -52,6 +53,16 @@ td {
     min-width: 7.5rem;
     max-width: 15rem;
     height: 1rem;
+}
+
+th, td {
+  border: 1px solid var(--color-text);
+  outline: none;
+}
+
+td:focus-visible, th:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-selection);
 }
 
 .todo-list {
