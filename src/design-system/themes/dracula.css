@@ -65,3 +65,9 @@
     --scrollbar-thumb: rgba(255, 255, 255, 0.20);
     --scrollbar-track: transparent;
 }
+
+[theme="dracula"] ul,
+[theme="dracula"] .guten-menu,
+[theme="dracula"] .guten-menu ul {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}

@@ -91,12 +91,6 @@ p code {
 
 
 /* Scrollbar styling */
-ul,
-.guten-menu,
-.guten-menu ul {
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-}
-
 ul::-webkit-scrollbar-track,
 .guten-menu::-webkit-scrollbar-track,
 .guten-menu ul::-webkit-scrollbar-track {

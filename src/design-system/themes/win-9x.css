@@ -4,7 +4,7 @@
     --link-visited: #551a8b;
     --link-hover: #0000ee;
 
-    --color-bg: #c0c0c0;
+    --color-bg: #dbdbdb;
     --color-surface: #c0c0c0;
     --color-surface-muted: #dfdfdf;
     --color-text: #000000;
@@ -54,7 +54,7 @@
 
     --tooltip-bg: #ffffe1;
     --tooltip-text: #000000;
-    --placeholder-bg: #e6e6e6;
+    --placeholder-bg: #808080;
 
     --color-code-block-background: #f7f7f7;
 
@@ -119,4 +119,58 @@
     --input-border: 1px solid #000000;
     --input-bg: #ffffff;
     --input-color: #000000;
+}
+
+[data-guten-theme="win-9x"] .card.animate-overlay,
+[theme="win-9x"] .card.animate-overlay {
+    border: 1px solid #000000;
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #808080,
+        1px 1px #000000;
+}
+
+[data-guten-theme="win-9x"] ul::-webkit-scrollbar,
+[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar,
+[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar,
+[theme="win-9x"] ul::-webkit-scrollbar,
+[theme="win-9x"] .guten-menu::-webkit-scrollbar,
+[theme="win-9x"] .guten-menu ul::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+    margin-top: 15px !important;
+    border-radius: 0;
+}
+
+[data-guten-theme="win-9x"] ul::-webkit-scrollbar-track,
+[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar-track,
+[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar-track,
+[theme="win-9x"] ul::-webkit-scrollbar-track,
+[theme="win-9x"] .guten-menu::-webkit-scrollbar-track,
+[theme="win-9x"] .guten-menu ul::-webkit-scrollbar-track {
+    background: #dbdbdb;
+    border: 1px solid #000000;
+}
+
+[data-guten-theme="win-9x"] ul::-webkit-scrollbar-thumb,
+[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar-thumb,
+[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar-thumb,
+[theme="win-9x"] ul::-webkit-scrollbar-thumb,
+[theme="win-9x"] .guten-menu::-webkit-scrollbar-thumb,
+[theme="win-9x"] .guten-menu ul::-webkit-scrollbar-thumb {
+    background-color: #c2c2c2;
+    border: 1px solid #000000;
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #808080;
+    border-radius: 0 !important;
+}
+
+[data-guten-theme="win-9x"] ul::-webkit-scrollbar-corner,
+[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar-corner,
+[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar-corner,
+[theme="win-9x"] ul::-webkit-scrollbar-corner,
+[theme="win-9x"] .guten-menu::-webkit-scrollbar-corner,
+[theme="win-9x"] .guten-menu ul::-webkit-scrollbar-corner {
+    background: #c0c0c0;
 }

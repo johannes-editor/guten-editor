@@ -66,3 +66,9 @@
     --scrollbar-thumb: rgba(255, 255, 255, .2);
     --scrollbar-track: transparent;
 }
+
+[theme="dark"] ul,
+[theme="dark"] .guten-menu,
+[theme="dark"] .guten-menu ul {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}

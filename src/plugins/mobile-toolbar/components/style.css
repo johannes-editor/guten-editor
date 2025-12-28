@@ -25,10 +25,11 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs, 0.5rem);
-    padding: var(--space-xs, 0.5rem);
+    padding: var(--space-xs, 0.5rem) var(--space-sm, 0.75rem);
     background: var(--color-surface, var(--guten-color-surface, #ffffff));
-    border-radius: 999px;
-    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+    border-radius: var(--toolbar-radius, 999px);
+    border: var(--border-default, 1px solid rgba(15, 23, 42, 0.08));
+    box-shadow: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.1));
 
     max-width: calc(100vw - 2 * var(--space-sm, 0.75rem));
     overflow-x: auto;
@@ -42,17 +43,18 @@
 }
 
 .mobile-toolbar__button {
-    border: none;
-    background: none;
-    padding: var(--space-2xs, 0.375rem);
-    border-radius: 999px;
+    background: var(--toolbar-button-bg);
+    border: var(--toolbar-button-border);
+    box-shadow: var(--toolbar-button-shadow);
+    padding: var(--toolbar-button-padding, var(--space-2xs, 0.375rem));
+    border-radius: var(--toolbar-button-radius, 999px);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: inherit;
+    color: var(--toolbar-button-color, inherit);
     min-width: 2.25rem;
     min-height: 2.25rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .mobile-toolbar__button svg {
@@ -62,13 +64,17 @@
 
 .mobile-toolbar__button:focus-visible,
 .mobile-toolbar__button:hover {
-    background: rgba(15, 23, 42, 0.08);
+    background: var(--toolbar-button-bg-hover);
+    border: var(--toolbar-button-border-hover);
+    box-shadow: var(--toolbar-button-shadow-hover);
     outline: none;
 }
 
 .mobile-toolbar__button.is-active {
-    background: rgba(37, 99, 235, 0.15);
-    color: rgb(37, 99, 235);
+    background: var(--toolbar-button-bg-active);
+    border: var(--toolbar-button-border-active);
+    box-shadow: var(--toolbar-button-shadow-active);
+    color: var(--color-primary);
 }
 
 @media (min-width: 769px) {

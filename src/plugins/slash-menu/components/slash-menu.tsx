@@ -43,7 +43,6 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         }
         
         guten-slash-menu .slash-menu-wrapper {
-            border-radius: 10px;
             overflow: hidden;
             max-height: 18rem;
         }

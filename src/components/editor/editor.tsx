@@ -18,7 +18,7 @@ export class Editor extends Component {
         return "x-guten-editor";
     }
 
-    static override styles = [tokens, ...themeStyles, foundation, primitives];
+    static override styles = [tokens, foundation, primitives, ...themeStyles];
 
     private contentArea: HTMLElement | null = null;
     private overlayArea: HTMLElement | null = null;
