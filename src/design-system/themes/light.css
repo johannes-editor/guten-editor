@@ -1,5 +1,4 @@
-[data-guten-theme="light"],
-[theme="light"] {
+[data-guten-theme="light"]{
 
     --link: #0000EE;
     --link-visited: #551A8B;
@@ -65,8 +64,8 @@
     --scrollbar-track: transparent;
 }
 
-[theme="light"] ul,
-[theme="light"] .guten-menu,
-[theme="light"] .guten-menu ul {
+:root[data-guten-theme="light"] ul,
+:root[data-guten-theme="light"] .guten-menu,
+:root[data-guten-theme="light"] .guten-menu ul {
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }

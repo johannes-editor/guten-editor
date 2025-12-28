@@ -19,16 +19,11 @@ export async function initEditor(root: HTMLElement) {
 
     const availableThemes = getAvailableThemes();
     const supportedThemes = new Set(availableThemes);
-    const requestedTheme = (root.getAttribute("theme") || DEFAULT_THEME).toLowerCase();
+    const requestedTheme = (root.getAttribute("theme") || root.getAttribute("data-guten-theme") || DEFAULT_THEME).toLowerCase();
     const resolvedTheme = resolveThemePreference(requestedTheme);
     const theme = supportedThemes.has(resolvedTheme) ? resolvedTheme : DEFAULT_THEME;
 
     applyTheme(document.documentElement, theme);
-    applyTheme(document.body, theme);
-    applyTheme(root, theme);
-
-    root.setAttribute("data-guten-theme", theme);
-    root.setAttribute("theme", theme);
 
     if (requestedTheme === "auto") {
         listenToSystemThemeChanges(root, supportedThemes);
@@ -53,7 +48,6 @@ export async function initEditor(root: HTMLElement) {
 
 function applyTheme(target: HTMLElement | null, theme: string) {
     target?.setAttribute("data-guten-theme", theme);
-    target?.setAttribute("theme", theme);
 }
 
 function resolveThemePreference(requestedTheme: string): string {
@@ -77,10 +71,6 @@ function listenToSystemThemeChanges(root: HTMLElement, supportedThemes: Set<stri
     const resolvedTheme = mediaQueryList.matches ? "dark" : "light";
     const nextTheme = supportedThemes.has(resolvedTheme) ? resolvedTheme : DEFAULT_THEME;
     applyTheme(document.documentElement, nextTheme);
-    applyTheme(document.body, nextTheme);
-    applyTheme(root, nextTheme);
-    root.setAttribute("data-guten-theme", nextTheme);
-    root.setAttribute("theme", nextTheme);
   };
 
   updateTheme();

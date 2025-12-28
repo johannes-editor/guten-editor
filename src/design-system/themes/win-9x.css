@@ -1,5 +1,4 @@
-[data-guten-theme="win-9x"],
-[theme="win-9x"] {
+[data-guten-theme="win-9x"]{
     --link: #0000ee;
     --link-visited: #551a8b;
     --link-hover: #0000ee;
@@ -121,8 +120,7 @@
     --input-color: #000000;
 }
 
-[data-guten-theme="win-9x"] .card.animate-overlay,
-[theme="win-9x"] .card.animate-overlay {
+:root[data-guten-theme="win-9x"] .card.animate-overlay {
     border: 1px solid #000000;
     box-shadow:
         inset 1px 1px #ffffff,
@@ -130,47 +128,20 @@
         1px 1px #000000;
 }
 
-[data-guten-theme="win-9x"] ul::-webkit-scrollbar,
-[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar,
-[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar,
-[theme="win-9x"] ul::-webkit-scrollbar,
-[theme="win-9x"] .guten-menu::-webkit-scrollbar,
-[theme="win-9x"] .guten-menu ul::-webkit-scrollbar {
+:root[data-guten-theme="win-9x"] *::-webkit-scrollbar {
     width: 16px;
     height: 16px;
-    margin-top: 15px !important;
-    border-radius: 0;
 }
 
-[data-guten-theme="win-9x"] ul::-webkit-scrollbar-track,
-[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar-track,
-[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar-track,
-[theme="win-9x"] ul::-webkit-scrollbar-track,
-[theme="win-9x"] .guten-menu::-webkit-scrollbar-track,
-[theme="win-9x"] .guten-menu ul::-webkit-scrollbar-track {
+:root[data-guten-theme="win-9x"] *::-webkit-scrollbar-track {
     background: #dbdbdb;
     border: 1px solid #000000;
 }
 
-[data-guten-theme="win-9x"] ul::-webkit-scrollbar-thumb,
-[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar-thumb,
-[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar-thumb,
-[theme="win-9x"] ul::-webkit-scrollbar-thumb,
-[theme="win-9x"] .guten-menu::-webkit-scrollbar-thumb,
-[theme="win-9x"] .guten-menu ul::-webkit-scrollbar-thumb {
+:root[data-guten-theme="win-9x"] *::-webkit-scrollbar-thumb {
     background-color: #c2c2c2;
     border: 1px solid #000000;
     box-shadow:
         inset 1px 1px #ffffff,
         inset -1px -1px #808080;
-    border-radius: 0 !important;
-}
-
-[data-guten-theme="win-9x"] ul::-webkit-scrollbar-corner,
-[data-guten-theme="win-9x"] .guten-menu::-webkit-scrollbar-corner,
-[data-guten-theme="win-9x"] .guten-menu ul::-webkit-scrollbar-corner,
-[theme="win-9x"] ul::-webkit-scrollbar-corner,
-[theme="win-9x"] .guten-menu::-webkit-scrollbar-corner,
-[theme="win-9x"] .guten-menu ul::-webkit-scrollbar-corner {
-    background: #c0c0c0;
 }

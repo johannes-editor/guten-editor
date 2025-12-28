@@ -1,5 +1,3 @@
-[data-guten-theme="dracula"],
-[theme="dracula"],
 :root[data-guten-theme="dracula"] {
 
     --link: #8be9fd;
@@ -66,8 +64,8 @@
     --scrollbar-track: transparent;
 }
 
-[theme="dracula"] ul,
-[theme="dracula"] .guten-menu,
-[theme="dracula"] .guten-menu ul {
+:root[data-guten-theme="dracula"] ul,
+:root[data-guten-theme="dracula"] .guten-menu,
+:root[data-guten-theme="dracula"] .guten-menu ul {
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
