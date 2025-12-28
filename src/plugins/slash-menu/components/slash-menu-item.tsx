@@ -6,6 +6,7 @@ export interface SlashMenuItemProps {
     icon: SVGAElement;
     index: number;
     label: string;
+    shortcut?: string;
     selected: boolean;
     onSelect: () => void;
     onMouseOver: (index: number) => void;
@@ -30,11 +31,18 @@ export class SlashMenuItem extends Component<SlashMenuItemProps> {
             gap: var(--space-custom-10);
         }
 
-        .guten-menu-item-x button span {
+        .guten-menu-item-x button .slash-menu-item-label {
             flex: 1;
             white-space: nowrap;
             box-sizing: border-box;
             vertical-align: middle;
+        }
+
+        .guten-menu-item-x button .slash-menu-item-shortcut {
+            margin-left: auto;
+            padding-left: 3rem;
+            white-space: nowrap;
+            opacity: 0.45;
         }
 
         .guten-menu-item-x button svg {
@@ -55,8 +63,12 @@ export class SlashMenuItem extends Component<SlashMenuItemProps> {
                     onClick={this.props.onSelect}
                     onMouseEnter={() => this.props.onMouseOver(this.props.index)}
                 >
-                    {this.props.icon} <span>{this.props.label}</span>
+                    {this.props.icon}
+                    <span class="slash-menu-item-label">{this.props.label}</span>
+                    {this.props.shortcut && (
+                        <span class="slash-menu-item-shortcut">{this.props.shortcut}</span>
+                    )}
                 </button>
             </div>);
-    }
+    }   
 }

@@ -329,6 +329,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                             <SlashMenuItem
                                 icon={item.icon}
                                 label={item.label}
+                                shortcut={item.shortcut}
                                 onSelect={() => this.handleOnSelect(item)}
                                 selected={index === this.state.selectedIndex}
                                 index={index}

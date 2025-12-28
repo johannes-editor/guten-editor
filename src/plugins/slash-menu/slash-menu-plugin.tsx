@@ -29,6 +29,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
         const items: SlashMenuItemData[] = extensions.map((ext) => ({
             icon: ext.icon,
             label: ext.label,
+            shortcut: ext.shortcut,
             sort: ext.sort,
             onSelect: (currentBlock: HTMLElement) => ext.onSelect(currentBlock),
         }));
@@ -114,6 +115,7 @@ export abstract class SlashMenuExtensionPlugin extends PluginExtension<SlashMenu
     override readonly target = SlashMenuPlugin;
     abstract readonly icon: SVGElement;
     abstract readonly label: string;
+    abstract readonly shortcut?: string;
     abstract readonly sort: number;
     abstract onSelect(currentBlock: HTMLElement): void;
 }

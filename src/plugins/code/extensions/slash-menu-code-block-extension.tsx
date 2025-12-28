@@ -10,11 +10,13 @@ export class SlashMenuCodeBlockExtension extends SlashMenuExtensionPlugin {
     icon: SVGElement;
     label: string;
     sort: number;
+    shortcut: string;
 
     constructor() {
         super();
         
         this.label = t("code");
+        this.shortcut = "```";
         this.icon = <CodeBlockIcon />;
         this.sort = 99;
     }

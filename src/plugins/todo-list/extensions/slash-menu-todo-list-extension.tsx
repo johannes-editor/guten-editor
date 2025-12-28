@@ -10,11 +10,13 @@ export class SlashMenuTodoListExtension extends SlashMenuExtensionPlugin {
     icon: SVGElement;
     label: string;
     sort: number;
+    shortcut: string;
     synonyms: string[];
 
     constructor() {
         super();
         this.icon = <MaterialChecklist />
+        this.shortcut = "[]";
         this.label = t("todo_list");
         this.sort = 61;
         this.synonyms = [t("list"), t("checkbox"), t("todo")];
