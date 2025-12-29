@@ -12,6 +12,12 @@
             "path": "./extensions/todo-list-enter-plugin.tsx",
             "class": "TodoListEnterPlugin",
             "active": true
+        },
+        {
+            "path": "./extensions/markdown-shortcut-todo-list-extension.tsx",
+            "class": "MarkdownShortcutTodoListExtension",
+            "description": "Adds markdown shortcut for todo lists.",
+            "active": true
         }
     ]
 }

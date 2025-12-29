@@ -17,6 +17,12 @@
             "class": "CodeCommandExtension",
             "description": "Adds code commands. E.g., insertCodeBlock.",
             "active": true
+        },
+        {
+            "path": "./extensions/markdown-shortcut-code-block-extension.tsx",
+            "class": "MarkdownShortcutCodeBlockExtension",
+            "description": "Adds markdown shortcut for code blocks.",
+            "active": true
         }
     ]
 }
