@@ -1,0 +1,32 @@
+{
+    "name": "Editor Settings",
+    "version": "1.0.0",
+    "author": "Alexandre Tavares",
+    "description": "Adds an editor settings entry to the slash menu.",
+    "entries": [
+        {
+            "path": "./editor-settings-plugin.tsx",
+            "class": "EditorSettingsPlugin",
+            "description": "Hosts the editor settings menu and extensions.",
+            "active": true
+        },
+        {
+            "path": "./extensions/slash-menu-editor-settings-extension.tsx",
+            "class": "SlashMenuEditorSettingsExtension",
+            "description": "Adds the editor settings menu entry to the slash menu.",
+            "active": true
+        },
+        {
+            "path": "./extensions/editor-settings-theme-extension.tsx",
+            "class": "EditorSettingsThemeExtension",
+            "description": "Adds theme selection to the editor settings menu.",
+            "active": true
+        },
+        {
+            "path": "./extensions/editor-settings-lang-extension.tsx",
+            "class": "EditorSettingsLangExtension",
+            "description": "Adds language selection to the editor settings menu.",
+            "active": true
+        }
+    ]
+}

@@ -94,6 +94,17 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
           margin: var(--space-xs) var(--space-sm);
           height:0;
         }
+
+        .guten-menu-item-right[data-kind="chevron"] {
+          visibility: hidden;
+          opacity: 0.6;
+        }
+
+        .guten-menu-item button.selected .guten-menu-item-right[data-kind="chevron"],
+        .guten-menu-item button:hover .guten-menu-item-right[data-kind="chevron"],
+        .guten-menu-item button:focus .guten-menu-item-right[data-kind="chevron"] {
+          visibility: visible;
+        }
   `);
 
     override connectedCallback(): void {
@@ -156,7 +167,12 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
                         {this.label && <span class="guten-menu-item-label">{this.label}</span>}
                     </span>
 
-                    <span class="guten-menu-item-right" data-visible={hasRight ? "true" : "false"} aria-hidden="true">
+                    <span
+                        class="guten-menu-item-right"
+                        data-kind={kind}                 // <- ADICIONE ISTO
+                        data-has-right={hasRight ? "true" : "false"} // opcional, mas útil
+                        aria-hidden="true"
+                    >
                         {hasRight ? rightNode : null}
                     </span>
                 </button>

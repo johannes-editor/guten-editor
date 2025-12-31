@@ -180,7 +180,8 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     * - ArrowDown/ArrowUp: cycle selection
     * - Enter: let the native <button> click fire
     */
-    protected onKeyDown = (e: KeyboardEvent) => {
+
+    protected onKeyDown(e: KeyboardEvent) {
         const count = this.getItemCount();
         if (!count || !this.contains(document.activeElement)) return;
 
@@ -194,16 +195,18 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
                 lockHover();
                 this.setState({ selectedIndex: (sel + 1) % count } as Partial<S>);
                 break;
+
             case keyboard.KeyboardKeys.ArrowUp:
                 e.preventDefault();
                 lockHover();
                 this.setState({ selectedIndex: (sel - 1 + count) % count } as Partial<S>);
                 break;
+
             case keyboard.KeyboardKeys.Enter:
                 lockHover();
                 break;
         }
-    };
+    }
 
     /**
     * Applies selection styles and roving tabIndex to all descendant buttons.

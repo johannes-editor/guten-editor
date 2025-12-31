@@ -95,6 +95,10 @@ const en: TranslationSchema = {
     invalid_youtube_url: 'Enter a valid YouTube link',
     youtube_video: 'YouTube video',
     youtube_playlist: 'YouTube playlist',
+
+    theme: 'Theme',
+    settings: 'Settings',
+    language: 'Language',
 };
 
 export default en;
