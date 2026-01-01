@@ -1,5 +1,11 @@
 import { TranslationSchema } from "../types.ts";
 
+export const languageMeta = {
+    code: "pt",
+    name: "Portuguese",
+    nativeName: "Português",
+};
+
 const pt: TranslationSchema = {
     bold: "Negrito",
     italic: "Itálico",
@@ -13,7 +19,7 @@ const pt: TranslationSchema = {
     divider: 'Divisor',
     line: 'Linha',
     untitled: 'Sem título',
-    startTyping: 'Comece a digitar...',
+    start_typing: 'Comece a digitar...',
     paragraph: 'Parágrafo',
     text: 'texto',
     title: 'Título',
@@ -95,10 +101,16 @@ const pt: TranslationSchema = {
     invalid_youtube_url: 'Insira um link válido do YouTube',
     youtube_video: 'Vídeo do YouTube',
     youtube_playlist: 'Playlist do YouTube',
+    blockquote_placeholder: 'Ser ou não ser',
+    list_item: 'Item',
+    code_block_placeholder: '/* Trecho de código */',
+    modal_close: 'Fechar',
+    modal_back: 'Voltar',
 
     theme: 'Tema',
     settings: 'Configurações',
     language: 'Idioma',
+    auto: 'Auto',
 };
 
 export default pt;

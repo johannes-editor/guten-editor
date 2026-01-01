@@ -2,6 +2,7 @@
 
 import { h } from "../../jsx.ts";
 import { ClassName } from "../../utils/dom/index.ts";
+import { t } from "../index.ts";
 
 
 function adoptToDocument<T extends Node>(doc: Document, node: T): T {
@@ -17,7 +18,7 @@ function TodoItem() {
             <input type="checkbox" />
             <span
                 contenteditable="true"
-                data-placeholder="Item"
+                data-placeholder={t("list_item")}
                 className={`${ClassName.Placeholder} ${ClassName.Empty}`}
             >
                 <br />

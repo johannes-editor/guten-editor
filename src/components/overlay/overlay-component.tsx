@@ -1,5 +1,6 @@
 /**@jsx h */
 
+import { t } from "../../core/i18n/index.ts";
 import { ArrowLeftIcon, CloseIcon } from "../../design-system/components/icons.tsx";
 import { h } from "../../jsx.ts";
 import { isMobileSheetViewport } from "../../utils/platform/index.ts";
@@ -139,7 +140,7 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
                         <button
                             type="button"
                             className="modal__action modal__action--back"
-                            aria-label="Voltar"
+                            aria-label={t("modal_back")}
                             onClick={this.handleMobileBackClick}
                             ref={(el: HTMLButtonElement) => { this.mobileBackButton = el; }}
                         >
@@ -150,7 +151,7 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
                         <button
                             type="button"
                             className="modal__action modal__action--close"
-                            aria-label="Fechar"
+                            aria-label={t("modal_close")}
                             onClick={this.handleMobileCloseClick}
                             ref={(el: HTMLButtonElement) => { this.mobileCloseButton = el; }}
                         >

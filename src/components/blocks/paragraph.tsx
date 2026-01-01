@@ -8,7 +8,8 @@ export function ParagraphBlock(props: DefaultProps) {
     return (
         <p
             className={`block placeholder ${!props.children && "empty"}`}
-            data-placeholder={t("startTyping")}
+            data-placeholder={t("start_typing")}
+            data-placeholder-key="start_typing"
             {...props}
         >
             {props.children ?? <br />}

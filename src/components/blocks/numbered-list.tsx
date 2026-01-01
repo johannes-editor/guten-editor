@@ -1,16 +1,18 @@
 /** @jsx h */
 
 import { h } from "../../jsx.ts";
+import { t } from "../../plugins/index.ts";
 import { DefaultProps } from "../types.ts";
 
 export function NumberedListBlock(props: DefaultProps) {
     return (
         <ol
             className="block"
-            data-placeholder="List item"
             {...props}
         >
-            {props.children ?? <li className="placeholder empty" data-placeholder="Item"><br /></li>}
+            {props.children ?? <li className="placeholder empty" 
+                                data-placeholder={t("list_item")} 
+                                data-placeholder-key="list_item"><br /></li>}
         </ol>
     );
 }

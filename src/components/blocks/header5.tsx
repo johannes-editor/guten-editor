@@ -9,6 +9,7 @@ export function Heading5Block(props: DefaultProps) {
         <h5
             className={`block placeholder ${!props.children && "empty"}`}
             data-placeholder={t("heading_5")}
+            data-placeholder-key="heading_5"
             {...props}
         >
             {props.children ?? <br />}

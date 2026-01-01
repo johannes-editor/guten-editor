@@ -9,6 +9,7 @@ export function Heading3Block(props: DefaultProps) {
         <h3
             className={`block placeholder ${!props.children && "empty"}`}
             data-placeholder={t("heading_3")}
+            data-placeholder-key="heading_3"
             {...props}
         >
             {props.children ?? <br />}

@@ -1,5 +1,5 @@
-import { ClassName } from "../../utils/dom/class-name.ts";
 import { focusOnElement } from "../../utils/dom-utils.ts";
+import { t } from "../i18n/index.ts";
 
 export class BlockquoteEnterHandler {
     private isFirefox: boolean;
@@ -38,7 +38,9 @@ export class BlockquoteEnterHandler {
         const newParagraph = document.createElement("p");
         newParagraph.classList.add("block");
         newParagraph.classList.add("placeholder");
-        newParagraph.dataset.placeholder = "Start typing...";
+        newParagraph.dataset.placeholder = t("start_typing");
+        newParagraph.dataset.placeholderKey = "start_typing";
+
         newParagraph.innerHTML = fragment.textContent?.trim() ? "" : "<br>";
         newParagraph.appendChild(fragment);
 

@@ -1,5 +1,11 @@
 import { TranslationSchema } from "../types.ts";
 
+export const languageMeta = {
+    code: "en",
+    name: "English",
+    nativeName: "English",
+};
+
 const en: TranslationSchema = {
     bold: "Bold",
     italic: "Italic",
@@ -10,7 +16,7 @@ const en: TranslationSchema = {
     link: "Link",
     equation: "Equation",
     untitled: 'Untitled',
-    startTyping: 'Start typing...',
+    start_typing: 'Start typing...',
     paragraph: 'Paragraph',
     text: 'Text',
     title: 'Title',
@@ -95,10 +101,17 @@ const en: TranslationSchema = {
     invalid_youtube_url: 'Enter a valid YouTube link',
     youtube_video: 'YouTube video',
     youtube_playlist: 'YouTube playlist',
+    blockquote_placeholder: 'To be or not to be',
+    list_item: 'Item',
+    code_block_placeholder: '/* Code snippet */',
+    modal_close: 'Close',
+    modal_back: 'Back',
+
 
     theme: 'Theme',
     settings: 'Settings',
     language: 'Language',
+    auto: 'Auto',
 };
 
 export default en;
