@@ -1,6 +1,11 @@
 /** @jsx h */
 import { Fragment, h } from "./jsx.ts";
-import { setLocale, t } from "./core/i18n/index.ts";
+import { getAvailableLocales, setLocale, t } from "./core/i18n/index.ts";
+import {
+    applyLocalePreference,
+    DEFAULT_LOCALE,
+    getStoredLocalePreference,
+} from "./core/i18n/locale-preference.ts";
 import { appendElementOnContentArea, setRoot } from "./components/editor/index.tsx";
 import { init } from "./core/plugin-engine/index.ts";
 import { ParagraphBlock } from "./components/blocks/paragraph.tsx";
@@ -14,6 +19,7 @@ import {
     clearStoredThemePreference,
     getStoredThemePreference,
 } from "./utils/color/theme-preference.ts";
+import { initLocaleDomSync } from "./core/i18n/locale-dom-sync.ts";
 
 /**
 * Initializes the text editor.
@@ -39,13 +45,21 @@ export async function initEditor(root: HTMLElement) {
 
     setRoot(root);
     // Set the language for the interface, defaulting to English if not specified.
-    const lang = root.getAttribute("lang") || "en";
-    await setLocale(lang);
+    const availableLocales = getAvailableLocales();
+    const supportedLocales = new Set(availableLocales.map((locale) => locale.code));
+
+    const storedLocale = getStoredLocalePreference();
+    const requestedLocale = storedLocale ?? "auto";
+    const fallbackLocale = root.getAttribute("lang") ?? DEFAULT_LOCALE;
+    const resolvedLocale = applyLocalePreference(requestedLocale, supportedLocales, fallbackLocale);
+    root.setAttribute("lang", resolvedLocale);
+    await setLocale(resolvedLocale);
+    initLocaleDomSync(root.ownerDocument ?? document);
 
     /** Load the basic editor layout */
     appendElementOnContentArea(
         <Fragment>
-            <Heading1Block data-placeholder={t("untitled")} />
+            <Heading1Block data-placeholder={t("untitled")} data-placeholder-key="untitled" />
             <ParagraphBlock />
         </Fragment>
     );

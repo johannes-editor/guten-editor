@@ -1,0 +1,1 @@
+export const LOCALE_CHANGED_EVENT = "guten:locale-changed";

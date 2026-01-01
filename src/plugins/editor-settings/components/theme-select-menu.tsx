@@ -36,7 +36,7 @@ export interface ThemeSelectMenuProps extends DefaultProps {
 export class ThemeSelectMenu extends NavigationMenu<ThemeSelectMenuProps> {
     override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([EditorSettingsMenu]);
     protected override positionMode: "none" | "relative" | "anchor" = "relative";
-    protected override lockWidthOnOpen = true;    
+    protected override lockWidthOnOpen = true;
 
     private formatThemeLabel(theme: string): string {
         if (theme === "auto") return "Auto";
@@ -50,8 +50,17 @@ export class ThemeSelectMenu extends NavigationMenu<ThemeSelectMenuProps> {
         this.props.onThemeSelect(theme);
     };
 
-    override onMount(): void {
-      
+    override afterRender(): void {
+
+        super.afterRender();
+
+        const anchor = this.props.anchor;
+
+        if (anchor) {
+            requestAnimationFrame(
+
+                () => this.positionRelativeToMenu(anchor));
+        }
     }
 
     override render() {
