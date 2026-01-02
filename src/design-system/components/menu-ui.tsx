@@ -20,9 +20,21 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     private _lastSelectedAnchor: HTMLElement | null = null;
     private _hoverByMouseEnabled = true;
 
+    /** Whether the menu should start with the first item selected (index 0). */
     protected autoFocusFirst = true;
+
+    /**
+    * Initial positioning strategy for the overlay:
+    * - "none": do not auto-position
+    * - "relative": position relative to the parent menu/trigger
+    * - "anchor": position to the provided anchor element
+    */
     protected positionMode: "none" | "relative" | "anchor" = "none";
+
+    /** Locks the current menu width (via minWidth) on open to reduce layout shift during animation. */
     protected lockWidthOnOpen = false;
+
+    /** If true, removes the menu when its anchor is missing or disconnected from the DOM. */
     protected closeOnAnchorLoss = true;
 
     static override styles = this.extendStyles(/*css*/`
@@ -75,7 +87,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         this.registerEvent(this, dom.EventTypes.Mouseover, this.onMouseOver as EventListener);
         this.registerEvent(this, dom.EventTypes.MouseMove, this.onMouseMove as EventListener);
 
-        if (this.autoFocusFirst !== false) {
+        if (this.autoFocusFirst !== false ) {
             this.setState({ selectedIndex: 0 } as Partial<S>);
         }
     }
@@ -122,10 +134,13 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
 
     private onMouseOver = (e: MouseEvent) => {
         if (!this._hoverByMouseEnabled) return;
-        const btn = (e.target as HTMLElement)?.closest?.("button") as HTMLButtonElement | null;
+
+        const btn = (e.target as HTMLElement | null)
+            ?.closest?.(".guten-menu .guten-menu-item > button") as HTMLButtonElement | null;
+
         if (!btn || !this.contains(btn)) return;
 
-        const buttons = Array.from(this.querySelectorAll<HTMLButtonElement>("button"));
+        const buttons = this.getMenuItemButtons();
         const idx = buttons.indexOf(btn);
         if (idx < 0 || idx === (this.state as MenuUIState).selectedIndex) return;
 
@@ -166,9 +181,12 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     * @param e Focus event from the menu container.
     */
     private onFocusIn = (e: FocusEvent) => {
-        const btn = (e.target as HTMLElement)?.closest?.("button") as HTMLButtonElement | null;
+
+        const btn = (e.target as HTMLElement | null)
+            ?.closest?.(".guten-menu .guten-menu-item > button") as HTMLButtonElement | null;
+
         if (!btn) return;
-        const buttons = Array.from(this.querySelectorAll<HTMLButtonElement>("button"));
+        const buttons = this.getMenuItemButtons();
         const idx = buttons.indexOf(btn);
         if (idx >= 0 && idx !== (this.state as MenuUIState).selectedIndex) {
             this.setState({ selectedIndex: idx } as Partial<S>);
@@ -214,7 +232,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     * @param forceFocus When true, always focus the selected button.
     */
     private applySelection(forceFocus = false) {
-        const buttons = Array.from(this.querySelectorAll<HTMLButtonElement>("button"));
+        const buttons = this.getMenuItemButtons();
         const count = buttons.length; if (!count) return;
         const raw = (this.state as MenuUIState).selectedIndex ?? 0;
         const idx = Math.min(Math.max(raw, 0), count - 1);
@@ -251,7 +269,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     * @returns Number of descendant <button> elements considered as menu items.
     */
     protected getItemCount(): number {
-        return this.querySelectorAll<HTMLButtonElement>("button").length;
+        return this.getMenuItemButtons().length;
     }
 
     /**
@@ -259,8 +277,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     * @returns The button at the given index, or null.
     */
     protected getButtonAtIndex(index: number): HTMLButtonElement | null {
-        const buttons = this.querySelectorAll<HTMLButtonElement>("button");
-        return buttons[index] ?? null;
+        return this.getMenuItemButtons()[index] ?? null;
     }
 
     /**
@@ -290,6 +307,12 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         });
     }
 
+    /** Returns only menu item buttons (excludes overlay chrome). */
+    protected getMenuItemButtons(): HTMLButtonElement[] {
+        return Array.from(
+            this.querySelectorAll<HTMLButtonElement>(".guten-menu .guten-menu-item > button")
+        );
+    }
 
     render() {
         return (

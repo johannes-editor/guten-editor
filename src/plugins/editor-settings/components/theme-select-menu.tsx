@@ -67,9 +67,9 @@ export class ThemeSelectMenu extends NavigationMenu<ThemeSelectMenuProps> {
         return (
             <div class="guten-menu">
                 <ul>
-                    <li>
+                    {/* <li>
                         <div class="guten-menu-label">{t('theme')}</div>
-                    </li>
+                    </li> */}
                     {this.props.themes.map((theme) => (
                         <li>
                             <ThemeSelectItem

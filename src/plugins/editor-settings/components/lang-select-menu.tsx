@@ -67,9 +67,9 @@ export class LangSelectMenu extends NavigationMenu<LangSelectMenuProps> {
         return (
             <div class="guten-menu">
                 <ul>
-                    <li>
+                    {/* <li>
                         <div class="guten-menu-label">{t('language')}</div>
-                    </li>
+                    </li> */}
                     {this.props.locales.map((locale) => (
                         <li>
                             <LangSelectItem

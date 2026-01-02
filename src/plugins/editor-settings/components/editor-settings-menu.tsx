@@ -52,9 +52,9 @@ export class EditorSettingsMenu extends NavigationMenu<EditorSettingsMenuProps> 
         return (
             <div class="guten-menu">
                 <ul>
-                    <li>
+                    {/* <li>
                         <div class="guten-menu-label">{t('settings')}</div>
-                    </li>
+                    </li> */}
                     {items.map((item) => (
                         <li>
                             <EditorSettingsMenuItem item={item} onSelectItem={this.handleSelectItem} />
