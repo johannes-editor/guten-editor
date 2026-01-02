@@ -31,11 +31,28 @@ export interface EditorSettingsMenuProps extends DefaultProps {
 export class EditorSettingsMenu extends NavigationMenu<EditorSettingsMenuProps> {
     protected override positionMode: "none" | "relative" | "anchor" = "anchor";
 
+    private restoreSelectionToAnchor() {
+        const anchor = this.props.anchor;
+        if (!anchor || !anchor.isConnected) return;
+
+        const block = anchor.closest(".block") as HTMLElement | null;
+        block?.focus();
+
+        const range = document.createRange();
+        range.setStartAfter(anchor);
+        range.collapse(true);
+
+        const selection = globalThis.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+    }
+
     override onUnmount(): void {
         super.onUnmount();
 
         const anchor = this.props.anchor;
         if (anchor?.dataset?.gutenSettingsAnchor === "true") {
+            this.restoreSelectionToAnchor();
             anchor.remove();
         }
     }
