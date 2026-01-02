@@ -32,7 +32,7 @@ function createAnchorAtSelection(): HTMLElement | null {
 }
 
 export class SlashMenuEditorSettingsExtension extends SlashMenuExtensionPlugin {
-    override shortcut?: string | undefined; // todo
+    
     override icon: SVGElement;
     override label: string;
     override sort: number;

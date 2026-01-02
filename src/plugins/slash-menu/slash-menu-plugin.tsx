@@ -115,7 +115,9 @@ export abstract class SlashMenuExtensionPlugin extends PluginExtension<SlashMenu
     override readonly target = SlashMenuPlugin;
     abstract readonly icon: SVGElement;
     abstract readonly label: string;
-    abstract readonly shortcut?: string;
     abstract readonly sort: number;
+    
+    readonly shortcut?: string = undefined;
+    
     abstract onSelect(currentBlock: HTMLElement): void;
 }
