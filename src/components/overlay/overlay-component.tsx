@@ -63,7 +63,7 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
 
     /** Called when the element is added to the DOM */
     override connectedCallback(): void {
-        this.classList.add("modal", "modal--sheet-mobile");
+        this.classList.add("guten-modal", "guten-modal--sheet-mobile");
 
         super.connectedCallback();
 
@@ -135,11 +135,11 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
     private ensureMobileChrome() {
         if (!this.mobileChrome) {
             const chrome = (
-                <div className="modal__chrome">
-                    <div className="modal__actions modal__actions--left">
+                <div className="guten-modal__chrome">
+                    <div className="guten-modal__actions guten-modal__actions--left">
                         <button
                             type="button"
-                            className="modal__action modal__action--back"
+                            className="guten-modal__action guten-modal__action--back"
                             aria-label={t("modal_back")}
                             onClick={this.handleMobileBackClick}
                             ref={(el: HTMLButtonElement) => { this.mobileBackButton = el; }}
@@ -147,10 +147,10 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
                             <ArrowLeftIcon />
                         </button>
                     </div>
-                    <div className="modal__actions modal__actions--right">
+                    <div className="guten-modal__actions guten-modal__actions--right">
                         <button
                             type="button"
-                            className="modal__action modal__action--close"
+                            className="guten-modal__action guten-modal__action--close"
                             aria-label={t("modal_close")}
                             onClick={this.handleMobileCloseClick}
                             ref={(el: HTMLButtonElement) => { this.mobileCloseButton = el; }}

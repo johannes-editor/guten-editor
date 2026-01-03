@@ -81,7 +81,7 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
 
     override connectedCallback(): void {
         super.connectedCallback();
-        this.setAttribute("class", "guten-input-popover modal--sheet-mobile card outline-none animate-overlay");
+        this.setAttribute("class", "guten-input-popover guten-modal--sheet-mobile card outline-none animate-overlay");
 
         this.registerEvent(this.input, dom.EventTypes.KeyDown, ((event: KeyboardEvent) => this.handleKeydown(event)) as EventListener);
     }
@@ -89,8 +89,8 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
     override render(): HTMLElement {
         return (
             <Fragment>
-                <input class="modal__input" type={this.props.inputType} placeholder={this.props.inputPlaceholder} {...(this.props.inputProps)} ref={(input: HTMLInputElement | null) => { this._input = input }}></input>
-                <button class="block modal__button" type="button" onClick={() => this.handleInsert()} ref={(button: HTMLButtonElement | null) => { this._button = button }}> {this.props.buttonText ?? t("insert")}</button>
+                <input class="guten-modal__input" type={this.props.inputType} placeholder={this.props.inputPlaceholder} {...(this.props.inputProps)} ref={(input: HTMLInputElement | null) => { this._input = input }}></input>
+                <button class="block guten-modal__button" type="button" onClick={() => this.handleInsert()} ref={(button: HTMLButtonElement | null) => { this._button = button }}> {this.props.buttonText ?? t("insert")}</button>
             </Fragment>
         );
     }

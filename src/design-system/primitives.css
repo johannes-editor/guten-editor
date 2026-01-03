@@ -87,11 +87,11 @@ hr.block {
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-.modal {
+.guten-modal {
     position: relative;
 }
 
-.modal__chrome {
+.guten-modal__chrome {
     display: none;
     align-items: center;
     justify-content: space-between;
@@ -102,20 +102,20 @@ hr.block {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
-.modal__actions {
+.guten-modal__actions {
     display: flex;
     gap: var(--space-xs);
 }
 
-.modal__actions--left {
+.guten-modal__actions--left {
     margin-right: auto;
 }
 
-.modal__actions--right {
+.guten-modal__actions--right {
     margin-left: auto;
 }
 
-.modal__action {
+.guten-modal__action {
     appearance: none;
     display: inline-flex;
     align-items: center;
@@ -138,16 +138,16 @@ hr.block {
     outline-offset: 2px;
 }
 
-.modal__action[hidden] {
+.guten-modal__action[hidden] {
     display: none !important;
 }
 
-.modal__action:hover {
+.guten-modal__action:hover {
     background: var(--button-bg-hover);
     box-shadow: var(--button-shadow-hover);
 }
 
-.modal__action:active {
+.guten-modal__action:active {
     background: var(--button-bg-active);
     box-shadow: var(--button-shadow-active);
 }
@@ -215,7 +215,7 @@ hr.block {
 
 
 @media (max-width: 720px) {
-    .modal--sheet-mobile {
+    .guten-modal--sheet-mobile {
         padding: 0 !important;
         margin: 0 !important;
         position: fixed !important;
@@ -233,26 +233,26 @@ hr.block {
 
     }
 
-    .modal--sheet-mobile-w100 {
+    .guten-modal--sheet-mobile-w100 {
         width: 100% !important;
     }
 
-    .modal--sheet-mobile .emoji-wrap,
-    .modal--sheet-mobile ul {
+    .guten-modal--sheet-mobile .emoji-wrap,
+    .guten-modal--sheet-mobile ul {
         width: 100% !important;
         box-sizing: border-box;
     }
 
-    .modal--sheet-mobile.animate-overlay {
+    .guten-modal--sheet-mobile.animate-overlay {
         transform: translateY(12px);
         transform-origin: bottom center;
     }
 
-    .modal--sheet-mobile.animate-overlay.show-overlay {
+    .guten-modal--sheet-mobile.animate-overlay.show-overlay {
         transform: translateY(0);
     }
 
-    .modal--sheet-mobile .modal__chrome {
+    .guten-modal--sheet-mobile .guten-modal__chrome {
         display: flex;
         align-items: center;
         gap: var(--space-sm);
@@ -261,13 +261,13 @@ hr.block {
         z-index: 1;
     }
 
-    .modal--sheet-mobile .modal__action {
+    .guten-modal--sheet-mobile .guten-modal__action {
         all: unset;
         padding: 0 var(--space-sm);
 
     }
 
-    .modal--sheet-mobile .modal__input {
+    .guten-modal--sheet-mobile .guten-modal__input {
         margin-left: auto;
         margin-right: auto;
         width: 85%;
@@ -275,20 +275,20 @@ hr.block {
         margin-top: 6px;
     }
 
-    .modal--sheet-mobile .modal__button {
+    .guten-modal--sheet-mobile .guten-modal__button {
         margin-left: auto;
         margin-right: auto;
         width: 85%;
         margin-bottom: 12px;
     }
 
-    .modal--sheet-mobile .guten-menu-item-x,
-    .modal--sheet-mobile .guten-menu-item {
+    .guten-modal--sheet-mobile .guten-menu-item-x,
+    .guten-modal--sheet-mobile .guten-menu-item {
         font-weight: bold;
     }
 
-    .modal--sheet-mobile .guten-menu-item-x button,
-    .modal--sheet-mobile .guten-menu-item button {
+    .guten-modal--sheet-mobile .guten-menu-item-x button,
+    .guten-modal--sheet-mobile .guten-menu-item button {
         padding: var(--space-sm) var(--space-md) !important;
     }
 

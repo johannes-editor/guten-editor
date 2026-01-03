@@ -204,7 +204,7 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
 
     override render(): HTMLElement {
         return (
-            <div class="image-menu modal--sheet-mobile-w100 outline-none">
+            <div class="image-menu guten-modal--sheet-mobile-w100 outline-none">
                 <div class="image-menu__tabs " role="tablist">
                     {this.renderTabButton("upload", t("image_tab_upload"))}
                     {this.renderTabButton("embed", t("image_tab_embed"))}

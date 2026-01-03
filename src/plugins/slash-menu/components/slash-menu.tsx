@@ -37,7 +37,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     static override styles = this.extendStyles(/*css */`
 
         @media (max-width: 720px) {
-            .modal--sheet-mobile ul{
+            .guten-modal--sheet-mobile ul{
                 min-height: 20rem;
             }
         }

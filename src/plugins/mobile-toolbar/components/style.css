@@ -106,6 +106,6 @@ body.has-mobile-toolbar {
 }
 
 
-body:has(.modal--sheet-mobile) .mobile-toolbar {
+body:has(.guten-modal--sheet-mobile) .mobile-toolbar {
     display: none;
 }

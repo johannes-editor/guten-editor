@@ -9,7 +9,7 @@ interface ModalProps {
 export class Modal extends Component<ModalProps> {
 
     // static styles = /*css*/ `
-    //     .modal-backdrop {
+    //     .guten-modal-backdrop {
     //         position: fixed;
     //         top: 0; left: 0; right: 0; bottom: 0;
     //         background: rgba(0, 0, 0, 0.5);
@@ -18,7 +18,7 @@ export class Modal extends Component<ModalProps> {
     //         justify-content: center;
     //     }
 
-    //     .modal-content {
+    //     .guten-modal-content {
     //         background: white;
     //         padding: 20px;
     //         border-radius: 8px;
@@ -28,8 +28,8 @@ export class Modal extends Component<ModalProps> {
 
     render() {
         return (
-            <div class="modal-backdrop" onClick={this.props.onClose}>
-                <div class="modal-content" onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()}>
+            <div class="guten-modal-backdrop" onClick={this.props.onClose}>
+                <div class="guten-modal-content" onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()}>
                     <input type="text" placeholder="Text..." />
                     <br />
                     <button type="button" onClick={this.props.onClose}>Close</button>
