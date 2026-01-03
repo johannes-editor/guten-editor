@@ -1,3 +1,7 @@
+#contentArea {
+    outline: none;
+}
+
 .callout {
     background: var(--color-callout);
     color: var(--color-callout-text-default);
@@ -381,4 +385,38 @@ hr.block {
 .outline-none textarea:focus,
 .outline-none button:focus {
     outline: none;
+}
+
+
+
+
+
+/* Placeholder */
+.guten-placeholder {
+    position: relative;
+}
+
+.guten-placeholder::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--color-text-placeholder);
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.guten-placeholder.empty::before {
+    visibility: visible;
+}
+
+p.guten-placeholder.empty::before {
+    visibility: hidden;
+}
+
+p.guten-placeholder.empty:hover::before,
+p.guten-placeholder.empty:focus::before,
+p.guten-placeholder.empty:focus-within::before,
+p.guten-placeholder.empty.has-caret::before {
+    visibility: visible;
 }
