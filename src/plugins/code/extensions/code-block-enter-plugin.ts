@@ -63,14 +63,14 @@ export class CodeBlockEnterPlugin extends Plugin {
     }
 
     private cleanupPlaceholder(codeElement: HTMLElement) {
-        if (codeElement.classList.contains("placeholder") || codeElement.classList.contains("empty")) {
+        if (codeElement.classList.contains("guten-placeholder") || codeElement.classList.contains("empty")) {
             const children = Array.from(codeElement.childNodes);
             for (const child of children) {
                 if (child.nodeType === Node.ELEMENT_NODE && (child as Element).tagName === "BR") {
                     codeElement.removeChild(child);
                 }
             }
-            codeElement.classList.remove("placeholder");
+            codeElement.classList.remove("guten-placeholder");
             codeElement.classList.remove("empty");
         }
     }

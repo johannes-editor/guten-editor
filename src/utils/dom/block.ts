@@ -352,7 +352,7 @@ export function findCodeAncestor(node: Node | null): HTMLElement | null {
 export function applyInstructionText(target: HTMLElement | null, text: string | undefined) {
     if (!target || !text) return;
     target.textContent = text;
-    target.classList.remove("empty", "placeholder");
+    target.classList.remove("empty", "guten-placeholder");
     target.removeAttribute("data-placeholder");
 }
 

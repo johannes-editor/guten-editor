@@ -26,7 +26,7 @@ export class MarkdownShortcutTodoListExtension extends MarkdownShortcutExtension
         const text = context.afterText.trimStart();
         if (span && text) {
             span.textContent = text;
-            span.classList.remove("empty", "placeholder");
+            span.classList.remove("empty", "guten-placeholder");
             span.removeAttribute("data-placeholder");
         }
 

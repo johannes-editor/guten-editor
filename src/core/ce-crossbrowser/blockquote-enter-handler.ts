@@ -37,7 +37,7 @@ export class BlockquoteEnterHandler {
 
         const newParagraph = document.createElement("p");
         newParagraph.classList.add("block");
-        newParagraph.classList.add("placeholder");
+        newParagraph.classList.add("guten-placeholder");
         newParagraph.dataset.placeholder = t("start_typing");
         newParagraph.dataset.placeholderKey = "start_typing";
 

@@ -39,7 +39,7 @@ export class PlaceholderObserver {
     }
 
     private updateEmptyClass() {
-        document.querySelectorAll<HTMLElement>('.placeholder').forEach((element) => {
+        document.querySelectorAll<HTMLElement>('.guten-placeholder').forEach((element) => {
             const text = element.textContent?.replace(/\u00A0/g, '').trim() ?? '';
             if (text === '') {
                 element.classList.add('empty');
@@ -50,14 +50,14 @@ export class PlaceholderObserver {
     }
 
     private updateCaretState() {
-        const placeholders = this.target.ownerDocument.querySelectorAll<HTMLElement>('p.placeholder');
+        const placeholders = this.target.ownerDocument.querySelectorAll<HTMLElement>('p.guten-placeholder');
         placeholders.forEach((element) => element.classList.remove('has-caret'));
 
         const selection = this.target.ownerDocument.getSelection?.();
         if (!selection || selection.rangeCount === 0) return;
 
         const currentBlock = findClosestBlockBySelection(selection);
-        if (currentBlock?.matches('p.placeholder')) {
+        if (currentBlock?.matches('p.guten-placeholder')) {
             currentBlock.classList.add('has-caret');
         }
     }

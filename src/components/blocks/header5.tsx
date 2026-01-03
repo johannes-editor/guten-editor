@@ -7,7 +7,7 @@ import { DefaultProps } from "../types.ts";
 export function Heading5Block(props: DefaultProps) {
     return (
         <h5
-            className={`block placeholder ${!props.children && "empty"}`}
+            className={`block guten-placeholder ${!props.children && "empty"}`}
             data-placeholder={t("heading_5")}
             data-placeholder-key="heading_5"
             {...props}

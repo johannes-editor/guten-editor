@@ -7,7 +7,7 @@ import { DefaultProps } from "../types.ts";
 export function ParagraphBlock(props: DefaultProps) {
     return (
         <p
-            className={`block placeholder ${!props.children && "empty"}`}
+            className={`block guten-placeholder ${!props.children && "empty"}`}
             data-placeholder={t("start_typing")}
             data-placeholder-key="start_typing"
             {...props}

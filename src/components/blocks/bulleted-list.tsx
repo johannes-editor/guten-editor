@@ -12,7 +12,7 @@ export function BulletedListBlock(props: DefaultProps) {
             data-placeholder-key="list_item_placeholder"
             {...props}
         >
-            {props.children ?? <li className="placeholder empty" data-placeholder={t("list_item")} data-placeholder-key="list_item"><br /></li>}
+            {props.children ?? <li className="guten-placeholder empty" data-placeholder={t("list_item")} data-placeholder-key="list_item"><br /></li>}
         </ul>
     );
 }
