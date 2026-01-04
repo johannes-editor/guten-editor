@@ -4,7 +4,7 @@ import { BlockOptionsPlugin } from "../extensible/block-options-plugin.tsx";
 
 export const OpenBlockOptions: Command = {
     id: "openBlockOptions",
-    shortcut: { chord: "Mod+Shift+O", description: "Open block options" },
+    shortcut: { chord: "Mod+/", description: "Open block options" },
     
     execute(context: CommandContext<{ block?: HTMLElement; rect?: DOMRect }>): boolean {
         const block = context.content?.block ?? selection.findClosestBlockBySelection();
