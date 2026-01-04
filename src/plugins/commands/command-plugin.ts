@@ -25,7 +25,7 @@ export class CommandPlugin extends ExtensiblePlugin<CommandExtensionPlugin> {
 
     /** Attach global keydown handler when the plugin is set up. */
     override setup(_root: HTMLElement, _plugins: Plugin[]): void {
-        document.addEventListener("keydown", this.keyHandler);
+        document.addEventListener("keydown", this.keyHandler, true);
     }
 
     /**
