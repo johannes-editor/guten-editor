@@ -12,7 +12,8 @@ export const OpenBlockOptions: Command = {
 
         const rect = context.content?.rect ?? null;
 
-        const menu = BlockOptionsPlugin.openForBlock(block, rect);
+        const anchor = rect ? null : selection.createAnchorAtSelection();
+        const menu = BlockOptionsPlugin.openForBlock(block, rect ?? anchor);
         return Boolean(menu);
     }
 };

@@ -101,3 +101,52 @@ export function findClosestBlockBySelection(sel: Selection | null = null): HTMLE
 
     return null;
 }
+
+const CARET_ANCHOR_DATASET_KEY = "gutenCaretAnchor";
+
+export function createAnchorAtSelection(): HTMLElement | null {
+    const selectionRange = SelectionUtils.getCurrentSelectionRange();
+    if (!selectionRange) return null;
+
+    const anchor = document.createElement("span");
+    anchor.dataset[CARET_ANCHOR_DATASET_KEY] = "true";
+    anchor.textContent = "\u200b";
+    anchor.style.display = "inline-block";
+    anchor.style.position = "absolute";
+    anchor.style.width = "0";
+    anchor.style.height = "0";
+    anchor.style.padding = "0";
+    anchor.style.margin = "0";
+    anchor.style.lineHeight = "0";
+
+    selectionRange.insertNode(anchor);
+    selectionRange.setStartAfter(anchor);
+    selectionRange.setEndAfter(anchor);
+
+    const selection = globalThis.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(selectionRange);
+
+    return anchor;
+}
+
+export function restoreSelectionToAnchor(anchor: HTMLElement | null): void {
+    if (!anchor || !anchor.isConnected) return;
+
+    const block = anchor.closest(".block") as HTMLElement | null;
+    block?.focus();
+
+    const range = document.createRange();
+    range.setStartAfter(anchor);
+    range.collapse(true);
+
+    const selection = globalThis.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+}
+
+export function cleanupCaretAnchor(anchor: HTMLElement | null): void {
+    if (!anchor?.dataset?.[CARET_ANCHOR_DATASET_KEY]) return;
+    restoreSelectionToAnchor(anchor);
+    anchor.remove();
+}
