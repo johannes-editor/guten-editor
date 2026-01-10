@@ -10,18 +10,21 @@ import {
 
 export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutExtensionPlugin> {
     private contentArea: HTMLElement | null = null;
+    private keyTarget: HTMLElement | null = null;
     private shortcuts: MarkdownShortcutRule[] = [];
 
     override setup(root: HTMLElement, _plugins: Plugin[]): void {
-        this.contentArea = root.querySelector<HTMLElement>("#contentArea") ??
-            root.querySelector<HTMLElement>('[contenteditable="true"]');
+        const contentArea = root.querySelector<HTMLElement>("#contentArea");
+        const editableRoot = root.querySelector<HTMLElement>('[contenteditable="true"]');
+        this.contentArea = contentArea ?? editableRoot;
+        this.keyTarget = editableRoot ?? contentArea;
 
-        if (!this.contentArea) {
+        if (!this.keyTarget) {
             console.warn("[MarkdownShortcutsPlugin] Unable to find content area.");
             return;
         }
 
-        this.contentArea.addEventListener("keydown", this.handleKeyDown, true);
+        this.keyTarget.addEventListener("keydown", this.handleKeyDown, true);
     }
 
     override attachExtensions(extensions: MarkdownShortcutExtensionPlugin[]): void {
@@ -155,8 +158,12 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
 
     private getContentArea(): HTMLElement | null {
         if (this.contentArea && document.contains(this.contentArea)) return this.contentArea;
+        if (this.keyTarget && document.contains(this.keyTarget)) return this.keyTarget;
         this.contentArea = document.getElementById("contentArea");
-        return this.contentArea;
+        if (!this.contentArea) {
+            this.keyTarget = document.querySelector<HTMLElement>('[contenteditable="true"]');
+        }
+        return this.contentArea ?? this.keyTarget;
     }
 }
 
