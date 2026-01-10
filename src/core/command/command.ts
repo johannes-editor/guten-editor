@@ -1,5 +1,5 @@
 
-/** A keyboard shortcut chord, e.g. "Mod+K", "Shift+Mod+/". */
+/** A keyboard shortcut chord, e.g. "Mod+K", "Mod+Slash". */
 export type KeyChord = string;
 
 /** Definition of a keyboard shortcut. */
