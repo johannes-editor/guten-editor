@@ -97,6 +97,21 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
 
     private tooltipId = `tt-${Math.random().toString(36).slice(2, 9)}`;
 
+    private wrapEl: HTMLElement | null = null;
+    private tooltipEl: HTMLElement | null = null;
+    private preferredPlacement: TooltipPlacement = "top";
+
+    override afterRender(): void {
+        this.wrapEl = this.querySelector(".guten-tooltip-wrap");
+        this.tooltipEl = this.querySelector(".guten-tooltip");
+        this.preferredPlacement = (this.props as TooltipProps).placement ?? "top";
+
+        if (this.wrapEl && this.tooltipEl) {
+            this.registerEvent(this.wrapEl, "mouseenter", () => this.updatePlacementForViewport());
+            this.registerEvent(this.wrapEl, "focusin", () => this.updatePlacementForViewport());
+        }
+    }
+
     override render(): HTMLElement {
         const {
             children,
@@ -158,5 +173,24 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
                 return <kbd class="keycap">{label}</kbd>;
             }
         }
+    }
+
+    private updatePlacementForViewport() {
+        const tooltip = this.tooltipEl;
+        if (!tooltip) return;
+
+        const preferred = this.preferredPlacement;
+        tooltip.setAttribute("data-placement", preferred);
+
+        if (preferred !== "top") {
+            return;
+        }
+
+        requestAnimationFrame(() => {
+            const rect = tooltip.getBoundingClientRect();
+            if (rect.top < 0) {
+                tooltip.setAttribute("data-placement", "bottom");
+            }
+        });
     }
 }
