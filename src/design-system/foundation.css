@@ -10,6 +10,12 @@ body {
     background-color: var(--color-bg);
 }
 
+#titleArea {
+    padding-left: 2rem;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+}
+
 .editor-container {
     color: var(--color-text);
     background-color: var(--color-bg);

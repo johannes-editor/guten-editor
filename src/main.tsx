@@ -6,7 +6,7 @@ import {
     DEFAULT_LOCALE,
     getStoredLocalePreference,
 } from "./core/i18n/locale-preference.ts";
-import { appendElementOnContentArea, setRoot } from "./components/editor/index.tsx";
+import { appendElementOnContentArea, appendElementOnTitleArea, setRoot } from "./components/editor/index.tsx";
 import { init } from "./core/plugin-engine/index.ts";
 import { ParagraphBlock } from "./components/blocks/paragraph.tsx";
 import { Heading1Block } from "./components/blocks/header1.tsx";
@@ -57,12 +57,10 @@ export async function initEditor(root: HTMLElement) {
     initLocaleDomSync(root.ownerDocument ?? document);
 
     /** Load the basic editor layout */
-    appendElementOnContentArea(
-        <Fragment>
-            <Heading1Block data-placeholder={t("untitled")} data-placeholder-key="untitled" />
-            <ParagraphBlock />
-        </Fragment>
+    appendElementOnTitleArea(
+        <Heading1Block data-placeholder={t("untitled")} data-placeholder-key="untitled" />
     );
+    appendElementOnContentArea(<ParagraphBlock />);
 
     /** Init plugins */
     await init(root);

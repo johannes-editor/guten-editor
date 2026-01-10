@@ -1,3 +1,9 @@
+#editorContent,
+#contentArea {
+    outline: none;
+}
+
+#editorContent,
 #contentArea {
     outline: none;
 }
