@@ -89,6 +89,7 @@ export function defaultSlashMenuItems(): SlashMenuItemData[] {
             icon: <Heading5Icon />,
             sort: 90,
             label: t("heading_5"),
+            shortcut: "#####",
             synonyms: [t("title"), "h5"],
             onSelect: (focusedBlock: HTMLElement) => {
                 runCommand("insertHeading5", { content: { afterBlock: focusedBlock } });
