@@ -18,6 +18,7 @@ export interface BlockOptionsItem {
     type?: BlockOptionsMenuItemType;
     icon?: Element;
     label?: string | ((block: HTMLElement) => string);
+    shortcut?: string;
     sort?: number;
     isActive?: (block: HTMLElement) => boolean;
     isVisible?: (block: HTMLElement) => boolean;
@@ -119,6 +120,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                 getMenuEl={getMenuEl}
                 icon={item.icon}
                 label={labelValue}
+                shortcut={item.shortcut}
                 isActive={item.isActive?.(block)}
                 data-block-options-id={item.id}
                 rightIndicator={item.rightIndicator || "none"}
@@ -142,6 +144,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                 id: "moveBlockUp",
                 icon: <icons.ArrowUpIcon />,
                 label: t("move_up"),
+                shortcut: "Alt+Up",
                 sort: 20,
                 onSelect: ({ block, blockOptions }) => {
                     runCommand("moveBlockUp", { content: { block, blockOptions } });
@@ -151,6 +154,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                 id: "deleteBlock",
                 icon: <icons.TrashIcon />,
                 label: t("delete"),
+                shortcut: "Mod+Backspace",
                 sort: 30,
                 onSelect: ({ block, blockOptions }) => {
                     runCommand("deleteBlock", { content: { block, blockOptions } });
@@ -160,6 +164,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                 id: "moveBlockDown",
                 icon: <icons.ArrowDownIcon />,
                 label: t("move_down"),
+                shortcut: "Alt+Down",
                 sort: 40,
                 onSelect: ({ block, blockOptions }) => {
                     runCommand("moveBlockDown", { content: { block, blockOptions } });

@@ -11,6 +11,7 @@ import { DefaultProps } from "../../index.ts";
 export interface BlockOptionsMenuItemProps extends DefaultProps {
     icon?: Element;
     label?: string;
+    shortcut?: string;
     rightIndicator?: "auto" | "check" | "chevron" | "none";
     onSelect?: (context: BlockOptionsItemContext) => void;
     block: HTMLElement;
@@ -23,6 +24,7 @@ export class BlockOptionsMenuItem<P extends BlockOptionsMenuItemProps, S = Defau
     override onMount(): void {
         this.icon = this.props.icon;
         this.label = this.props.label || "";
+        this.shortcut = this.props.shortcut;
         this.rightIndicator = this.props.rightIndicator || "none";
 
     }

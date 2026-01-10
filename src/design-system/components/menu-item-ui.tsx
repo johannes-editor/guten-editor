@@ -40,7 +40,7 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
           font-family: var(--button-font-family);
           font-weight: var(--button-font-weight);
           display: grid;
-          grid-template-columns: 1fr var(--menu-indicator-w);
+          grid-template-columns: 1fr auto;
           align-items: center;
           column-gap: var(--space-custom-10);
           column-gap: 20px;
@@ -76,7 +76,8 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
           display: inline-flex;
           justify-content: flex-end;
           align-items: center;
-          width: var(--menu-indicator-w);
+          min-width: var(--menu-indicator-w);
+          gap: var(--space-xs);
         }
         .guten-menu-item-right[data-visible="false"] { visibility: hidden; }
         .guten-menu-item-right svg { width: var(--icon-size-md); height: var(--icon-size-md); display: block; }
@@ -104,6 +105,33 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
         .guten-menu-item button:hover .guten-menu-item-right[data-kind="chevron"],
         .guten-menu-item button:focus .guten-menu-item-right[data-kind="chevron"] {
           visibility: visible;
+        }
+
+        .guten-menu-item-shortcut {
+          display: inline-flex;
+          align-items: center;
+          opacity: 0.6;
+          font-size: var(--font-size-xs);
+          line-height: 1;
+        }
+
+        .guten-menu-item-shortcut .keycap {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 1;
+          vertical-align: middle;
+          font-size: var(--font-size-xs);
+          font-family: var(--font-family);
+        }
+
+        .guten-menu-item-shortcut .keycap[data-symbol="true"] {
+          transform: scale(var(--keycap-symbol-scale, 1));
+          transform-origin: center;
+        }
+
+        .guten-menu-item-shortcut .plus {
+          margin: 0 1px;
         }
   `);
 
@@ -152,7 +180,23 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
                 ? (this.chevronIcon ?? <ArrowRightIcon />)
                 : (kind === "check" ? (this.checkIcon ?? <CheckIcon />) : null));
 
-        const hasRight = kind !== "none" || !!this.right;
+        const shortcutNode = this.shortcut
+            ? (
+                <span class="guten-menu-item-shortcut" aria-hidden="true">
+                    {keyboard.normalizeChord(this.shortcut)
+                        .split("+")
+                        .map((raw, i, arr) => (
+                            <span>
+                                {this.renderKeycap(raw.trim())}
+                                {i < arr.length - 1 && <span class="plus">+</span>}
+                            </span>
+                        ))}
+                </span>
+            )
+            : null;
+
+        const hasIndicator = kind !== "none" || !!this.right;
+        const hasRight = hasIndicator || !!shortcutNode;
 
         return (
             <div class="guten-menu-item">
@@ -173,7 +217,8 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
                         data-has-right={hasRight ? "true" : "false"} // opcional, mas útil
                         aria-hidden="true"
                     >
-                        {hasRight ? rightNode : null}
+                        {shortcutNode}
+                        {hasIndicator ? rightNode : null}
                     </span>
                 </button>
             </div>
@@ -183,5 +228,22 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
     private handleOnSelect(event: Event) {
         event.preventDefault();
         this.onSelect(event);
+    }
+
+    private renderKeycap(part: string) {
+        switch (part) {
+            case keyboard.ChordModifiers.Shift:
+                return <kbd class="keycap" data-symbol="true" aria-label="Shift">⇧</kbd>;
+            case keyboard.ChordModifiers.Meta:
+                return <kbd class="keycap" data-symbol="true" aria-label="Command">⌘</kbd>;
+            case keyboard.ChordModifiers.Ctrl:
+                return <kbd class="keycap" aria-label="Control">Ctrl</kbd>;
+            case keyboard.ChordModifiers.Alt:
+                return <kbd class="keycap" aria-label="Alt">Alt</kbd>;
+            default: {
+                const label = /^[a-z]$/i.test(part) ? part.toUpperCase() : part;
+                return <kbd class="keycap">{label}</kbd>;
+            }
+        }
     }
 }
