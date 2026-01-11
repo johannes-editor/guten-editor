@@ -7,21 +7,21 @@ import { ClassName } from "../../../utils/dom/class-name.ts";
 
 export class BlockquoteEnterPlugin extends Plugin {
 
-    private contentArea: HTMLElement | null = null;
+    private editorContent: HTMLElement | null = null;
 
     override setup(root: HTMLElement): void {
-        if (this.contentArea) {
-            this.contentArea.removeEventListener("keydown", this.handleKeyDown, true);
+        if (this.editorContent) {
+            this.editorContent.removeEventListener("keydown", this.handleKeyDown, true);
         }
 
-        const contentArea = root.querySelector<HTMLElement>("#contentArea");
-        if (!contentArea) {
-            console.warn("[BlockquoteEnterPlugin] Unable to find #contentArea in editor root.");
+        const editorContent = root.querySelector<HTMLElement>("#editorContent");
+        if (!editorContent) {
+            console.warn("[BlockquoteEnterPlugin] Unable to find #editorContent in editor root.");
             return;
         }
 
-        this.contentArea = contentArea;
-        contentArea.addEventListener("keydown", this.handleKeyDown, true);
+        this.editorContent = editorContent;
+        editorContent.addEventListener("keydown", this.handleKeyDown, true);
     }
 
     private handleKeyDown = (event: KeyboardEvent) => {
@@ -30,7 +30,7 @@ export class BlockquoteEnterPlugin extends Plugin {
         if (event.defaultPrevented) return;
         if (event.isComposing) return;
 
-        const contentArea = this.contentArea;
+        const contentArea = this.editorContent;
         if (!contentArea) return;
 
         const doc = contentArea.ownerDocument ?? document;
@@ -83,8 +83,8 @@ export class BlockquoteEnterPlugin extends Plugin {
     };
 
     private findClosestBlockquote(node: Node | null): HTMLElement | null {
-        const contentArea = this.contentArea;
-        while (node && contentArea && node !== contentArea) {
+        const editorContent = this.editorContent;
+        while (node && editorContent && node !== editorContent) {
             if (node instanceof HTMLElement && node.tagName === "BLOCKQUOTE") {
                 return node;
             }
