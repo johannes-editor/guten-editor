@@ -3,6 +3,7 @@ import { h, MenuItemUI, t, type DefaultProps } from "../../index.ts";
 import type { OverlayCtor } from "../../../components/overlay/overlay-component.tsx";
 import { EditorSettingsMenu } from "./editor-settings-menu.tsx";
 import { NavigationMenu } from "../../../design-system/components/navigation-menu.tsx";
+import { MenuUIState } from "../../../design-system/components/menu-ui.tsx";
 
 interface ThemeSelectItemProps extends DefaultProps {
     label: string;
@@ -33,10 +34,22 @@ export interface ThemeSelectMenuProps extends DefaultProps {
     onThemeSelect: (theme: string) => void;
 }
 
-export class ThemeSelectMenu extends NavigationMenu<ThemeSelectMenuProps> {
+export interface ThemeSelectMenuState extends MenuUIState {
+    activeTheme: string;
+}
+
+export class ThemeSelectMenu extends NavigationMenu<ThemeSelectMenuProps, ThemeSelectMenuState> {
+
     override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([EditorSettingsMenu]);
     protected override positionMode: "none" | "relative" | "anchor" = "relative";
     protected override lockWidthOnOpen = true;
+
+    override onMount(): void {
+        if(!this.state.activeTheme) {
+            this.setState({ activeTheme: this.props.activeTheme });
+        }
+        super.onMount();
+    }
 
     private formatThemeLabel(theme: string): string {
         if (theme === "auto") return "Auto";
@@ -47,6 +60,7 @@ export class ThemeSelectMenu extends NavigationMenu<ThemeSelectMenuProps> {
     }
 
     private handleThemeSelect = (theme: string) => {
+        this.setState({ activeTheme: theme });
         this.props.onThemeSelect(theme);
     };
 
@@ -75,7 +89,7 @@ export class ThemeSelectMenu extends NavigationMenu<ThemeSelectMenuProps> {
                             <ThemeSelectItem
                                 label={this.formatThemeLabel(theme)}
                                 value={theme}
-                                activeTheme={this.props.activeTheme}
+                                activeTheme={this.state.activeTheme}
                                 onSelectTheme={this.handleThemeSelect}
                             />
                         </li>

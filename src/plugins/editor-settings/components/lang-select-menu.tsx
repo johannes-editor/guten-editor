@@ -4,6 +4,7 @@ import type { OverlayCtor } from "../../../components/overlay/overlay-component.
 import { EditorSettingsMenu } from "./editor-settings-menu.tsx";
 import { NavigationMenu } from "../../../design-system/components/navigation-menu.tsx";
 import { LocaleMeta } from "../../../core/i18n/index.ts";
+import { MenuUIState } from "../../../design-system/components/menu-ui.tsx";
 
 interface LangSelectItemProps extends DefaultProps {
     label: string;
@@ -34,10 +35,21 @@ export interface LangSelectMenuProps extends DefaultProps {
     onLocaleSelect: (locale: string) => void;
 }
 
-export class LangSelectMenu extends NavigationMenu<LangSelectMenuProps> {
+export interface LangSelectMenuState extends MenuUIState {
+    activeLocale: string;
+}
+
+export class LangSelectMenu extends NavigationMenu<LangSelectMenuProps, LangSelectMenuState> {
     override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([EditorSettingsMenu]);
     protected override positionMode: "none" | "relative" | "anchor" = "relative";
     protected override lockWidthOnOpen = true;
+
+    override onMount(): void {
+        if(!this.state.activeLocale) {
+            this.setState({ activeLocale: this.props.activeLocale });
+        }
+        super.onMount();
+    }
 
     private formatLocaleLabel(locale: LocaleMeta): string {
         if (!locale.name || locale.name === locale.nativeName) {
@@ -47,6 +59,7 @@ export class LangSelectMenu extends NavigationMenu<LangSelectMenuProps> {
     }
 
     private handleLocaleSelect = (locale: string) => {
+        this.setState({ activeLocale: locale });
         this.props.onLocaleSelect(locale);
     };
 
@@ -75,7 +88,7 @@ export class LangSelectMenu extends NavigationMenu<LangSelectMenuProps> {
                             <LangSelectItem
                                 label={this.formatLocaleLabel(locale)}
                                 value={locale.code}
-                                activeLocale={this.props.activeLocale}
+                                activeLocale={this.state.activeLocale}
                                 onSelectLocale={this.handleLocaleSelect}
                             />
                         </li>
