@@ -54,7 +54,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
     }
 
     private readonly handleKey = async (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
-        if (event.key === keyboard.KeyboardKeys.Slash && !this.mounted()) {
+        if (event.key === keyboard.KeyboardKeys.Slash && !this.mounted() && event.shiftKey === false && event.ctrlKey === false && event.altKey === false && event.metaKey === false) {
             const selection = globalThis.getSelection();
             if (!selection || selection.rangeCount === 0) return;
 
