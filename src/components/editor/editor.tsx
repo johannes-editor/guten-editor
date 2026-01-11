@@ -27,9 +27,11 @@ export class Editor extends Component {
     private contentArea: HTMLElement | null = null;
     private titleArea: HTMLElement | null = null;
     private overlayArea: HTMLElement | null = null;
+    private editorObserver: MutationObserver | null = null;
     private titleObserver: MutationObserver | null = null;
     private contentObserver: MutationObserver | null = null;
     private titleTemplate: HTMLElement | null = null;
+    private isRestoringEditor = false;
     private isRestoringTitle = false;
     private isRestoringContent = false;
 
@@ -80,13 +82,17 @@ export class Editor extends Component {
         if (this.editorContent) {
             this.registerEvent(this.editorContent, dom.EventTypes.KeyDown, this.handleEditorKeyDown as EventListener, true);
         }
+        if (this.editorContent) {
+            this.observeEditorChanges();
+            this.ensureEditorStructureIntegrity();
+        }
         if (this.titleArea) {
             this.observeTitleChanges();
             this.ensureTitleIntegrity();
         }
         if (this.contentArea) {
             this.observeContentChanges();
-            this.ensureContentIntegrity();
+            // this.ensureContentIntegrity();
         }
     }
 
@@ -137,31 +143,133 @@ export class Editor extends Component {
     }
 
     private readonly handleEditorKeyDown = (event: KeyboardEvent) => {
-        if (!this.titleArea || !this.contentArea) return;
 
-        const selection = this.titleArea.ownerDocument.getSelection?.() ?? null;
+        const isShortcutCombo = event.ctrlKey || event.metaKey || event.altKey;
+        if (isShortcutCombo) {
+            // IMPORTANT: still allow our multi-block deletion fix if you want it for Ctrl+Backspace/Delete etc.
+            // Otherwise, just return.
+        }
+
+        if (!this.editorContent || !this.titleArea || !this.contentArea) return;
+
+        const selection = this.editorContent.ownerDocument.getSelection?.() ?? null;
         if (!selection || selection.rangeCount === 0) return;
 
-        const { startContainer } = selection.getRangeAt(0);
-        if (!this.titleArea.contains(startContainer)) return;
+        const range = selection.getRangeAt(0);
 
-        if (event.key === "Backspace" || event.key === "Delete") {
-            const titleBlock = this.getTitleBlock();
-            if (titleBlock && this.isTitleEmpty(titleBlock)) {
-                event.preventDefault();
-                this.ensureTitleIntegrity();
+        // If the selection/caret is not inside the editor, do not interfere.
+        if (!this.editorContent.contains(range.commonAncestorContainer)) return;
+
+        const inTitle = this.titleArea.contains(range.startContainer);
+        const touchesContent = this.selectionTouchesContentArea(selection, range);
+        const touchesTitle = this.selectionTouchesTitleArea(selection, range);
+
+        // 1) Fixes multi-block deletion in the content (Firefox / cross-browser)
+        if ((event.key === "Backspace" || event.key === "Delete") && touchesContent && !selection.isCollapsed) {
+            event.preventDefault();
+
+            this.newContentChildrenObserver?.stop();
+            try {
+                this.deleteContentSelection(range);
+
+                // If the selection crossed title + content, clear the title.
+                if (touchesTitle) {
+                    const titleBlock = this.getTitleBlock();
+                    if (titleBlock) titleBlock.innerHTML = "<br>";
+                }
+
+                this.ensureEditorStructureIntegrity();
+
+                if (touchesTitle) {
+                    const titleBlock = this.getTitleBlock();
+                    titleBlock ? focusOnElement(titleBlock) : focusOnElement(this.titleArea);
+                }
+
+                // Ensures the caret is placed in a valid location after deletion
+                //const fallback = this.contentArea.querySelector(".block") as HTMLElement | null;
+                //if (fallback) focusOnElement(fallback);
+            } finally {
+                this.newContentChildrenObserver?.start();
+            }
+
+            return;
+        }
+
+        // 2) Enter in the title: create the first paragraph in the content and focus it
+
+        if (event.key === "Enter" && inTitle) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const paragraph = this.insertElementAtContentStart(<ParagraphBlock />);
+            focusOnElement(paragraph);
+            return;
+        }
+
+        // Any other key: DO NOT interfere (allow normal typing)
+    };
+
+
+    private deleteContentSelection(range: Range): void {
+        if (!this.contentArea) return;
+
+        const startBlock = (range.startContainer as HTMLElement).closest?.(".block") as HTMLElement | null;
+        const endBlock = (range.endContainer as HTMLElement).closest?.(".block") as HTMLElement | null;
+
+        if (startBlock && endBlock && startBlock === endBlock) {
+            range.deleteContents();
+            const hasMultipleBlocks = this.contentArea.querySelectorAll(".block").length > 1;
+            if (hasMultipleBlocks && this.isBlockEmpty(startBlock)) {
+                startBlock.remove();
             }
             return;
         }
 
-        if (event.key !== "Enter") return;
+        const blocks = Array.from(this.contentArea.querySelectorAll(".block")) as HTMLElement[];
+        for (const block of blocks) {
+            if (range.intersectsNode(block)) {
+                block.remove();
+            }
+        }
+    }
 
-        event.preventDefault();
-        event.stopPropagation();
+    private selectionTouchesContentArea(selection: Selection, range: Range): boolean {
+        if (!this.contentArea) return false;
+        if (this.contentArea.contains(range.commonAncestorContainer)) {
+            return true;
+        }
+        if (typeof selection.containsNode === "function") {
+            return selection.containsNode(this.contentArea, true);
+        }
+        if (typeof range.intersectsNode === "function") {
+            return range.intersectsNode(this.contentArea);
+        }
 
-        const paragraph = this.insertElementAtContentStart(<ParagraphBlock />);
-        focusOnElement(paragraph);
-    };
+        const contentRange = this.contentArea.ownerDocument.createRange();
+        contentRange.selectNodeContents(this.contentArea);
+        const startsBeforeContentEnd = range.compareBoundaryPoints(Range.START_TO_END, contentRange) < 0;
+        const endsAfterContentStart = range.compareBoundaryPoints(Range.END_TO_START, contentRange) > 0;
+        return startsBeforeContentEnd && endsAfterContentStart;
+    }
+
+    private selectionTouchesTitleArea(selection: Selection, range: Range): boolean {
+        if (!this.titleArea) return false;
+        if (this.titleArea.contains(range.commonAncestorContainer)) {
+            return true;
+        }
+        if (typeof selection.containsNode === "function") {
+            return selection.containsNode(this.titleArea, true);
+        }
+        if (typeof range.intersectsNode === "function") {
+            return range.intersectsNode(this.titleArea);
+        }
+
+        const titleRange = this.titleArea.ownerDocument.createRange();
+        titleRange.selectNodeContents(this.titleArea);
+        const startsBeforeTitleEnd = range.compareBoundaryPoints(Range.START_TO_END, titleRange) < 0;
+        const endsAfterTitleStart = range.compareBoundaryPoints(Range.END_TO_START, titleRange) > 0;
+        return startsBeforeTitleEnd && endsAfterTitleStart;
+    }
 
     private insertElementAtContentStart(element: HTMLElement): HTMLElement {
         this.newContentChildrenObserver?.stop();
@@ -196,13 +304,36 @@ export class Editor extends Component {
         this.titleObserver?.disconnect();
     }
 
+    private observeEditorChanges(): void {
+        this.editorObserver?.disconnect();
+        if (!this.editorContent) return;
+
+        this.editorObserver = new MutationObserver(() => {
+            if (this.isRestoringEditor) return;
+            this.ensureEditorStructureIntegrity();
+        });
+        this.startEditorObserver();
+    }
+
+    private startEditorObserver(): void {
+        if (!this.editorObserver || !this.editorContent) return;
+        this.editorObserver.observe(this.editorContent, {
+            childList: true,
+            subtree: false,
+        });
+    }
+
+    private stopEditorObserver(): void {
+        this.editorObserver?.disconnect();
+    }
+
     private observeContentChanges(): void {
         this.contentObserver?.disconnect();
         if (!this.contentArea) return;
 
         this.contentObserver = new MutationObserver(() => {
             if (this.isRestoringContent) return;
-            this.ensureContentIntegrity();
+            // this.ensureContentIntegrity();
         });
         this.startContentObserver();
     }
@@ -218,6 +349,46 @@ export class Editor extends Component {
 
     private stopContentObserver(): void {
         this.contentObserver?.disconnect();
+    }
+
+    private ensureEditorStructureIntegrity(): void {
+        if (!this.editorContent) return;
+
+        if (!this.titleArea) {
+            const title = document.getElementById("titleArea");
+            this.titleArea = title ?? document.createElement("div");
+            this.titleArea.id = "titleArea";
+        }
+
+        if (!this.contentArea) {
+            const content = document.getElementById("contentArea");
+            this.contentArea = content ?? document.createElement("div");
+            this.contentArea.id = "contentArea";
+        }
+
+        const titleArea = this.titleArea;
+        const contentArea = this.contentArea;
+        const nodes = Array.from(this.editorContent.childNodes);
+        const hasUnexpectedNodes = nodes.some((node) => node !== titleArea && node !== contentArea);
+        const missingNodes = !this.editorContent.contains(titleArea) || !this.editorContent.contains(contentArea);
+        const orderInvalid = this.editorContent.firstChild !== titleArea
+            || this.editorContent.lastChild !== contentArea
+            || this.editorContent.childNodes.length !== 2;
+
+        if (hasUnexpectedNodes || missingNodes || orderInvalid) {
+            this.isRestoringEditor = true;
+            this.stopEditorObserver();
+            this.stopTitleObserver();
+            this.stopContentObserver();
+            this.editorContent.replaceChildren(titleArea, contentArea);
+            this.startTitleObserver();
+            this.startContentObserver();
+            this.startEditorObserver();
+            this.isRestoringEditor = false;
+        }
+
+        this.ensureTitleIntegrity();
+        // this.ensureContentIntegrity();
     }
 
     private ensureTitleIntegrity(): void {
@@ -265,6 +436,11 @@ export class Editor extends Component {
 
     private isTitleEmpty(titleBlock: HTMLElement): boolean {
         const text = titleBlock.textContent?.replace(/[\s\u00A0\u200B]+/g, "") ?? "";
+        return text.length === 0;
+    }
+
+    private isBlockEmpty(block: HTMLElement): boolean {
+        const text = block.textContent?.replace(/[\s\u00A0\u200B]+/g, "") ?? "";
         return text.length === 0;
     }
 }
