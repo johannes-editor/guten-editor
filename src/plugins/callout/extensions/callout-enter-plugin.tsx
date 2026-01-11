@@ -8,28 +8,28 @@ import { ClassName } from "../../../utils/dom/class-name.ts";
 
 export class CalloutEnterPlugin extends Plugin {
 
-    private contentArea: HTMLElement | null = null;
+    private editorContent: HTMLElement | null = null;
 
     override setup(root: HTMLElement): void {
-        if (this.contentArea) {
-            this.contentArea.removeEventListener("keydown", this.handleKeyDown, true);
+        if (this.editorContent) {
+            this.editorContent.removeEventListener("keydown", this.handleKeyDown, true);
         }
 
-        const contentArea = root.querySelector<HTMLElement>("#contentArea");
-        if (!contentArea) {
-            console.warn("[CalloutEnterPlugin] Unable to find #contentArea in editor root.");
-            this.contentArea = null;
+        const editorContent = root.querySelector<HTMLElement>("#editorContent");
+        if (!editorContent) {
+            console.warn("[CalloutEnterPlugin] Unable to find #editorContent in editor root.");
+            this.editorContent = null;
             return;
         }
 
-        this.contentArea = contentArea;
-        contentArea.addEventListener("keydown", this.handleKeyDown, true);
+        this.editorContent = editorContent;
+        editorContent.addEventListener("keydown", this.handleKeyDown, true);
     }
 
     teardown(): void {
-        if (this.contentArea) {
-            this.contentArea.removeEventListener("keydown", this.handleKeyDown, true);
-            this.contentArea = null;
+        if (this.editorContent) {
+            this.editorContent.removeEventListener("keydown", this.handleKeyDown, true);
+            this.editorContent = null;
         }
     }
 
@@ -39,7 +39,7 @@ export class CalloutEnterPlugin extends Plugin {
         if (event.defaultPrevented) return;
         if (event.isComposing) return;
 
-        const contentArea = this.contentArea;
+        const contentArea = this.editorContent;
         if (!contentArea) return;
 
         const doc = contentArea.ownerDocument ?? document;
@@ -79,8 +79,8 @@ export class CalloutEnterPlugin extends Plugin {
     };
 
     private findClosestParagraph(node: Node | null): HTMLParagraphElement | null {
-        const contentArea = this.contentArea;
-        while (node && contentArea && node !== contentArea) {
+        const editorContent = this.editorContent;
+        while (node && editorContent && node !== editorContent) {
             if (node instanceof HTMLParagraphElement) {
                 return node;
             }
@@ -90,8 +90,8 @@ export class CalloutEnterPlugin extends Plugin {
     }
 
     private findClosestCallout(node: Node | null): HTMLElement | null {
-        const contentArea = this.contentArea;
-        while (node && contentArea && node !== contentArea) {
+        const editorContent = this.editorContent;
+        while (node && editorContent && node !== editorContent) {
             if (node instanceof HTMLElement && node.classList.contains("callout")) {
                 return node;
             }
