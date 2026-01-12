@@ -36,7 +36,7 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
             position: absolute;
             border-radius: var(--radius-sm);
             box-shadow: var(--shadow-md);
-            white-space: nowrap;
+            white-space: pre;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.15s ease-in-out;

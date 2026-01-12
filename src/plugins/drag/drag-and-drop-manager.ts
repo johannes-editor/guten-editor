@@ -75,7 +75,7 @@ export class DragAndDropManager {
 
         const wrap = h(
             Tooltip,
-            { text: 'Drag to move block \n Right click to open menu', shortcut: 'Mod+Shift+O', placement: 'right' },
+            { text: 'Drag to move block \n Right click to open menu', shortcut: '', placement: 'right' },
             handle,
         ) as HTMLElement;
         wrap.style.position = 'absolute';
