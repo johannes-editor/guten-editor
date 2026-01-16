@@ -3,6 +3,7 @@
 import { Toolbar } from "../../../design-system/index.ts";
 import { hasSelection, clearSelection } from "../../../utils/selection/selection-utils.ts";
 import { dom } from "../../index.ts";
+import { FormattingToolbarItem } from "./formatting-toolbar-item.tsx";
 
 import style from "./style.css?inline"
 
@@ -175,6 +176,11 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
         if (!sel?.rangeCount) return;
         this.selectionRange = sel.getRangeAt(sel.rangeCount - 1).cloneRange();
         this.isBackwardSelection = this.isSelectionBackward(sel);
+    }
+
+    public refreshActiveStates(): void {
+        const items = this.querySelectorAll<FormattingToolbarItem>(FormattingToolbarItem.getTagName());
+        items.forEach((item) => item.refreshActiveState());
     }
 
     public isSelectionLocked(): boolean {

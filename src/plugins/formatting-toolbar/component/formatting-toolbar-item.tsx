@@ -83,6 +83,10 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
         });
     }
 
+    public refreshActiveState(): void {
+        this.handleSelectionChange();
+    }
+
     private ensureButtonReference(): HTMLButtonElement | null {
         if (!this.buttonEl || !this.buttonEl.isConnected) {
             this.buttonEl = this.querySelector<HTMLButtonElement>("button");
