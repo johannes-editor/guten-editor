@@ -137,6 +137,9 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     override onMount(): void {
         this.registerEvent(document, dom.EventTypes.KeyDown, this.handleKey as EventListener);
         this.registerEvent(this, dom.EventTypes.MouseMove, this.handleMouse as EventListener)
+        this.registerEvent(document, dom.EventTypes.Input, this.handleInput as EventListener);
+        this.registerEvent(document, dom.EventTypes.SelectionChange, this.handleSelectionChange as EventListener);
+
         this.setState({ items: this.props.items });
 
         if (!isMobileSheetViewport()) {
@@ -212,6 +215,14 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         }
     };
 
+    private readonly handleInput = () => {
+        this.updateFilterFromEditor();
+    };
+
+    private readonly handleSelectionChange = () => {
+        this.updateFilterFromEditor();
+    };
+
     private removeSlashCommand() {
         if (!this.range) return;
 
@@ -266,10 +277,33 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         if (!filter) return sortedItems;
 
         const f = filter.toLowerCase();
-        return sortedItems.filter(item =>
-            item.label.toLowerCase().includes(f) ||
-            (item.synonyms && item.synonyms.some(s => s.toLowerCase().includes(f)))
-        );
+
+        const getMatchScore = (value: string): number | null => {
+            const normalized = value.toLowerCase();
+            const index = normalized.indexOf(f);
+            if (index === -1) return null;
+            if (normalized === f) return 0;
+            if (index === 0) return 100 + index;
+            return 200 + index;
+        };
+
+        return sortedItems
+            .map(item => {
+                const labelScore = getMatchScore(item.label);
+                const synonymScores = (item.synonyms ?? [])
+                    .map(getMatchScore)
+                    .filter((score): score is number => score !== null);
+                const bestScore = [labelScore, ...synonymScores]
+                    .filter((score): score is number => score !== null)
+                    .reduce((min, score) => Math.min(min, score), Number.POSITIVE_INFINITY);
+
+                if (!Number.isFinite(bestScore)) return null;
+
+                return { item, score: bestScore };
+            })
+            .filter((entry): entry is { item: SlashMenuItemData; score: number } => entry !== null)
+            .sort((a, b) => a.score - b.score || a.item.sort - b.item.sort)
+            .map(entry => entry.item);
     }
 
     handleOnSelect(item: SlashMenuItemData) {
