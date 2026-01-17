@@ -47,7 +47,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             if (!toolbar || toolbar.isSelectionLocked()) return;
             toolbar.refreshSelection();
             toolbar.refreshActiveStates();
-        }, 100) as EventListener);
+        }, 25) as EventListener);
 
         document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
             if (event.key === keyboard.KeyboardKeys.ArrowUp || event.key === keyboard.KeyboardKeys.ArrowDown || event.key === keyboard.KeyboardKeys.ArrowLeft || event.key === keyboard.KeyboardKeys.ArrowRight) {
