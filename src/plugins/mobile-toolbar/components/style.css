@@ -96,6 +96,7 @@
         visibility: hidden;
     }
 
+    #titleArea,
     #contentArea {
         padding-left: 0 !important;
     }
