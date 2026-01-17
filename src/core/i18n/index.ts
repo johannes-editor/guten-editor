@@ -23,6 +23,10 @@ interface LocaleModule {
 }
 
 const localeModules = import.meta.glob<LocaleModule>("./lang/*.ts", { eager: true });
+// const glob = (import.meta as { glob?: <T>(pattern: string, options: { eager: true }) => Record<string, T> }).glob;
+// const localeModules = typeof glob === "function"
+//     ? glob<LocaleModule>("./lang/*.ts", { eager: true })
+//     : {};
 
 const localeCatalog: LocaleMeta[] = Object.entries(localeModules).map(([path, module]) => {
     const filename = path.split("/").pop() ?? "";
