@@ -10,7 +10,10 @@ import { ChordModifiers, CodeKeyNames } from "./keys.ts";
 export function normalizeChord(s: string): string {
     const apple = isApplePlatform();
     return s.replace(/Mod/gi, apple ? ChordModifiers.Meta : ChordModifiers.Ctrl)
-        .split("+").map(p => p.trim()).join("+");
+        .split("+")
+        .map(p => p.trim())
+        .map(p => (p === "/" || p === "?") ? CodeKeyNames.Slash : p)
+        .join("+");
 }
 
 /**
@@ -18,13 +21,15 @@ export function normalizeChord(s: string): string {
  * Examples: "Ctrl+Shift+K", "Meta+Slash".
  */
 export function eventToChord(ev: KeyboardEvent): string {
+    const key = /^[a-z]$/i.test(ev.key) ? ev.key.toUpperCase() : codeToName(ev.code) ?? ev.key;
+    const isSlashKey = key === "/" || key === "?" || key === CodeKeyNames.Slash;
     const parts: string[] = [];
     if (ev.ctrlKey) parts.push(ChordModifiers.Ctrl);
     if (ev.metaKey) parts.push(ChordModifiers.Meta);
     if (ev.altKey) parts.push(ChordModifiers.Alt);
-    if (ev.shiftKey) parts.push(ChordModifiers.Shift);
-    const key = /^[a-z]$/i.test(ev.key) ? ev.key.toUpperCase() : codeToName(ev.code) ?? ev.key;
-    parts.push(key);
+    if (ev.shiftKey && !isSlashKey) parts.push(ChordModifiers.Shift);
+    const normalizedKey = isSlashKey ? CodeKeyNames.Slash : key;
+    parts.push(normalizedKey);
     return parts.join("+");
 }
 
