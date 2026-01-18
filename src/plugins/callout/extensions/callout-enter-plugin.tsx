@@ -5,6 +5,7 @@ import { Plugin } from "../../../core/plugin-engine/plugin.ts";
 import { ParagraphBlock } from "../../../components/blocks/paragraph.tsx";
 import { focusOnElement } from "../../../utils/dom-utils.ts";
 import { ClassName } from "../../../utils/dom/class-name.ts";
+import { dom, keyboard } from "../../index.ts";
 
 export class CalloutEnterPlugin extends Plugin {
 
@@ -12,7 +13,7 @@ export class CalloutEnterPlugin extends Plugin {
 
     override setup(root: HTMLElement): void {
         if (this.editorContent) {
-            this.editorContent.removeEventListener("keydown", this.handleKeyDown, true);
+            this.editorContent.removeEventListener(dom.EventTypes.KeyDown, this.handleKeyDown, true);
         }
 
         const editorContent = root.querySelector<HTMLElement>("#editorContent");
@@ -23,18 +24,19 @@ export class CalloutEnterPlugin extends Plugin {
         }
 
         this.editorContent = editorContent;
-        editorContent.addEventListener("keydown", this.handleKeyDown, true);
+        editorContent.addEventListener(dom.EventTypes.KeyDown, this.handleKeyDown, true);
     }
 
     teardown(): void {
         if (this.editorContent) {
-            this.editorContent.removeEventListener("keydown", this.handleKeyDown, true);
+            this.editorContent.removeEventListener(dom.EventTypes.KeyDown, this.handleKeyDown, true);
             this.editorContent = null;
         }
     }
 
     private readonly handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key !== "Enter") return;
+
+        if (event.key !== keyboard.KeyboardKeys.Enter) return;
         if (event.shiftKey || event.altKey || event.metaKey || event.ctrlKey) return;
         if (event.defaultPrevented) return;
         if (event.isComposing) return;
@@ -55,9 +57,18 @@ export class CalloutEnterPlugin extends Plugin {
         if (!callout) return;
 
         if (!this.isEmptyCalloutParagraph(paragraph)) return;
+        if (!this.isLastParagraphInCallout(paragraph, callout)) return;
 
         event.preventDefault();
         event.stopPropagation();
+
+        if(this.isFirstParagraphInCallout(paragraph, callout)) {
+            const newParagraph = this.createParagraph(doc);
+            callout.insertAdjacentElement("afterend", newParagraph);
+            focusOnElement(newParagraph);
+            this.dispatchInput(newParagraph);
+            return;
+        }
 
         const newParagraph = this.createParagraph(doc);
         paragraph.remove();
@@ -116,5 +127,13 @@ export class CalloutEnterPlugin extends Plugin {
     private dispatchInput(target: HTMLElement) {
         const event = new Event("input", { bubbles: true });
         target.dispatchEvent(event);
+    }
+
+    private isLastParagraphInCallout(paragraph: HTMLParagraphElement, callout: HTMLElement): boolean {
+        return callout.lastElementChild === paragraph;
+    }
+
+    private isFirstParagraphInCallout(paragraph: HTMLParagraphElement, callout: HTMLElement): boolean {
+        return callout.firstElementChild === paragraph;
     }
 }
