@@ -143,7 +143,7 @@ export function extractImageBlockDataset(element: HTMLElement): Record<string, s
 export function findImageBlockById(blockId: string): HTMLElement | null {
     if (!blockId || typeof document === "undefined") return null;
     const candidates = document.querySelectorAll<HTMLElement>(IMAGE_BLOCK_SELECTOR);
-    for (const candidate of candidates) {
+    for (const candidate of Array.from(candidates)) {
         if (candidate.dataset.blockId === blockId) {
             return candidate;
         }
