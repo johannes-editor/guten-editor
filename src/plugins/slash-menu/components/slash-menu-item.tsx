@@ -61,6 +61,10 @@ export class SlashMenuItem extends Component<SlashMenuItemProps> {
                     type="button"
                     class={className}
                     onClick={this.props.onSelect}
+                    onMouseDown={(event: MouseEvent) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }}
                     onMouseEnter={() => this.props.onMouseOver(this.props.index)}
                 >
                     {this.props.icon}
