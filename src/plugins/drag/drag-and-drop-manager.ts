@@ -21,10 +21,12 @@ export class DragAndDropManager {
         this.bindHandleEvents();
         this.observeOverlay();
         this.updateTargets();
+        
         this.mutationObserver = new MutationObserver(() => this.updateTargets());
         this.mutationObserver.observe(this.content, { childList: true, subtree: true });
-        window.addEventListener(EventTypes.Scroll, () => this.updateHandlePosition());
-        window.addEventListener(EventTypes.Resize, () => this.updateHandlePosition());
+        
+        globalThis.addEventListener(EventTypes.Scroll, () => this.updateHandlePosition());
+        globalThis.addEventListener(EventTypes.Resize, () => this.updateHandlePosition());
     }
 
     stop() {
@@ -32,8 +34,10 @@ export class DragAndDropManager {
         this.mutationObserver = null;
         this.overlayObserver?.disconnect();
         this.overlayObserver = null;
+
         document.removeEventListener(EventTypes.PointerMove, this.onPointerMove);
         document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
+        
         this.unbindHandleEvents();
         this.handleWrap?.remove();
         this.handleWrap = null;
@@ -78,6 +82,7 @@ export class DragAndDropManager {
             { text: 'Drag to move block \n Right click to open menu', shortcut: '', placement: 'right' },
             handle,
         ) as HTMLElement;
+        
         wrap.style.position = 'absolute';
         wrap.style.display = 'none';
         wrap.style.pointerEvents = 'auto';
@@ -266,19 +271,25 @@ export class DragAndDropManager {
 
         const contentRect = this.content.getBoundingClientRect();
         let x = e.clientX;
+        let y = e.clientY;
         if (x < contentRect.left) {
             x = contentRect.left + 1;
         } else if (x > contentRect.right) {
             x = contentRect.right - 1;
         }
+        if (y < contentRect.top) {
+            y = contentRect.top + 1;
+        } else if (y > contentRect.bottom) {
+            y = contentRect.bottom - 1;
+        }
 
-        const element = document.elementFromPoint(x, e.clientY) as HTMLElement | null;
+        const element = document.elementFromPoint(x, y) as HTMLElement | null;
         const target = element?.closest('.block') as HTMLElement | null;
         if (!target || target === this.currentDrag || target === this.placeholder) {
             return;
         }
         const rect = target.getBoundingClientRect();
-        const before = e.clientY < rect.top + rect.height / 2;
+        const before = y < rect.top + rect.height / 2;
         target.parentElement!.insertBefore(this.placeholder, before ? target : target.nextSibling);
     };
 
