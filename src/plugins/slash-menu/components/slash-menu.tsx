@@ -109,10 +109,6 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             color: var(--menu-item-color-selected);
         }
 
-        .guten-menu.no-items-found {
-            padding: 8px;
-        }
-
     ` );
 
     constructor() {
@@ -371,14 +367,23 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                             />
                         </li>
                     ))}
+
+                    {filtered.length === 0 && (
+                        <li role="menuitem">
+                            <SlashMenuItem
+                                label={t("no_item_found")}
+                                shortcut="Esc"
+                                onSelect={() => { 
+                                    this.removeSlashCommand();
+                                    this.remove(); 
+                                }}
+                                selected={1 === this.state.selectedIndex}
+                                index={1}
+                                onMouseOver={() => this.mouseSetSelectedIndex(1)}
+                            />
+                        </li>
+                    )}
                 </ul>
-
-                {filtered.length === 0 && (
-                    <div class="no-items-found">
-                        {t("no_item_found")}
-                    </div>
-                )}
-
             </div>
         );
     }

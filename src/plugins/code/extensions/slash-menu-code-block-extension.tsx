@@ -10,7 +10,7 @@ export class SlashMenuCodeBlockExtension extends SlashMenuExtensionPlugin {
     icon: SVGElement;
     label: string;
     sort: number;
-    shortcut: string;
+    override shortcut: string;
 
     constructor() {
         super();
