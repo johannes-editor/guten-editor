@@ -50,8 +50,11 @@ const en: TranslationSchema = {
 
     add_table_header: 'Add header row',
     remove_table_header: 'Remove header row',
-    callout_color_default: 'Default',
+
+
+    callout: 'Callout',
     callout_color_info: 'Info',
+    callout_color_neutral: 'Neutral',
     callout_color_success: 'Success',
     callout_color_warning: 'Warning',
     callout_color_danger: 'Danger',
@@ -101,9 +104,14 @@ const en: TranslationSchema = {
     invalid_youtube_url: 'Enter a valid YouTube link',
     youtube_video: 'YouTube video',
     youtube_playlist: 'YouTube playlist',
-    blockquote_placeholder: 'To be or not to be',
+    blockquote_placeholder: 'Add a note',
     list_item: 'Item',
     code_block_placeholder: '/* Code snippet */',
+
+    note: 'Note',
+    highlight: 'Highlight',
+    notice: 'Notice',
+
     modal_close: 'Close',
     modal_back: 'Back',
 

@@ -31,9 +31,8 @@ export class CalloutColorMenuItem extends MenuItemUI<CalloutColorMenuItemProps, 
         handleBackgroundChange(variant.id || "");
     }
 
-
     private renderSwatch(variant: ColorVariant): Element {
-        const strokeColor = variant.stroke ?? "var(--color-border)";
+        const strokeColor = variant.stroke ?? `color-mix(in srgb, ${variant.color} 70%, #000 30%)`;
         if (variant.rounded) {
             return <icons.SwatchRoundedIcon color={variant.color} strokeColor={strokeColor} strokeWidth={1} size={18} />
         }

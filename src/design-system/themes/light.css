@@ -30,8 +30,8 @@
     --color-ui-text: #2c2c2b;
     --blockquote-border-color: #2b2b2d;
 
-    --color-callout: #fee5b2;
     --color-callout-info: #dbeafe;
+    --color-callout-neutral: #eae9e8;
     --color-callout-success: #dcfce7;
     --color-callout-warning: #fef3c7;
     --color-callout-danger: #fee2e2;

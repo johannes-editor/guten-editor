@@ -9,7 +9,7 @@ export class SlashMenuImageExtension extends SlashMenuExtensionPlugin {
     icon: SVGElement;
     label: string;
     sort: number;
-    synonyms: string[];
+    override synonyms: string[];
 
     constructor() {
         super();

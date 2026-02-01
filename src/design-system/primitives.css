@@ -9,28 +9,34 @@
 }
 
 .callout {
-    background: var(--color-callout);
+    --callout-bg: var(--color-callout);
+    background: var(--callout-bg);
     color: var(--color-callout-text-default);
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-sm);
+    border: 1px solid color-mix(in srgb, var(--callout-bg) 70%, #000 5%);
     box-shadow: var(--shadow-sm);
     margin-bottom: 1rem;
 }
 
 .callout[data-callout-variant="info"] {
-    background: var(--color-callout-info);
+    --callout-bg: var(--color-callout-info);
+}
+
+.callout[data-callout-variant="neutral"] {
+    --callout-bg: var(--color-callout-neutral);
 }
 
 .callout[data-callout-variant="success"] {
-    background: var(--color-callout-success);
+    --callout-bg: var(--color-callout-success);
 }
 
 .callout[data-callout-variant="warning"] {
-    background: var(--color-callout-warning);
+    --callout-bg: var(--color-callout-warning);
 }
 
 .callout[data-callout-variant="danger"] {
-    background: var(--color-callout-danger);
+    --callout-bg: var(--color-callout-danger);
 }
 
 .callout[data-callout-text-color="muted"] {
@@ -447,6 +453,10 @@ td:focus-visible, th:focus-visible {
 
 p.guten-placeholder.empty::before {
     visibility: hidden;
+}
+
+.callout p.guten-placeholder.empty::before {
+    visibility: visible;
 }
 
 p.guten-placeholder.empty:hover::before,

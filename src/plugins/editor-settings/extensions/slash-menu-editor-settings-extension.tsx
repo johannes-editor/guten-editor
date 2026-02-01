@@ -10,12 +10,14 @@ export class SlashMenuEditorSettingsExtension extends SlashMenuExtensionPlugin {
     override icon: SVGElement;
     override label: string;
     override sort: number;
+    override synonyms: string[];
 
     constructor() {
         super();
 
         this.icon = <icons.SettingsIcon />;
         this.label = t("settings");
+        this.synonyms = [t("language"), t("theme")];
         this.sort = 120;
     }
 

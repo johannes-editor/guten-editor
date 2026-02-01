@@ -29,8 +29,8 @@
     --color-ui-text: #000000;
     --blockquote-border-color: #000000;
 
-    --color-callout: #ffe9a8;
     --color-callout-info: #c9d8ff;
+    --color-callout-neutral: #f0f0f0;
     --color-callout-success: #c2f3c2;
     --color-callout-warning: #ffe8a3;
     --color-callout-danger: #ffc7c7;

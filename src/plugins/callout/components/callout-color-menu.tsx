@@ -17,8 +17,8 @@ interface CalloutColorMenuState extends DefaultState {
 }
 
 const BACKGROUND_VARIANTS: ColorVariant[] = [
-    { id: "", labelKey: "callout_color_default", color: "var(--color-callout)", rounded: true },
     { id: "info", labelKey: "callout_color_info", color: "var(--color-callout-info)", rounded: true },
+    { id: "neutral", labelKey: "callout_color_neutral", color: "var(--color-callout-neutral)", rounded: true },
     { id: "success", labelKey: "callout_color_success", color: "var(--color-callout-success)", rounded: true },
     { id: "warning", labelKey: "callout_color_warning", color: "var(--color-callout-warning)", rounded: true },
     { id: "danger", labelKey: "callout_color_danger", color: "var(--color-callout-danger)", rounded: true },
