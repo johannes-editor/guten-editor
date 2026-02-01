@@ -1,3 +1,4 @@
 build/
 demo/dist
 deno.lock
+node_modules
