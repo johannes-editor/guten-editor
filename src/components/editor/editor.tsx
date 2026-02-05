@@ -166,11 +166,17 @@ export class Editor extends Component {
 
         // 1) Fixes multi-block deletion in the content (Firefox / cross-browser)
         if ((event.key === "Backspace" || event.key === "Delete") && touchesContent && !selection.isCollapsed) {
+
+            const intersectingBlocks = this.getContentBlocksInRange(range);
+            if (intersectingBlocks.length <= 1) {
+                return;
+            }
+
             event.preventDefault();
 
             this.newContentChildrenObserver?.stop();
             try {
-                this.deleteContentSelection(range);
+                this.deleteContentSelection(range, intersectingBlocks);
 
                 // If the selection crossed title + content, clear the title.
                 if (touchesTitle) {
@@ -210,11 +216,13 @@ export class Editor extends Component {
     };
 
 
-    private deleteContentSelection(range: Range): void {
+    private deleteContentSelection(range: Range, intersectingBlocks?: HTMLElement[]): void {
         if (!this.contentArea) return;
 
         const startBlock = (range.startContainer as HTMLElement).closest?.(".block") as HTMLElement | null;
         const endBlock = (range.endContainer as HTMLElement).closest?.(".block") as HTMLElement | null;
+
+        const blocksInRange = intersectingBlocks ?? this.getContentBlocksInRange(range);
 
         if (startBlock && endBlock && startBlock === endBlock) {
             range.deleteContents();
@@ -225,12 +233,44 @@ export class Editor extends Component {
             return;
         }
 
-        const blocks = Array.from(this.contentArea.querySelectorAll(".block")) as HTMLElement[];
-        for (const block of blocks) {
-            if (range.intersectsNode(block)) {
-                block.remove();
+        if (!startBlock || !endBlock || blocksInRange.length <= 1) {
+            range.deleteContents();
+            return;
+        }
+
+        const allBlocks = Array.from(this.contentArea.querySelectorAll(".block")) as HTMLElement[];
+        const startIndex = allBlocks.indexOf(startBlock);
+        const endIndex = allBlocks.indexOf(endBlock);
+
+        const tailRange = range.cloneRange();
+        if (endBlock.contains(range.endContainer)) {
+            tailRange.setStart(range.endContainer, range.endOffset);
+            tailRange.setEnd(endBlock, endBlock.childNodes.length);
+        } else {
+            tailRange.selectNodeContents(endBlock);
+        }
+        const trailingContent = tailRange.cloneContents();
+
+        range.deleteContents();
+
+        if (trailingContent.childNodes.length > 0) {
+            startBlock.appendChild(trailingContent);
+        }
+
+        if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+            for (let i = startIndex + 1; i <= endIndex; i += 1) {
+                const block = allBlocks[i];
+                if (block && block !== startBlock && block.isConnected) {
+                    block.remove();
+                }
             }
         }
+    }
+
+    private getContentBlocksInRange(range: Range): HTMLElement[] {
+        if (!this.contentArea) return [];
+        const blocks = Array.from(this.contentArea.querySelectorAll(".block")) as HTMLElement[];
+        return blocks.filter((block) => range.intersectsNode(block));
     }
 
     private selectionTouchesContentArea(selection: Selection, range: Range): boolean {
