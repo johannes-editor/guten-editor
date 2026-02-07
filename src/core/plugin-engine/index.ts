@@ -1,9 +1,16 @@
-import { PluginManager } from "./plugin-manager.ts";
+import type { PluginManager } from "./plugin-manager.ts";
 
-const pluginManager = new PluginManager();
+let pluginManager: PluginManager | null = null;
 
-export const init = async (root: HTMLElement) => await pluginManager.init(root);
+export const init = async (root: HTMLElement) => {
+    if (!pluginManager) {
+        const { PluginManager } = await import("./plugin-manager.ts");
+        pluginManager = new PluginManager();
+    }
 
-export *  from "./plugin.ts";
+    await pluginManager.init(root);
+};
+
+export * from "./plugin.ts";
 export * from "./plugin-extension.ts";
 export * from "./extensible-plugin.ts";

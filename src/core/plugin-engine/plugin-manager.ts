@@ -15,9 +15,9 @@ const manifests = import.meta.glob(
 // ) as unknown as Record<string, () => Promise<Record<string, unknown>>>;
 
 const pluginModules = import.meta.glob(
-    ["../../plugins/**/*.{ts,tsx}",
-    "!../../plugins/**/*.test.{ts,tsx}"],
-) as unknown as Record<string, () => Promise<Record<string, unknown>>>;
+    ["../../plugins/**/*.{ts,tsx}", "!../../plugins/**/*.test.{ts,tsx}"],
+    { eager: true },
+) as unknown as Record<string, Record<string, unknown>>;
 
 
 export class PluginManager {
@@ -71,15 +71,14 @@ export class PluginManager {
                 if (!entry.active) continue;
 
                 const sourceKey = `${baseDir}/${entry.path.replace(/^\.?\//, "")}`;
-                const loader = pluginModules[sourceKey];
+                const mod = pluginModules[sourceKey];
 
-                if (!loader) {
+                if (!mod) {
                     console.warn(`Source file not found or not bundled: ${sourceKey}`);
                     continue;
                 }
 
                 try {
-                    const mod = await loader();
                     // deno-lint-ignore no-explicit-any
                     const PluginClass = (mod as any)[entry.class] as { new(): Plugin };
 
@@ -91,7 +90,9 @@ export class PluginManager {
                     const instance = new PluginClass();
                     if (instance instanceof Plugin) loaded.push(instance);
                 } catch (err) {
-                    console.warn(`Failed to load plugin at ${sourceKey}: ${err instanceof Error ? err.message : err}`);
+                    console.warn(
+                        `Failed to load plugin at ${sourceKey}: ${err instanceof Error ? err.message : err}`,
+                    );
                 }
             }
         }
