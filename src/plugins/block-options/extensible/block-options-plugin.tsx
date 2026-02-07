@@ -1,7 +1,13 @@
 /** @jsx h */
-import { h, ExtensiblePlugin, appendElementOnOverlayArea, runCommand, t, icons } from "../../index.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { ExtensiblePlugin } from "@core/plugin-engine/index.ts";
+import { PluginExtension } from "@core/plugin-engine/index.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { ArrowUpIcon, ArrowDownIcon, TrashIcon } from "@components/ui/primitives/icons.tsx";
 import { BlockOptionsMenu } from "../components/block-options-menu.tsx";
-import { PluginExtension } from "../../../core/plugin-engine/plugin-extension.ts";
 import { BlockOptionsMenuItem } from "../components/block-options-menu-item.tsx";
 
 export interface BlockOptionsItemContext {
@@ -94,7 +100,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
             type: "separator",
         };
 
-        return [...extensionItems, separator, ...baseItems ];
+        return [...extensionItems, separator, ...baseItems];
     }
 
 
@@ -142,7 +148,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
             // },
             {
                 id: "moveBlockUp",
-                icon: <icons.ArrowUpIcon />,
+                icon: <ArrowUpIcon />,
                 label: t("move_up"),
                 shortcut: "Alt+Up",
                 sort: 20,
@@ -152,7 +158,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
             },
             {
                 id: "deleteBlock",
-                icon: <icons.TrashIcon />,
+                icon: <TrashIcon />,
                 label: t("delete"),
                 shortcut: "Mod+Backspace",
                 sort: 30,
@@ -162,7 +168,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
             },
             {
                 id: "moveBlockDown",
-                icon: <icons.ArrowDownIcon />,
+                icon: <ArrowDownIcon />,
                 label: t("move_down"),
                 shortcut: "Alt+Down",
                 sort: 40,
@@ -170,7 +176,7 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
                     runCommand("moveBlockDown", { content: { block, blockOptions } });
                 },
             }
-            
+
         ];
     }
 }

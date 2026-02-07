@@ -1,7 +1,10 @@
 /** @jsx h */
 
-import { h, icons, runCommand, t } from "../../index.ts";
-import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "../../mobile-toolbar/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { h } from "@core/jsx/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { AddRowBelow, AddColumnRight, DeleteRow, DeleteColumn } from "@components/ui/primitives/icons.tsx";
+import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar/index.ts";
 import { findTableFromSelection } from "../commands/table-command-utils.ts";
 
 export class TableMobileToolbarExtension extends MobileToolbarButtonExtensionPlugin {
@@ -15,28 +18,28 @@ export class TableMobileToolbarExtension extends MobileToolbarButtonExtensionPlu
         return [
             {
                 id: "table-add-row",
-                icon: () => <icons.AddRowBelow />,
+                icon: () => <AddRowBelow />,
                 label: t("add_row"),
                 sort: 110,
                 onClick: () => runCommand("table.addRow", { content: selectionTable }),
             },
             {
                 id: "table-add-column",
-                icon: () => <icons.AddColumnRight />,
+                icon: () => <AddColumnRight />,
                 label: t("add_column"),
                 sort: 120,
                 onClick: () => runCommand("table.addColumn", { content: selectionTable }),
             },
             {
                 id: "table-delete-row",
-                icon: () => <icons.DeleteRow />,
+                icon: () => <DeleteRow />,
                 label: t("delete_row"),
                 sort: 130,
                 onClick: () => runCommand("table.deleteRow", { content: selectionTable, selection }),
             },
             {
                 id: "table-delete-column",
-                icon: () => <icons.DeleteColumn />,
+                icon: () => <DeleteColumn />,
                 label: t("delete_column"),
                 sort: 140,
                 onClick: () => runCommand("table.deleteColumn", { content: selectionTable, selection }),

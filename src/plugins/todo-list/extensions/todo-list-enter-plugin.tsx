@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "../../../jsx.ts";
-import { Plugin } from "../../../core/plugin-engine/plugin.ts";
-import { ParagraphBlock } from "../../../components/blocks/paragraph.tsx";
-import { focusOnElement } from "../../../utils/dom-utils.ts";
-import { ClassName } from "../../../utils/dom/class-name.ts";
+import { h } from "@core/jsx/index.ts";
+import { Plugin } from "@core/plugin-engine/plugin.ts";
+import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
+import { focusOnElement } from "@utils/dom/dom-utils.ts";
+import { ClassName } from "@utils/dom/class-name.ts";
 import { createTodoItem, createTodoList } from "../utils.tsx";
 
 export class TodoListEnterPlugin extends Plugin {

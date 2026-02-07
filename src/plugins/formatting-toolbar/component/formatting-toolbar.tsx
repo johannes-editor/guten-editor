@@ -2,7 +2,7 @@
 
 import { Toolbar } from "../../../design-system/index.ts";
 import { hasSelection, clearSelection } from "../../../utils/selection/selection-utils.ts";
-import { dom } from "../../index.ts";
+import { EventTypes } from "@utils/dom/index.ts";
 import { FormattingToolbarItem } from "./formatting-toolbar-item.tsx";
 
 import style from "./style.css?inline"
@@ -35,8 +35,8 @@ export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
 
         });
 
-        this.registerEvent(document, dom.EventTypes.SelectionChange, () => this.handleSelectionChange());
-        this.registerEvent(globalThis, dom.EventTypes.Scroll, () => this.positionToolbarNearSelection());
+        this.registerEvent(document, EventTypes.SelectionChange, () => this.handleSelectionChange());
+        this.registerEvent(globalThis, EventTypes.Scroll, () => this.positionToolbarNearSelection());
     }
 
     override onUnmount(): void {

@@ -1,7 +1,10 @@
 /** @jsx h */
 
-import { Command } from "../../../core/command/command.ts";
-import { appendElementOnOverlayArea, dom, h, t } from "../../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { Command } from "@core/command/command.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { InputTypes } from "@utils/dom/index.ts";
 import { YouTubePopover } from "../components/youtube-popover.tsx";
 
 export type OpenYouTubePopoverPayload = {
@@ -24,7 +27,7 @@ export const OpenYouTubePopover: Command<OpenYouTubePopoverPayload> = {
             <YouTubePopover
                 target={target ?? null}
                 initialValue={initialValue ?? undefined}
-                inputType={dom.InputTypes.Url}
+                inputType={InputTypes.Url}
                 inputPlaceholder={t("paste_or_type_a_youtube_link")}
                 anchorRect={anchor}
             />

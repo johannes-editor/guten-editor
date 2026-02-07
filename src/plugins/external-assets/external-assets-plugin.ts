@@ -1,6 +1,5 @@
-import { ExtensiblePlugin, PluginExtension } from "../index.ts";
-import { loadAssetsSequentially } from "../../core/asset-loader/loader.ts";
-import { AssetBundle } from "../../core/asset-loader/types.ts";
+import { ExtensiblePlugin, PluginExtension } from "@core/plugin-engine/index.ts";
+import { AssetBundle, loadAssetsSequentially } from "@core/asset-loader/index.ts";
 
 /**
  * Plugin that registers and loads external CSS/JS assets declared by extensions.

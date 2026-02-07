@@ -1,5 +1,5 @@
-import { Plugin } from "../../../core/plugin-engine/plugin.ts";
-import { focusOnElement } from "../../index.ts";
+import { Plugin } from "@core/plugin-engine/plugin.ts";
+import { focusOnElement } from "@utils/dom/index.ts";
 
 type Direction = "left" | "right" | "up" | "down";
 

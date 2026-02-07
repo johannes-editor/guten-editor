@@ -1,5 +1,5 @@
-import { Command } from "../../../core/command/command.ts";
-import { CommandExtensionPlugin } from "../../commands/command-plugin.ts";
+import { Command } from "@core/command/command.ts";
+import { CommandExtensionPlugin } from "@plugin/commands/command-plugin.ts";
 import { InsertYouTubeEmbed } from "../commands/insert-youtube-embed.tsx";
 import { OpenYouTubePopover } from "../commands/open-youtube-popove.tsx";
 

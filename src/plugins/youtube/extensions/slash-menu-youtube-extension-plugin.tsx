@@ -1,7 +1,10 @@
 /** @jsx h */
 
-import { icons, h, t, focusOnElement } from "../../index.ts";
-import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { YouTubeIcon } from "@components/ui/primitives/icons.tsx";
+import { focusOnElement } from "@utils/dom/index.ts";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
 import { YouTubePlaceholder } from "../components/youtube-placeholder.tsx";
 
 
@@ -14,7 +17,7 @@ export class SlashMenuYouTubeExtensionPlugin extends SlashMenuExtensionPlugin {
 
     constructor() {
         super();
-        this.icon = <icons.YouTubeIcon />;
+        this.icon = <YouTubeIcon />;
         this.label = t("youtube");
         this.sort = 110;
         this.synonyms = ["youtube", "video", "short", "shorts", "playlist"];

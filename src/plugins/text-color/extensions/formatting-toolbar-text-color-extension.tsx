@@ -1,7 +1,10 @@
 /** @jsx h */
 
-import { FormattingToolbarExtensionPlugin, icons, runCommand, t, h } from "../../index.ts";
-
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { TextColorIcon } from "@components/ui/primitives/icons.tsx"
+import { FormattingToolbarExtensionPlugin } from "@plugin/formatting-toolbar/index.ts";
 
 /**
  * FormattingToolbar extension that adds the "Text Color" button.
@@ -10,7 +13,7 @@ import { FormattingToolbarExtensionPlugin, icons, runCommand, t, h } from "../..
  */
 export class FormattingToolbarTextColorExtension extends FormattingToolbarExtensionPlugin {
     /** Toolbar icon (link glyph). */
-    readonly icon: SVGElement = <icons.TextColorIcon />;
+    readonly icon: SVGElement = <TextColorIcon />;
 
     /** Tooltip shown on hover. */
     readonly label: string = t("text_color");

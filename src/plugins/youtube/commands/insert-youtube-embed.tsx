@@ -1,7 +1,7 @@
 /** @jsx h */
 
-import { Command } from "../../../core/command/command.ts";
-import { h } from "../../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { Command } from "@core/command/command.ts";
 import { YouTubeEmbed } from "../components/youtube-embed.tsx";
 import { YouTubePlaceholder } from "../components/youtube-placeholder.tsx";
 import type { YouTubeEmbedKind } from "../utils/parse-youtube-url.ts";

@@ -1,8 +1,7 @@
 
-import { keyboard } from "../../utils/index.ts";
-
-import { ShortcutDef } from "../../core/command/command.ts";
-import { Command, ExtensiblePlugin, Plugin, PluginExtension, registerCommand, runCommand } from "../index.ts";
+import { Command, ShortcutDef, registerCommand, runCommand} from "@core/command/index.ts";
+import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine/index.ts";
+import { normalizeChord, eventToChord } from "@utils/keyboard/index.ts";
 
 type Binding = { cmdId: string; def: ShortcutDef };
 
@@ -53,7 +52,7 @@ export class CommandPlugin extends ExtensiblePlugin<CommandExtensionPlugin> {
     * Ensures bindings for the same chord are kept in descending priority.
     */
     private registerShortcut(def: ShortcutDef, cmdId: string) {
-        const chord = keyboard.normalizeChord(def.chord);
+        const chord = normalizeChord(def.chord);
         const arr = this.bindings.get(chord) ?? [];
         arr.push({ cmdId, def });
         arr.sort((a, b) => (b.def.priority ?? 0) - (a.def.priority ?? 0));
@@ -71,7 +70,7 @@ export class CommandPlugin extends ExtensiblePlugin<CommandExtensionPlugin> {
         // Example: ignore inputs/textarea or contenteditable outside the editor root
         // if (isTextInput(ev.target as Element)) return;
 
-        const chord = keyboard.eventToChord(ev);
+        const chord = eventToChord(ev);
         const list = this.bindings.get(chord);
         if (!list?.length) return;
 

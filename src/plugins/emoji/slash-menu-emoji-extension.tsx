@@ -1,15 +1,15 @@
 /** @jsx h */
 
-import { h } from "../../jsx.ts";
-import { SlashMenuExtensionPlugin } from "../slash-menu/slash-menu-plugin.tsx";
+import { h } from "@core/jsx/index.ts";
+import { t, registerTranslation } from "@core/i18n/index.ts";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/slash-menu-plugin.tsx";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
 import { EmojiPicker } from "./components/emoji-picker.tsx";
-import { appendElementOnOverlayArea, focusOnElement } from "../index.ts";
-import { SelectionUtils } from "../../utils/selection/selection-utils.ts";
-import { registerTranslation, t } from "../index.ts";
-
+import { getCurrentSelectionRange } from "@utils/selection/index.ts";
+import { focusOnElement } from "@utils/dom/index.ts";
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
-import { EmojiIcon } from "../../design-system/components/icons.tsx";
+import { EmojiIcon } from "@components/ui/primitives/icons.tsx";
 import { EmojiPlaceholder } from "./components/emoji-placeholder.tsx";
 
 export class SlashMenuEmojiExtension extends SlashMenuExtensionPlugin {
@@ -20,8 +20,8 @@ export class SlashMenuEmojiExtension extends SlashMenuExtensionPlugin {
 
     onSelect(focusedBlock: HTMLElement): void {
         const placeholder: HTMLElement = <EmojiPlaceholder />;
-    
-        let range = SelectionUtils.getCurrentSelectionRange();
+
+        let range = getCurrentSelectionRange();
         if (!range || !focusedBlock.contains(range.startContainer)) {
             range = document.createRange();
             range.selectNodeContents(focusedBlock);

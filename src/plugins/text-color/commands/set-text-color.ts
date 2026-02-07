@@ -1,5 +1,5 @@
-import { Command } from "../../../core/command/command.ts";
-import { colorUtil } from "../../index.ts";
+import { Command } from "@core/command/command.ts";
+import { colorUtil } from "@utils/color/index.ts";
 
 type TextColorPayload = {
     color: string;

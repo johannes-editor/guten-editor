@@ -1,14 +1,13 @@
 /** @jsx h */
-import { h, icons, appendElementOnOverlayArea, t } from "../../index.ts";
-import { EditorSettingsExtensionPlugin } from "../editor-settings-plugin.tsx";
+
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { PaletteIcon } from "@components/ui/primitives/icons.tsx";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { getAvailableThemes } from "@design-system/themes/index.ts";
+import * as themePreferences from "@/utils/color/theme-preference.ts";
 import { ThemeSelectMenu } from "../components/theme-select-menu.tsx";
-import { getAvailableThemes } from "../../../design-system/themes/index.ts";
-import {
-    applyEditorTheme,
-    clearStoredThemePreference,
-    getCurrentThemePreference,
-    setStoredThemePreference,
-} from "../../../utils/color/theme-preference.ts";
+import { EditorSettingsExtensionPlugin } from "../editor-settings-plugin.tsx";
 
 export class EditorSettingsThemeExtension extends EditorSettingsExtensionPlugin {
     override icon: SVGElement;
@@ -19,7 +18,7 @@ export class EditorSettingsThemeExtension extends EditorSettingsExtensionPlugin 
     constructor() {
         super();
 
-        this.icon = <icons.PaletteIcon />;
+        this.icon = <PaletteIcon />;
         this.label = t("theme");
         this.sort = 10;
     }
@@ -33,15 +32,15 @@ export class EditorSettingsThemeExtension extends EditorSettingsExtensionPlugin 
             <ThemeSelectMenu
                 anchor={anchor}
                 themes={availableThemes}
-                activeTheme={getCurrentThemePreference()}
+                activeTheme={themePreferences.getCurrentThemePreference()}
                 onThemeSelect={(theme: string) => {
                     if (theme === "auto") {
-                        clearStoredThemePreference();
+                        themePreferences.clearStoredThemePreference();
                     } else {
-                        setStoredThemePreference(theme);
+                        themePreferences.setStoredThemePreference(theme);
                     }
 
-                    applyEditorTheme(theme, supportedThemes);
+                    themePreferences.applyEditorTheme(theme, supportedThemes);
                 }}
             />
         );

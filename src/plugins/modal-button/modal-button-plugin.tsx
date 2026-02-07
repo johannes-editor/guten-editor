@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h } from "../../jsx.ts";
+import { h } from "@core/jsx/index.ts";
 import { ModalButtonUI } from "./components/modal-button-ui.tsx";
 import { Plugin } from "../../core/plugin-engine/plugin.ts";
 

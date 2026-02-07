@@ -1,7 +1,9 @@
 /** @jsx h */
 
-import { Component } from "../../../components/component.ts";
-import { dom, runCommand, t } from "../../index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { Component } from "@core/components/component.ts";
+import { EventTypes } from "@utils/dom/index.ts";
 
 export type EquationInlineProps = {
     latex: string;
@@ -45,8 +47,8 @@ export class EquationInline extends Component<EquationInlineProps> {
         this.setAttribute("aria-label", t("equation"));
         this.tabIndex = 0;
 
-        this.registerEvent(this, dom.EventTypes.Click, this.openPopover);
-        this.registerEvent(this, dom.EventTypes.KeyDown, this.handleKeydown as EventListener);
+        this.registerEvent(this, EventTypes.Click, this.openPopover);
+        this.registerEvent(this, EventTypes.KeyDown, this.handleKeydown as EventListener);
 
         this.syncAttributes();
     }

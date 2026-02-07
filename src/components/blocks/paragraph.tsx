@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { t } from "../../core/i18n/index.ts";
-import { h } from "../../jsx.ts"
-import { DefaultProps } from "../types.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { DefaultProps } from "@core/components/types.ts";
 
-export function ParagraphBlock(props: DefaultProps) {
+export function ParagraphBlock(props: DefaultProps) : HTMLElement{
     return (
         <p
             className={`block guten-placeholder ${!props.children && "empty"}`}

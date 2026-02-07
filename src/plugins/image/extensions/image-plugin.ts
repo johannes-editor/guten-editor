@@ -1,5 +1,5 @@
-import { runCommand } from "../../index.ts";
-import { Plugin } from "../../../core/plugin-engine/plugin.ts";
+import { runCommand } from "@core/command/index.ts";
+import { Plugin } from "@core/plugin-engine/plugin.ts";
 import { IMAGE_REPLACE_EVENT, type ImageReplaceEventDetail } from "../image-events.ts";
 
 export interface ImageUploadResult {

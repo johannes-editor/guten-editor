@@ -1,9 +1,11 @@
 /** @jsx h */
 /** @jsxFrag Fragment */
 
-import { h, dom, keyboard, Fragment } from "../../index.ts";
-import { OverlayComponent } from "../../../components/overlay/overlay-component.tsx";
-import { EmojiClapIcon, EmojiHeartIcon, EmojiSmileyIcon } from "../../../design-system/components/icons.tsx";
+import { h, Fragment } from "@core/jsx/index.ts";
+import { EventTypes } from "@utils/dom/index.ts";
+import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { OverlayComponent } from "@components/editor/overlay/overlay-component.tsx";
+import { EmojiClapIcon, EmojiHeartIcon, EmojiSmileyIcon } from "@components/ui/primitives/icons.tsx";
 
 interface EmojiPickerOverlayProps {
     range: Range;
@@ -130,7 +132,7 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
     }
 
     override onMount(): void {
-        this.registerEvent(document, dom.EventTypes.KeyDown, this.handleKey as EventListener);
+        this.registerEvent(document, EventTypes.KeyDown, this.handleKey as EventListener);
         this.style.setProperty("--columns", String(this.state.columns));
         if (this.props.placeholder) this.positionToAnchor(this.props.placeholder);
     }
@@ -158,17 +160,17 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
     private readonly handleKey = (event: KeyboardEvent) => {
         const stop = () => { event.preventDefault(); event.stopPropagation(); };
         switch (event.key) {
-            case keyboard.KeyboardKeys.ArrowRight: stop(); this.setSelectedIndex(this.state.selectedIndex + 1); break;
-            case keyboard.KeyboardKeys.ArrowLeft: stop(); this.setSelectedIndex(this.state.selectedIndex - 1); break;
-            case keyboard.KeyboardKeys.ArrowDown: stop(); this.setSelectedIndex(this.state.selectedIndex + this.state.columns); break;
-            case keyboard.KeyboardKeys.ArrowUp: stop(); this.setSelectedIndex(this.state.selectedIndex - this.state.columns); break;
-            case keyboard.KeyboardKeys.Enter: {
+            case KeyboardKeys.ArrowRight: stop(); this.setSelectedIndex(this.state.selectedIndex + 1); break;
+            case KeyboardKeys.ArrowLeft: stop(); this.setSelectedIndex(this.state.selectedIndex - 1); break;
+            case KeyboardKeys.ArrowDown: stop(); this.setSelectedIndex(this.state.selectedIndex + this.state.columns); break;
+            case KeyboardKeys.ArrowUp: stop(); this.setSelectedIndex(this.state.selectedIndex - this.state.columns); break;
+            case KeyboardKeys.Enter: {
                 stop();
                 const emoji = this.visibleEmojis[this.state.selectedIndex];
                 if (emoji) this.selectEmoji(emoji);
                 break;
             }
-            case keyboard.KeyboardKeys.Escape: stop(); this.remove(); break;
+            case KeyboardKeys.Escape: stop(); this.remove(); break;
         }
     };
 

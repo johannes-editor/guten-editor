@@ -1,4 +1,4 @@
-import { findClosestBlockBySelection } from "../../utils/selection/selection-utils.ts";
+import { findClosestBlockBySelection } from "@utils/selection/selection-utils.ts";
 
 
 export class PlaceholderObserver {

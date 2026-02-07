@@ -1,8 +1,10 @@
 /** @jsx h */
 
-import { MaterialChecklist } from "../../../design-system/components/icons.tsx";
-import { h, t, focusOnElement } from "../../index.ts";
-import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
+import { h } from "@core/jsx/dom-factory.ts";
+import { t } from "@core/i18n/index.ts";
+import { MaterialChecklist } from "@components/ui/primitives/icons.tsx";
+import { focusOnElement } from "@utils/dom/index.ts";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
 import { createTodoList } from "../utils.tsx";
 
 export class SlashMenuTodoListExtension extends SlashMenuExtensionPlugin {
@@ -10,8 +12,8 @@ export class SlashMenuTodoListExtension extends SlashMenuExtensionPlugin {
     icon: SVGElement;
     label: string;
     sort: number;
-    shortcut: string;
-    synonyms: string[];
+    override shortcut: string;
+    override synonyms: string[];
 
     constructor() {
         super();

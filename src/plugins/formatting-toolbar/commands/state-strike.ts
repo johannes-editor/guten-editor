@@ -1,4 +1,4 @@
-import { Command, CommandContext } from "../../../core/command/command.ts";
+import { Command, CommandContext } from "@core/command/command.ts";
 
 export const StateStrike: Command = {
   id: "stateStrike",

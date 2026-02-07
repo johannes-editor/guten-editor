@@ -1,7 +1,13 @@
 /** @jsx h */
 
-import { appendElementOnRootArea } from "../../components/editor/index.tsx";
-import { h, hasSelection, icons, keyboard, ExtensiblePlugin, Plugin, PluginExtension, runCommand, t } from "../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine/index.ts";
+import { SlashCommandIcon, UndoIcon, ArrowDownIcon, ArrowUpIcon, RedoIcon, UnderlineIcon, ItalicIcon, BoldIcon, StrikeThroughIcon, TrashIcon } from "@components/ui/primitives/icons.tsx";
+import { appendElementOnRootArea } from "@components/editor/core/index.tsx";
+import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { hasSelection, } from "@utils/selection/index.ts";
 import { MobileToolbar, MobileToolbarButton } from "./components/mobile-toolbar.tsx";
 
 export type MobileToolbarMode = "default" | "selection";
@@ -17,7 +23,7 @@ class MobileToolbarController {
     constructor(
         private readonly toolbar: MobileToolbar,
         private readonly resolveButtons: (mode: MobileToolbarMode) => MobileToolbarButton[],
-    ) {}
+    ) { }
 
     private mode: MobileToolbarMode = "default";
 
@@ -60,7 +66,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
         }
 
         const viewportBottom = viewport.height + viewport.offsetTop;
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        const windowHeight = globalThis.innerHeight || document.documentElement.clientHeight;
         const keyboardOffset = Math.max(0, Math.round(windowHeight - viewportBottom));
         this.toolbar.style.setProperty("--mobile-toolbar-bottom-offset", `${keyboardOffset}px`);
     };
@@ -155,42 +161,42 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
         return [
             {
                 id: "slash-menu",
-                icon: () => <icons.SlashCommandIcon />,
+                icon: () => <SlashCommandIcon />,
                 label: t("open_slash_menu"),
                 onClick: () => this.dispatchSlashShortcut(),
                 sort: 10,
             },
             {
                 id: "undo",
-                icon: () => <icons.UndoIcon />,
+                icon: () => <UndoIcon />,
                 label: t("undo"),
                 onClick: () => runCommand("editor.undo"),
                 sort: 15,
             },
             {
                 id: "redo",
-                icon: () => <icons.RedoIcon />,
+                icon: () => <RedoIcon />,
                 label: t("redo"),
                 onClick: () => runCommand("editor.redo"),
                 sort: 16,
             },
             {
                 id: "move-up",
-                icon: () => <icons.ArrowUpIcon />,
+                icon: () => <ArrowUpIcon />,
                 label: t("move_up"),
                 onClick: () => runCommand("moveBlockUp", { selection: context.selection ?? undefined }),
                 sort: 20,
             },
             {
                 id: "move-down",
-                icon: () => <icons.ArrowDownIcon />,
+                icon: () => <ArrowDownIcon />,
                 label: t("move_down"),
                 onClick: () => runCommand("moveBlockDown", { selection: context.selection ?? undefined }),
                 sort: 30,
             },
             {
                 id: "delete-block",
-                icon: () => <icons.TrashIcon />,
+                icon: () => <TrashIcon />,
                 label: t("delete"),
                 onClick: () => runCommand("deleteBlock", { selection: context.selection ?? undefined }),
                 sort: 40,
@@ -202,7 +208,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
         return [
             {
                 id: "bold",
-                icon: () => <icons.BoldIcon />,
+                icon: () => <BoldIcon />,
                 label: t("bold"),
                 onClick: () => runCommand("toggleBold"),
                 isActive: () => runCommand("stateBold"),
@@ -210,7 +216,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
             },
             {
                 id: "italic",
-                icon: () => <icons.ItalicIcon />,
+                icon: () => <ItalicIcon />,
                 label: t("italic"),
                 onClick: () => runCommand("toggleItalic"),
                 isActive: () => runCommand("stateItalic"),
@@ -218,7 +224,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
             },
             {
                 id: "underline",
-                icon: () => <icons.UnderlineIcon />,
+                icon: () => <UnderlineIcon />,
                 label: t("underline"),
                 onClick: () => runCommand("toggleUnderline"),
                 isActive: () => runCommand("stateUnderline"),
@@ -226,7 +232,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
             },
             {
                 id: "strikethrough",
-                icon: () => <icons.StrikeThroughIcon />,
+                icon: () => <StrikeThroughIcon />,
                 label: t("strikethrough"),
                 onClick: () => runCommand("toggleStrike"),
                 isActive: () => runCommand("stateStrike"),
@@ -250,7 +256,7 @@ export class MobileToolbarPlugin extends ExtensiblePlugin<MobileToolbarButtonExt
         }
 
         const event = new KeyboardEvent("keydown", {
-            key: keyboard.KeyboardKeys.Slash,
+            key: KeyboardKeys.Slash,
             code: "Slash",
             bubbles: true,
             cancelable: true,

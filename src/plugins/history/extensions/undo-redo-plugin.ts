@@ -1,8 +1,6 @@
-import { Command } from "../../../core/command/command.ts";
-import { Plugin } from "../../../core/plugin-engine/plugin.ts";
-import { registerCommand } from "../../index.ts";
+import { Command, registerCommand } from "@core/command/index.ts";
+import { Plugin } from "@core/plugin-engine/plugin.ts";
 import { historyManager } from "../utils/history-manager-instance.ts";
-
 
 
 export class UndoRedoPlugin extends Plugin {

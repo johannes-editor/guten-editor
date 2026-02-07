@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "../../jsx.ts";
-import { t } from "../../plugins/index.ts";
-import { DefaultProps } from "../types.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { DefaultProps } from "@core/components/types.ts";
 
-export function NumberedListBlock(props: DefaultProps) {
+export function NumberedListBlock(props: DefaultProps) : HTMLElement{
     return (
         <ol
             className="block"

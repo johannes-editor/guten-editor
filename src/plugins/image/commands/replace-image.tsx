@@ -1,4 +1,4 @@
-import { Command } from "../../../core/command/command.ts";
+import { Command } from "@core/command/command.ts";
 import { extractImageBlockDataset, findImageBlockById, updateImageBlockElement } from "../components/image-block.tsx";
 import type { ImageReplaceEventDetail } from "../image-events.ts";
 

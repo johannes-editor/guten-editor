@@ -1,4 +1,4 @@
-import { Command, CommandContext } from "../../../core/command/command.ts";
+import { Command, CommandContext } from "@core/command/command.ts";
 
 /**
  * Command: creates a hyperlink from the current selection.

@@ -1,8 +1,11 @@
 /** @jsx h */
 
-import { dom } from "../../index.ts";
-import { Command } from "../../../core/command/command.ts";
-import { h, appendElementOnOverlayArea, t, hasSelection } from "../../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { Command } from "@core/command/command.ts";
+import { InputTypes } from "@utils/dom/index.ts";
+import { hasSelection } from "@utils/selection/index.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
 import { LinkPopover } from "../components/link-popover.tsx";
 
 /**
@@ -17,7 +20,7 @@ export const OpenLinkPopover: Command = {
     shortcut: { chord: "Mod+K", description: "Insert/edit link", when: () => hasSelection(), preventDefault: true },
     execute(): boolean {
 
-        appendElementOnOverlayArea(<LinkPopover inputType={dom.InputTypes.Url} inputPlaceholder={t("paste_or_type_a_link")} />);
+        appendElementOnOverlayArea(<LinkPopover inputType={InputTypes.Url} inputPlaceholder={t("paste_or_type_a_link")} />);
 
         return true;
     }

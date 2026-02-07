@@ -1,8 +1,10 @@
 /** @jsx h */
-import { h, OverlayCtor, BlockOptions } from "../../index.ts";
-import { type BlockOptionsProps } from "../../block-options/components/block-options-menu.tsx";
-import type { DefaultState } from "../../../components/types.ts";
-import { MenuUI } from "../../../design-system/components/menu-ui.tsx";
+
+import { h } from "@core/jsx/index.ts";
+import type { DefaultState } from "@core/components/types.ts";
+import { OverlayCtor } from "@components/editor/overlay/index.ts";
+import { MenuUI } from "@components/ui/composites/menu/menu-ui.tsx";
+import { BlockOptionsMenu, type BlockOptionsProps } from "@plugin/block-options/components/block-options-menu.tsx";
 import { ColorVariant } from "./types.ts";
 import { CalloutColorMenuItem } from "./callout-color-menu-item.tsx";
 
@@ -26,7 +28,7 @@ const BACKGROUND_VARIANTS: ColorVariant[] = [
 
 export class CalloutColorMenu extends MenuUI<CalloutColorMenuProps, CalloutColorMenuState> {
 
-    override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([BlockOptions]);
+    override canOverlayClasses: ReadonlySet<OverlayCtor> = new Set<OverlayCtor>([BlockOptionsMenu]);
 
     override props: CalloutColorMenuProps = {} as CalloutColorMenuProps;
 
@@ -69,7 +71,6 @@ export class CalloutColorMenu extends MenuUI<CalloutColorMenuProps, CalloutColor
             />
         ) as HTMLElement;
     }
-
 
     private isActiveVariant(variant: ColorVariant): boolean {
         return this.state.background === variant.id;

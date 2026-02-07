@@ -1,7 +1,10 @@
 /** @jsx h */
 
-import { h, icons, runCommand, t } from "../../index.ts";
-import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "../../mobile-toolbar/mobile-toolbar-plugin.tsx";
+import { h } from "@core/jsx/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { LinkIcon } from "@components/ui/primitives/icons.tsx";
+import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar/index.ts";
 
 
 /**
@@ -18,7 +21,7 @@ export class HyperlinkMobileToolbarExtension extends MobileToolbarButtonExtensio
 
         return [{
             id: "insert-link",
-            icon: () => <icons.LinkIcon />,
+            icon: () => <LinkIcon />,
             label: t("link"),
             sort: 50,
             onClick: () => runCommand("openLinkPopover"),

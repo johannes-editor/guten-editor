@@ -1,5 +1,5 @@
-import { Command } from "../../../core/command/command.ts";
-import { ensureBlockId } from "../../../utils/dom/block.ts";
+import { Command } from "@core/command/command.ts";
+import { ensureBlockId } from "@utils/dom/block.ts";
 import { createImageBlock, extractImageBlockDataset, isImageBlockElement } from "../components/image-block.tsx";
 import { ImagePlaceholder } from "../components/image-placeholder.tsx";
 import { IMAGE_ADDED_EVENT, getImageSourceType, type ImageAddedEventDetail } from "../image-events.ts";

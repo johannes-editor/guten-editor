@@ -1,7 +1,9 @@
 /** @jsx h */
-import { h, selection } from "../../index.ts";
-import { MenuUI } from "../../../design-system/components/menu-ui.tsx";
-import { DefaultProps } from "../../../components/types.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { cleanupCaretAnchor } from "@utils/selection/index.ts";
+import { MenuUI } from "@components/ui/composites/menu/menu-ui.tsx";
+import { DefaultProps } from "@core/components/types.ts";
 
 export interface BlockOptionsProps extends DefaultProps {
 
@@ -15,6 +17,6 @@ export class BlockOptionsMenu extends MenuUI<BlockOptionsProps> {
 
     override onUnmount(): void {
         super.onUnmount();
-        selection.cleanupCaretAnchor(this.props.anchor ?? null);
+        cleanupCaretAnchor(this.props.anchor ?? null);
     }
 }

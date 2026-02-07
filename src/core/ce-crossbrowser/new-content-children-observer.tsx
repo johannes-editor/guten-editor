@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from "../../jsx.ts";
+import { h } from "@core/jsx/index.ts";
 import { ParagraphBlock } from "../../components/blocks/paragraph.tsx";
-import { focusOnElement } from "../../utils/dom-utils.ts";
+import { focusOnElement } from "@utils/dom/dom-utils.ts";
 
 /**
  * Observes the insertion of new blocks directly into the contentEditable DOM (e.g., when pressing Enter).

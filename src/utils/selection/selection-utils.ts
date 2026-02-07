@@ -1,19 +1,16 @@
-export class SelectionUtils {
-    static getCurrentSelectionRange(): Range | null {
-        const getSelection = typeof globalThis.getSelection === "function"
-            ? globalThis.getSelection
-            : null;
+export function getCurrentSelectionRange(): Range | null {
+    const getSelection = typeof globalThis.getSelection === "function"
+        ? globalThis.getSelection
+        : null;
 
-        if (!getSelection) return null;
+    if (!getSelection) return null;
 
-        const selection = getSelection();
-        if (selection && selection.rangeCount > 0) {
-            return selection.getRangeAt(0).cloneRange();
-        }
-        return null;
+    const selection = getSelection();
+    if (selection && selection.rangeCount > 0) {
+        return selection.getRangeAt(0).cloneRange();
     }
+    return null;
 }
-
 
 export function hasSelection(
     container: HTMLElement = document.getElementById('contentArea')!
@@ -105,7 +102,7 @@ export function findClosestBlockBySelection(sel: Selection | null = null): HTMLE
 const CARET_ANCHOR_DATASET_KEY = "gutenCaretAnchor";
 
 export function createAnchorAtSelection(): HTMLElement | null {
-    const selectionRange = SelectionUtils.getCurrentSelectionRange();
+    const selectionRange = getCurrentSelectionRange();
     if (!selectionRange) return null;
 
     const anchor = document.createElement("span");

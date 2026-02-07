@@ -1,6 +1,8 @@
 /** @jsx h */
 
-import { Component, h, t } from "../../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { Component } from "@core/components/index.ts";
 import type { YouTubeEmbedKind } from "../utils/parse-youtube-url.ts";
 
 export interface YouTubeEmbedProps {

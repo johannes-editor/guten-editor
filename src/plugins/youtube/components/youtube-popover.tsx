@@ -1,7 +1,8 @@
 /** @jsx h */
 
-import { InputPopover, InputPopoverProps } from "../../../components/input-popover/input-popover.ts";
-import { runCommand, t } from "../../index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand  } from "@core/command/index.ts";
+import { InputPopover, InputPopoverProps } from "@components/ui/composites/input/input-popover.ts";
 import { parseYouTubeUrl } from "../utils/parse-youtube-url.ts";
 
 export interface YouTubePopoverProps extends InputPopoverProps {

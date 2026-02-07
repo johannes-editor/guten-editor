@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { runCommand } from "../../index.ts";
-import { InputPopover, InputPopoverProps, SelectionController } from "../../../components/input-popover/input-popover.ts";
-import { useContext } from "../../../core/context/context.ts";
-import { FormattingToolbarCtx } from "../../formatting-toolbar/formatting-toolbar-context.ts";
+import { runCommand } from "@core/command/index.ts";
+import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input/input-popover.ts";
+import { useContext } from "@core/context/context.ts";
+import { FormattingToolbarCtx } from "@plugin/formatting-toolbar/context/formatting-toolbar-context.ts";
 import { EquationPlaceholder } from "./equation-placeholder.tsx";
 import { EquationInline } from "./equation-inline.tsx";
 
@@ -84,7 +84,7 @@ export class EquationPopover extends InputPopover<EquationPopoverProps> {
     }
 
     override setPosition(rect: DOMRect): void {
-      this.positionToAnchor(this.props.targetEquation!);
+        this.positionToAnchor(this.props.targetEquation!);
     }
 
     /** Checkbox handler: toggles display mode. */

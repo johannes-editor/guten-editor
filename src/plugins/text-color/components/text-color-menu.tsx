@@ -1,7 +1,13 @@
 /** @jsx h */
-import { FormattingToolbar, FormattingToolbarContext, FormattingToolbarCtx, colorUtil, h, MenuUI, MenuUIProps, runCommand, t } from "../../index.ts";
-import type { MenuUIState } from "../../../design-system/components/menu-ui.tsx";
-import { useContext } from "../../../core/context/context.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { useContext } from "@core/context/context.ts";
+import { MenuUI, MenuUIProps } from "@components/ui/composites/menu/index.ts";
+import type { MenuUIState } from "@components/ui/composites/menu/menu-ui.tsx";
+import { FormattingToolbar, FormattingToolbarContext, FormattingToolbarCtx } from "@plugin/formatting-toolbar/index.ts";
+import { colorUtil } from "@utils/color/index.ts";
 import { TextColorMenuItem } from "./text-color-menu-item.tsx";
 import { HIGHLIGHT_COLOR_OPTIONS, normalizeColorValue, TEXT_COLOR_OPTIONS, type ColorOption } from "../color-options.ts";
 

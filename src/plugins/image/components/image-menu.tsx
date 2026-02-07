@@ -1,8 +1,10 @@
 /** @jsx h */
 
-import { OverlayComponent } from "../../../components/overlay/overlay-component.tsx";
-import { DefaultProps, DefaultState } from "../../../components/types.ts";
-import { h, runCommand, t } from "../../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { OverlayComponent } from "@components/editor/overlay/overlay-component.tsx";
+import { DefaultProps, DefaultState } from "@core/components/types.ts";
 import { ImagePlugin, type ImageUploadResult } from "../extensions/image-plugin.ts";
 
 export interface ImageMenuProps extends DefaultProps {

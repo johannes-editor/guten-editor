@@ -1,7 +1,12 @@
 /** @jsx h */
-import { DefaultProps, h, t } from "../../index.ts";
-import { DefaultState, icons, MenuItemUI } from "../../index.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { DefaultProps, DefaultState } from "@core/components/index.ts";
+import { SwatchRoundedIcon, SwatchIcon } from "@components/ui/primitives/icons.tsx";
 import { ColorVariant } from "./types.ts";
+
+import { MenuItemUI } from "@components/ui/composites/menu/menu-item-ui.tsx";
 
 interface CalloutColorMenuItemProps extends DefaultProps {
     variant: ColorVariant;
@@ -11,7 +16,6 @@ interface CalloutColorMenuItemProps extends DefaultProps {
 }
 
 export class CalloutColorMenuItem extends MenuItemUI<CalloutColorMenuItemProps, DefaultState> {
-
 
     override connectedCallback(): void {
         this.icon = this.renderSwatch(this.props.variant);
@@ -34,9 +38,9 @@ export class CalloutColorMenuItem extends MenuItemUI<CalloutColorMenuItemProps, 
     private renderSwatch(variant: ColorVariant): Element {
         const strokeColor = variant.stroke ?? `color-mix(in srgb, ${variant.color} 70%, #000 30%)`;
         if (variant.rounded) {
-            return <icons.SwatchRoundedIcon color={variant.color} strokeColor={strokeColor} strokeWidth={1} size={18} />
+            return <SwatchRoundedIcon color={variant.color} strokeColor={strokeColor} strokeWidth={1} size={18} />
         }
 
-        return <icons.SwatchIcon color={variant.color} strokeColor={strokeColor} strokeWidth={1} size={18} />
+        return <SwatchIcon color={variant.color} strokeColor={strokeColor} strokeWidth={1} size={18} />
     }
 }

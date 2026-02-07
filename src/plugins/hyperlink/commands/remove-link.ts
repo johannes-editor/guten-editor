@@ -1,4 +1,4 @@
-import { Command } from "../../../core/command/command.ts";
+import { Command } from "@core/command/command.ts";
 
 export const RemoveLink: Command = {
     id: "removeLink",

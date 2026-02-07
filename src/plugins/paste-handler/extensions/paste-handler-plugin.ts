@@ -1,8 +1,8 @@
 
-import { SelectionUtils } from "../../../utils/selection/index.ts";
-import { isEquationElement } from "../../equation/utils/equation-element.ts";
-import {  Plugin, runCommand, selection } from "../../index.ts";
-import { InsertResultContext, PasteBlockInstruction, PasteBlocksEventDetail } from "../../../core/command/types.ts";
+import { Plugin } from "@core/plugin-engine/index.ts";
+import { InsertResultContext, PasteBlockInstruction, PasteBlocksEventDetail, runCommand } from "@core/command/index.ts";
+import { getCurrentSelectionRange, findClosestBlockBySelection } from "@utils/selection/index.ts";
+import { isEquationElement } from "@plugin/equation/utils/equation-element.ts";
 
 export const PASTE_BLOCKS_EVENT = "guten:paste-blocks";
 
@@ -73,7 +73,7 @@ export class PasteHandlerPlugin extends Plugin {
     private applyBlockInstructions(instructions: PasteBlockInstruction[]) {
         if (!instructions.length) return;
 
-        const context: InsertResultContext = { afterBlock: selection.findClosestBlockBySelection() };
+        const context: InsertResultContext = { afterBlock: findClosestBlockBySelection() };
 
         instructions.forEach((instruction, index) => {
             const commandId = this.instructionCommandMap[instruction.type];
@@ -98,7 +98,7 @@ export class PasteHandlerPlugin extends Plugin {
             return;
         }
 
-        const range = SelectionUtils.getCurrentSelectionRange();
+        const range = getCurrentSelectionRange();
         if (!range) return;
 
         const node = document.createTextNode(clean);
@@ -108,7 +108,7 @@ export class PasteHandlerPlugin extends Plugin {
     }
 
     private insertFragment(fragment: DocumentFragment) {
-        const range = SelectionUtils.getCurrentSelectionRange();
+        const range = getCurrentSelectionRange();
         if (!range) return;
 
         const insertedNodes = Array.from(fragment.childNodes);

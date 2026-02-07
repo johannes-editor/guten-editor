@@ -1,16 +1,17 @@
 /** @jsx h */
-import { Fragment, h } from "./jsx.ts";
-import { getAvailableLocales, setLocale, t } from "./core/i18n/index.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { t, setLocale, getAvailableLocales } from "@core/i18n/index.ts";
 import {
     applyLocalePreference,
     DEFAULT_LOCALE,
     getStoredLocalePreference,
-} from "./core/i18n/locale-preference.ts";
-import { appendElementOnContentArea, appendElementOnTitleArea, setRoot } from "./components/editor/index.tsx";
-import { init } from "./core/plugin-engine/index.ts";
-import { ParagraphBlock } from "./components/blocks/paragraph.tsx";
-import { Heading1Block } from "./components/blocks/header1.tsx";
-import { getAvailableThemes } from "./design-system/themes/index.ts";
+} from "@core/i18n/locale-preference.ts";
+import { appendElementOnContentArea, appendElementOnTitleArea, setRoot } from "@components/editor/core/index.tsx";
+import { init } from "@core/plugin-engine/index.ts";
+import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
+import { Heading1Block } from "@components/blocks/heading.tsx";
+import { getAvailableThemes } from "@design-system/themes/index.ts";
 
 
 import {
@@ -18,8 +19,8 @@ import {
     applyEditorTheme,
     clearStoredThemePreference,
     getStoredThemePreference,
-} from "./utils/color/theme-preference.ts";
-import { initLocaleDomSync } from "./core/i18n/locale-dom-sync.ts";
+} from "@utils/color/theme-preference.ts";
+import { initLocaleDomSync } from "@core/i18n/locale-dom-sync.ts";
 
 /**
 * Initializes the text editor.

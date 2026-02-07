@@ -1,11 +1,12 @@
 /** @jsx h */
-import { h } from '../../../jsx.ts';
-import { t } from "../../index.ts";
 
-export function CalloutBlock() {
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+
+export function CalloutBlock(): HTMLDivElement {
     return (
         <div class="block callout" data-callout-variant="warning">
-            <p class="empty guten-placeholder" data-placeholder={t("blockquote_placeholder")} data-placeholder-key="blockquote_placeholder"><br/></p>
+            <p class="empty guten-placeholder" data-placeholder={t("blockquote_placeholder")} data-placeholder-key="blockquote_placeholder"><br /></p>
         </div>
     );
 }

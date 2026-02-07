@@ -1,6 +1,7 @@
 /** @jsx h */
-import { Command, CommandContext } from "../../../core/command/command.ts";
-import { selection, dom } from "../../index.ts";
+import { Command, CommandContext } from "@/core/command/command.ts";
+import { findClosestBlockBySelection } from "@utils/selection/index.ts";
+import { moveBlockUpPreservingCaret } from "@utils/dom/index.ts";
 import { BlockOptionPayload } from "./types.ts";
 
 export const MoveBlockUp: Command = {
@@ -11,10 +12,10 @@ export const MoveBlockUp: Command = {
         context.content?.blockOptions.remove();
 
         const currentBlock =
-            context.content?.block ?? selection.findClosestBlockBySelection(context.selection ?? null);
+            context.content?.block ?? findClosestBlockBySelection(context.selection ?? null);
             
         if (!currentBlock) return false;
 
-        return dom.moveBlockUpPreservingCaret(currentBlock);
+        return moveBlockUpPreservingCaret(currentBlock);
     }
 };

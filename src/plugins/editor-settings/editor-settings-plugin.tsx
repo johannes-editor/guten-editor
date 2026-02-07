@@ -1,5 +1,8 @@
 /** @jsx h */
-import { h, Plugin, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea } from "../index.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine/index.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
 import { EditorSettingsMenu } from "./components/editor-settings-menu.tsx";
 import type { EditorSettingsItemData } from "./types.ts";
 import { setEditorSettingsItems } from "./editor-settings-registry.ts";

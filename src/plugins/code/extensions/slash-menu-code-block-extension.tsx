@@ -1,9 +1,10 @@
 /** @jsx h */
 
-import { CodeBlockIcon } from "../../../design-system/components/icons.tsx";
-import { h, runCommand, t } from "../../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { CodeBlockIcon } from "@components/ui/primitives/icons.tsx";
 import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
-
 
 export class SlashMenuCodeBlockExtension extends SlashMenuExtensionPlugin {
 

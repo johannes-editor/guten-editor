@@ -1,15 +1,17 @@
 /** @jsx h */
 
-import { h, Plugin, ExtensiblePlugin, PluginExtension, registerTranslation, appendElementOnOverlayArea } from "../index.ts";
-
+import { h } from "@core/jsx/index.ts";
+import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine/index.ts";
+import { registerTranslation } from "@core/i18n/index.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
 import { SlashMenuOverlay } from "./components/slash-menu.tsx";
 import { SlashMenuItemData } from "./components/types.ts";
-
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
 import { defaultSlashMenuItems } from "./default-items.tsx";
-
-import { dom, keyboard, timing } from "../index.ts";
+import { EventTypes } from "@utils/dom/index.ts";
+import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { waitFrames } from "@utils/timing/index.ts";
 
 
 /**
@@ -35,7 +37,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
             onSelect: (currentBlock: HTMLElement) => ext.onSelect(currentBlock),
         }));
 
-        document.addEventListener(dom.EventTypes.KeyDown, (event) => this.handleKey(event, items));
+        document.addEventListener(EventTypes.KeyDown, (event) => this.handleKey(event, items));
     }
 
     /**
@@ -55,7 +57,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
     }
 
     private readonly handleKey = async (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
-        if (event.key === keyboard.KeyboardKeys.Slash && !this.mounted() && event.shiftKey === false && event.ctrlKey === false && event.altKey === false && event.metaKey === false) {
+        if (event.key === KeyboardKeys.Slash && !this.mounted() && event.shiftKey === false && event.ctrlKey === false && event.altKey === false && event.metaKey === false) {
             const selection = globalThis.getSelection();
             if (!selection || selection.rangeCount === 0) return;
 
@@ -68,7 +70,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            await timing.waitFrames(2);
+            await waitFrames(2);
 
             const refreshedSelection = globalThis.getSelection();
             if (refreshedSelection && refreshedSelection.rangeCount > 0) {
@@ -82,7 +84,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
                 refreshedSelection.removeAllRanges();
                 refreshedSelection.addRange(range);
 
-                await timing.waitFrames(2);
+                await waitFrames(2);
 
                 const slashMenuItems = defaultSlashMenuItems();
                 slashMenuItems.push(...extensionItems);
@@ -117,9 +119,9 @@ export abstract class SlashMenuExtensionPlugin extends PluginExtension<SlashMenu
     abstract readonly icon: SVGElement;
     abstract readonly label: string;
     abstract readonly sort: number;
-    
+
     readonly shortcut?: string = undefined;
     readonly synonyms?: string[] = undefined;
-    
+
     abstract onSelect(currentBlock: HTMLElement): void;
 }

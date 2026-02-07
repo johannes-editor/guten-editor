@@ -1,7 +1,11 @@
 /** @jsx h */
-import { h, selection, MenuItemUI, t, type DefaultProps } from "../../index.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { DefaultProps } from "@core/components/types.ts";
+import { cleanupCaretAnchor } from "@utils/selection/index.ts";
+import { NavigationMenu } from "@components/ui/composites/navigation-menu/navigation-menu.tsx";
+import { MenuItemUI } from "@components/ui/composites/menu/menu-item-ui.tsx";
 import type { EditorSettingsItemData } from "../types.ts";
-import { NavigationMenu } from "../../../design-system/components/navigation-menu.tsx";
 
 interface EditorSettingsMenuItemProps extends DefaultProps {
     item: EditorSettingsItemData;
@@ -49,7 +53,7 @@ export class EditorSettingsMenu extends NavigationMenu<EditorSettingsMenuProps> 
 
     override onUnmount(): void {
         super.onUnmount();
-        selection.cleanupCaretAnchor(this.props.anchor ?? null);
+        cleanupCaretAnchor(this.props.anchor ?? null);
     }
 
     private handleSelectItem = (item: EditorSettingsItemData, anchor: HTMLElement) => {

@@ -1,18 +1,15 @@
 /** @jsx h */
 
-import { h, Command, focusOnElement, selection } from "../../index.ts";
-import { BlockquoteBlock } from "../../../components/blocks/blockquote.tsx";
-import { BulletedListBlock } from "../../../components/blocks/bulleted-list.tsx";
-import { Heading1Block } from "../../../components/blocks/header1.tsx";
-import { Heading2Block } from "../../../components/blocks/header2.tsx";
-import { Heading3Block } from "../../../components/blocks/header3.tsx";
-import { Heading4Block } from "../../../components/blocks/header4.tsx";
-import { Heading5Block } from "../../../components/blocks/header5.tsx";
-import { NumberedListBlock } from "../../../components/blocks/numbered-list.tsx";
-import { ParagraphBlock } from "../../../components/blocks/paragraph.tsx";
-import { SeparatorBlock } from "../../../components/blocks/separator.tsx";
-import { InsertResultContext } from "../../../core/command/types.ts";
-import { appendAfter, getInstructionText, resolveAfterBlock } from "../../../utils/dom/index.ts";
+import { h } from "@core/jsx/index.ts";
+import { Command, InsertResultContext } from "@core/command/index.ts";
+import { focusOnElement } from "@utils/dom/index.ts";
+import { BlockquoteBlock } from "@components/blocks/blockquote.tsx";
+import { BulletedListBlock } from "@components/blocks/bulleted-list.tsx";
+import { Heading1Block, Heading2Block, Heading3Block, Heading4Block, Heading5Block } from "@components/blocks/heading.tsx";
+import { NumberedListBlock } from "@components/blocks/numbered-list.tsx";
+import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
+import { SeparatorBlock } from "@components/blocks/separator.tsx";
+import { appendAfter, getInstructionText, resolveAfterBlock } from "@utils/dom/index.ts";
 
 
 

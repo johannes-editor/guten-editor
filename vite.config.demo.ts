@@ -1,17 +1,25 @@
-// import { defineConfig } from "npm:vite";
+import { defineConfig, normalizePath } from "npm:vite";
+import { fileURLToPath, URL } from "node:url";
 
-// export default defineConfig({
-//   root: "demo",
-//   publicDir: "public",
-//   build: {
-//     outDir: "dist",
-//     emptyOutDir: true,
-//   },
-// });
+const srcPath = normalizePath(fileURLToPath(new URL("./src/", import.meta.url)));
 
-import { defineConfig } from "npm:vite";
 
 export default defineConfig({
+    resolve: {
+        alias: [
+            { find: "@/", replacement: `${srcPath}/` },
+            { find: "@core/", replacement: `${srcPath}/core/` },
+            { find: "@design-system/", replacement: `${srcPath}/design-system/` },
+            { find: "@components/", replacement: `${srcPath}/components/` },
+            { find: "@plugin/", replacement: `${srcPath}/plugins/` },
+            { find: "@utils/", replacement: `${srcPath}/utils/` },
+        ],
+    },
+    // server: {
+    //     fs: {
+    //         allow: [".."],
+    //     },
+    // },
     root: "demo",
     publicDir: "public",
 
@@ -21,6 +29,14 @@ export default defineConfig({
         emptyOutDir: true,
         minify: "esbuild",
         sourcemap: true,
+        // cssCodeSplit: false,
+        // assetsInlineLimit: 100000000,
+        // rollupOptions: {
+        //     output: {
+        //         inlineDynamicImports: true,
+        //         manualChunks: undefined,
+        //     },
+        // },
     },
     esbuild: {
         keepNames: true,

@@ -1,15 +1,12 @@
 /** @jsx h */
-import { h, icons, appendElementOnOverlayArea, t } from "../../index.ts";
-import { EditorSettingsExtensionPlugin } from "../editor-settings-plugin.tsx";
-import { getAvailableLocales, setLocale } from "../../../core/i18n/index.ts";
-import {
-    applyLocalePreference,
-    getCurrentLocalePreference,
-    getStoredLocalePreference,
-    clearStoredLocalePreference,
-    setStoredLocalePreference,
-} from "../../../core/i18n/locale-preference.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { t, setLocale, getAvailableLocales } from "@core/i18n/index.ts";
+import  * as localePreferences from "@core/i18n/locale-preference.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { TranslationIcon } from "@components/ui/primitives/icons.tsx";
 import { LangSelectMenu } from "../components/lang-select-menu.tsx";
+import { EditorSettingsExtensionPlugin } from "../editor-settings-plugin.tsx";
 
 export class EditorSettingsLangExtension extends EditorSettingsExtensionPlugin {
     override icon: SVGElement;
@@ -20,11 +17,10 @@ export class EditorSettingsLangExtension extends EditorSettingsExtensionPlugin {
     constructor() {
         super();
 
-        this.icon = <icons.TranslationIcon />;
+        this.icon = <TranslationIcon />;
         this.label = t("language");
         this.sort = 10;
     }
-
 
     override onSelect(anchor: HTMLElement): boolean | void {
         const locales = [
@@ -32,23 +28,23 @@ export class EditorSettingsLangExtension extends EditorSettingsExtensionPlugin {
             ...getAvailableLocales(),
         ];
         const supportedLocales = new Set(locales.map((locale) => locale.code));
-        const activeLocale = getStoredLocalePreference() ?? "auto";
+        const activeLocale = localePreferences.getStoredLocalePreference() ?? "auto";
 
         appendElementOnOverlayArea(
             <LangSelectMenu
                 anchor={anchor}
                 locales={locales}
-                activeLocale={activeLocale === "auto" ? "auto" : getCurrentLocalePreference()}
+                activeLocale={activeLocale === "auto" ? "auto" : localePreferences.getCurrentLocalePreference()}
                 onLocaleSelect={(locale: string) => {
-                    const resolvedLocale = applyLocalePreference(
+                    const resolvedLocale = localePreferences.applyLocalePreference(
                         locale,
                         supportedLocales,
                         document.documentElement.getAttribute("lang") ?? "en",
                     );
                     if (locale === "auto") {
-                        clearStoredLocalePreference();
+                        localePreferences.clearStoredLocalePreference();
                     } else {
-                        setStoredLocalePreference(resolvedLocale);
+                        localePreferences.setStoredLocalePreference(resolvedLocale);
                     }
                     void setLocale(resolvedLocale);
                 }}
@@ -56,6 +52,5 @@ export class EditorSettingsLangExtension extends EditorSettingsExtensionPlugin {
         );
 
         return false;
-
     }
 }

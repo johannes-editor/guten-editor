@@ -1,5 +1,5 @@
 import { InsertResultContext } from "../../core/command/types.ts";
-import { focusOnElement } from "../dom-utils.ts";
+import { focusOnElement } from "./dom-utils.ts";
 import { selection } from "../index.ts";
 
 const BLOCK_ID_PREFIX = "block-";

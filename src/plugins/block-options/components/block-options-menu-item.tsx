@@ -1,11 +1,10 @@
 /** @jsx h */
-import { h } from "../../../jsx.ts";
-
-import { MenuItemUI } from "../../../design-system/components/menu-item-ui.tsx";
-import { DefaultState } from "../../../components/types.ts";
+import { h } from "@core/jsx/index.ts";
+import { DefaultProps } from "@core/components/index.ts";
+import { MenuItemUI } from "@components/ui/composites/menu/menu-item-ui.tsx";
+import { DefaultState } from "@core/components/types.ts";
 import { BlockOptionsItemContext } from "../extensible/block-options-plugin.tsx";
 import { BlockOptionsMenu } from "./block-options-menu.tsx";
-import { DefaultProps } from "../../index.ts";
 
 
 export interface BlockOptionsMenuItemProps extends DefaultProps {
@@ -19,7 +18,6 @@ export interface BlockOptionsMenuItemProps extends DefaultProps {
 }
 
 export class BlockOptionsMenuItem<P extends BlockOptionsMenuItemProps, S = DefaultState> extends MenuItemUI<P, S> {
-
 
     override onMount(): void {
         this.icon = this.props.icon;

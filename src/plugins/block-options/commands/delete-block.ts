@@ -1,6 +1,7 @@
 /** @jsx h */
-import { Command, CommandContext } from "../../../core/command/command.ts";
-import { selection, dom } from "../../index.ts";
+import { Command, CommandContext } from "@/core/command/index.ts";
+import { getNextBlockSibling, getPrevBlockSibling, focusStartOfBlock, removeBlockWithTransition } from "@utils/dom/index.ts";
+import { findClosestBlockBySelection } from "@utils/selection/index.ts";
 import { BlockOptionPayload } from "./types.ts";
 
 
@@ -13,20 +14,20 @@ export const DeleteBlock: Command = {
         context.content?.blockOptions.remove();
 
         const currentBlock =
-            context.content?.block ?? selection.findClosestBlockBySelection(context.selection ?? null);
+            context.content?.block ?? findClosestBlockBySelection(context.selection ?? null);
 
         if (!currentBlock || !currentBlock.parentElement) return false;
 
 
-        const dest = dom.getNextBlockSibling(currentBlock) || dom.getPrevBlockSibling(currentBlock);
+        const dest = getNextBlockSibling(currentBlock) || getPrevBlockSibling(currentBlock);
 
         if (dest) {
-            dom.focusStartOfBlock(dest);
+            focusStartOfBlock(dest);
         } else {
             const sel = globalThis.getSelection?.();
             sel?.removeAllRanges();
         }
 
-        return dom.removeBlockWithTransition(currentBlock, 200);
-    },
+        return removeBlockWithTransition(currentBlock, 200);
+    }
 };

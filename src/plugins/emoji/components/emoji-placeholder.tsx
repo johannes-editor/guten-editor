@@ -1,7 +1,8 @@
 /** @jsx h */
 
-import { runCommand, t } from "../../index.ts";
-import { InlineObjectPlaceholderUI } from "../../../design-system/components/inline-object-placeholder-ui.tsx";
+import { runCommand } from "@core/command/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { InlineObjectPlaceholderUI } from "@components/ui/primitives/placeholder/inline-object-placeholder-ui.tsx";
 
 export class EmojiPlaceholder extends InlineObjectPlaceholderUI {
 

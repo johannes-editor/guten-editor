@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "../../jsx.ts";
-import { t } from "../../plugins/index.ts";
-import { DefaultProps } from "../types.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { DefaultProps } from "@core/components/types.ts";
 
-export function BulletedListBlock(props: DefaultProps) {
+export function BulletedListBlock(props: DefaultProps) : HTMLElement{
     return (
         <ul
             className="block"

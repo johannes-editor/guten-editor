@@ -1,7 +1,9 @@
 /** @jsx h */
 
-import { ToolbarItemUI } from "../../../design-system/components/toolbar-item-ui.tsx";
-import { dom, icons, keyboard } from "../../index.ts";
+import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { EventTypes } from "@utils/dom/index.ts";
+import { ToolbarItemUI } from "@components/ui/composites/toolbar/toolbar-item-ui.tsx";
+import { ArrowDownIcon } from "@components/ui/primitives/icons.tsx";
 
 interface FormattingToolbarItemProps {
 
@@ -47,8 +49,8 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
     private menuIndicatorEl: HTMLElement | null = null;
 
     override onMount(): void {
-        this.registerEvent(this, dom.EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
-        this.registerEvent(this, dom.EventTypes.KeyDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect), true);
+        this.registerEvent(this, EventTypes.MouseDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect));
+        this.registerEvent(this, EventTypes.KeyDown, (e: Event) => this.handleOnSelect(e, this.props.onSelect), true);
 
         this.ensureButtonReference();
         this.handleSelectionChange();
@@ -62,7 +64,7 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
     handleOnSelect(event: Event, onSelect: (event?: Event, button?: HTMLButtonElement | null) => void) {
 
         if (event instanceof KeyboardEvent) {
-            if (event.key !== keyboard.KeyboardKeys.Enter) return;
+            if (event.key !== KeyboardKeys.Enter) return;
         }
 
         event.preventDefault();
@@ -113,7 +115,7 @@ export class FormattingToolbarItem extends ToolbarItemUI<FormattingToolbarItemPr
             const indicator = document.createElement("span");
             indicator.classList.add("guten-toolbar-item__menu-indicator");
             indicator.setAttribute("aria-hidden", "true");
-            indicator.appendChild(icons.ArrowDownIcon());
+            indicator.appendChild(ArrowDownIcon());
             this.menuIndicatorEl = indicator;
         }
 

@@ -1,6 +1,6 @@
 import { CommandContext } from "../../../core/command/command.ts";
 import { commandRegistry } from "../../../core/command/index.ts";
-import { Component } from "../../../components/component.ts";
+import { Component } from "@core/components/component.ts";
 import { COMMAND_COMMIT_DELAY, DocumentChange, MAX_HISTORY, NodeSnapshot, SelectionSnapshot, Transaction, TYPING_COMMIT_DELAY } from "./types.ts";
 
 export class HistoryManager {

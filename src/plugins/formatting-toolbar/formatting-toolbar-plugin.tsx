@@ -1,12 +1,20 @@
 /** @jsx h */
 
-import { provideContext } from "../../core/context/context.ts";
-import { h, ExtensiblePlugin, PluginExtension, appendElementOnOverlayArea, debounce, hasSelection, runCommand, Plugin, t, icons } from "../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine/index.ts";
+import { provideContext } from "@core/context/context.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { BoldIcon, ItalicIcon, UnderlineIcon, StrikeThroughIcon } from "@components/ui/primitives/icons.tsx";
+import { hasSelection } from "@utils/selection/selection-utils.ts";
+import { debounce } from "@utils/timing/index.ts";
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
-import { FormattingToolbarCtx } from "./formatting-toolbar-context.ts";
-import { dom, keyboard } from "../index.ts";
-import { isMobileSheetViewport } from "../../utils/platform/index.ts";
+import { FormattingToolbarCtx } from "./context/formatting-toolbar-context.ts";
+import { EventTypes } from "@utils/dom/events.ts";
+import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { isMobileSheetViewport } from "@utils/platform/index.ts";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
 
@@ -30,27 +38,27 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
         this.extensionPlugins = extensions ?? [];
 
-        document.addEventListener(dom.EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
+        document.addEventListener(EventTypes.MouseUp, debounce(() => this.handleSelection(), 100) as EventListener);
 
         if (isMobileSheetViewport()) {
-            document.addEventListener(dom.EventTypes.SelectionChange, debounce(() => this.handleSelection(), 100) as EventListener);
+            document.addEventListener(EventTypes.SelectionChange, debounce(() => this.handleSelection(), 100) as EventListener);
         }
 
-        document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
-            if (event.key === keyboard.KeyboardKeys.Shift) {
+        document.addEventListener(EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
+            if (event.key === KeyboardKeys.Shift) {
                 this.handleSelection();
             }
         }, 100) as EventListener);
 
-        document.addEventListener(dom.EventTypes.KeyUp, debounce(() => {
+        document.addEventListener(EventTypes.KeyUp, debounce(() => {
             const toolbar = FormattingToolbarPlugin.toolbarInstance;
             if (!toolbar || toolbar.isSelectionLocked()) return;
             toolbar.refreshSelection();
             toolbar.refreshActiveStates();
         }, 25) as EventListener);
 
-        document.addEventListener(dom.EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
-            if (event.key === keyboard.KeyboardKeys.ArrowUp || event.key === keyboard.KeyboardKeys.ArrowDown || event.key === keyboard.KeyboardKeys.ArrowLeft || event.key === keyboard.KeyboardKeys.ArrowRight) {
+        document.addEventListener(EventTypes.KeyUp, debounce((event: KeyboardEvent) => {
+            if (event.key === KeyboardKeys.ArrowUp || event.key === KeyboardKeys.ArrowDown || event.key === KeyboardKeys.ArrowLeft || event.key === KeyboardKeys.ArrowRight) {
 
                 const toolbar = FormattingToolbarPlugin.toolbarInstance;
                 if (!toolbar || toolbar.isSelectionLocked()) return;
@@ -93,7 +101,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
     private readonly defaultItems: ToolbarEntry[] = [
         {
-            icon: <icons.BoldIcon />,
+            icon: <BoldIcon />,
             label: t("bold"),
             shortcut: "Mod+B",
             onSelect: () => runCommand("toggleBold"),
@@ -101,7 +109,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 10,
         },
         {
-            icon: <icons.ItalicIcon />,
+            icon: <ItalicIcon />,
             label: t("italic"),
             shortcut: "Mod+I",
             onSelect: () => runCommand("toggleItalic"),
@@ -109,7 +117,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 20,
         },
         {
-            icon: <icons.UnderlineIcon />,
+            icon: <UnderlineIcon />,
             label: t("underline"),
             shortcut: "Mod+U",
             onSelect: () => runCommand("toggleUnderline"),
@@ -117,7 +125,7 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
             sort: 30,
         },
         {
-            icon: <icons.StrikeThroughIcon />,
+            icon: <StrikeThroughIcon />,
             label: t("strikethrough"),
             shortcut: "Mod+Shift+X",
             onSelect: () => runCommand("toggleStrike"),

@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { Command } from "../../../core/command/command.ts";
-import { h, appendElementOnOverlayArea, runCommand } from "../../index.ts";
-import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
+import { h } from "@core/jsx/index.ts";
+import { Command } from "@core/command/command.ts";
+import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
 import { EquationPopover } from "../components/equation-popover.tsx";
 
 

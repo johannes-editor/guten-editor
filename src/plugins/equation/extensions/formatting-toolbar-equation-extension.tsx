@@ -1,9 +1,10 @@
 /** @jsx h */
 
-import { h } from "../../../jsx.ts";
-import { runCommand, t } from "../../index.ts";
-import { FormattingToolbarExtensionPlugin } from "../../formatting-toolbar/formatting-toolbar-plugin.tsx";
-import { EquationIcon } from "../../../design-system/components/icons.tsx";
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { EquationIcon } from "@components/ui/primitives/icons.tsx";
+import { FormattingToolbarExtensionPlugin } from "@plugin/formatting-toolbar/formatting-toolbar-plugin.tsx";
 
 /**
  * FormattingToolbar extension that adds the "Insert Math (KaTeX)" button.

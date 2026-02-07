@@ -1,8 +1,9 @@
 /** @jsx h */
-import { h } from '../../../jsx.ts';
-import { t } from "../../index.ts";
 
-export function CodeBlock() {
+import { h } from '@/core/jsx/index.ts';
+import { t } from "@core/i18n/index.ts";
+
+export function CodeBlock() : HTMLDivElement {
     return (
         <div class="block code-block">
             <pre>

@@ -1,6 +1,7 @@
 /** @jsx h */
-import { Command, CommandContext } from "../../../core/command/command.ts";
-import { selection, dom } from "../../index.ts";
+import { Command, CommandContext } from "@/core/command/command.ts";
+import { duplicateBlock } from "@utils/dom/index.ts";
+import { findClosestBlockBySelection } from "@utils/selection/index.ts";
 import { BlockOptionPayload } from "./types.ts";
 
 export const DuplicateBlock: Command = {
@@ -12,11 +13,11 @@ export const DuplicateBlock: Command = {
 
         context.content?.blockOptions.remove();
 
-        const currentBlock = context.content?.block ?? selection.findClosestBlockBySelection();
+        const currentBlock = context.content?.block ?? findClosestBlockBySelection();
 
         if (!currentBlock) return false;
 
-        dom.duplicateBlock(currentBlock, {
+        duplicateBlock(currentBlock, {
             insert: 'after',
             highlight: true,
             highlightMs: 900,

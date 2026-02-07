@@ -1,4 +1,9 @@
-import { dom, ExtensiblePlugin, keyboard, Plugin, PluginExtension, selection } from "../index.ts";
+
+
+import { findCodeAncestor} from "@utils/dom/index.ts";
+import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine/index.ts";
+import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { findClosestBlockBySelection } from "@utils/selection/index.ts";
 
 import {
     MarkdownShortcutContext,
@@ -53,8 +58,8 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
     };
 
     private resolveTrigger(event: KeyboardEvent): MarkdownShortcutTrigger | null {
-        if (event.key === keyboard.KeyboardKeys.Space) return "space";
-        if (event.key === keyboard.KeyboardKeys.Enter) return "enter";
+        if (event.key === KeyboardKeys.Space) return "space";
+        if (event.key === KeyboardKeys.Enter) return "enter";
         return null;
     }
 
@@ -68,10 +73,10 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
         const range = selectionState.getRangeAt(0);
         if (!contentArea.contains(range.startContainer)) return null;
 
-        const block = selection.findClosestBlockBySelection(selectionState);
+        const block = findClosestBlockBySelection(selectionState);
         if (!block || !block.isContentEditable) return null;
 
-        const codeAncestor = dom.findCodeAncestor(range.startContainer);
+        const codeAncestor = findCodeAncestor(range.startContainer);
         if (codeAncestor) return null;
 
         const textBeforeCaret = this.getTextBeforeCaret(block, range);

@@ -1,5 +1,10 @@
 /** @jsx h */
-import { DefaultState, MenuItemUI, icons, h, t } from "../../index.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { MenuItemUI } from "@components/ui/composites/menu/index.ts";
+import { DefaultState } from "@core/components/types.ts";
+import { AlphabetIcon, SwatchIcon } from "@components/ui/primitives/icons.tsx";
 import { ColorOption } from "../color-options.ts";
 
 
@@ -54,11 +59,11 @@ export class TextColorMenuItem extends MenuItemUI<TextColorMenuItemProps, Defaul
         if (option.rounded) {
             return (
                 <span style={`color: ${option.color}`}>
-                    <icons.AlphabetIcon />
+                    <AlphabetIcon />
                 </span>
             );
         }
 
-        return <icons.SwatchIcon color={option.color} strokeColor={strokeColor} strokeWidth={1} size={18} />;
+        return <SwatchIcon color={option.color} strokeColor={strokeColor} strokeWidth={1} size={18} />;
     }
 }

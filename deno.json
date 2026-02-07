@@ -1,13 +1,21 @@
 {
-  "compilerOptions": {
-    "lib": ["dom", "esnext"],
-    "strict": true,
-    "types": ["npm:vite/client", "./src/jsx.d.ts"]
-  },
-  "tasks": {
-    "dev": "deno run -A npm:vite demo",
+    "compilerOptions": {
+        "lib": ["dom", "esnext"],
+        "strict": true,
+        "types": ["npm:vite/client"]
+    },
+    "imports": {
+        "@/": "./src/",
+        "@core/": "./src/core/",
+        "@design-system/": "./src/design-system/",
+        "@components/": "./src/components/",
+        "@plugin/": "./src/plugins/",
+        "@utils/": "./src/utils/"
+    },
+    "tasks": {
+    "dev": "deno run -A npm:vite --config vite.config.demo.ts",
     "build": "deno run -A npm:vite build",
-    "build-demo": "deno run -A npm:vite build demo",
+    "build-demo": "deno run -A npm:vite build --config vite.config.demo.ts",
     "test": "deno test -A"
   }
 }

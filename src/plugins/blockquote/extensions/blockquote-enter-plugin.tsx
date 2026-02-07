@@ -1,9 +1,9 @@
 /** @jsx h */
-import { h } from "../../../jsx.ts";
-import { Plugin } from "../../../core/plugin-engine/plugin.ts";
-import { ParagraphBlock } from "../../../components/blocks/paragraph.tsx";
-import { focusOnElement } from "../../../utils/dom-utils.ts";
-import { ClassName } from "../../../utils/dom/class-name.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { Plugin } from "@core/plugin-engine/plugin.ts";
+import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
+import { focusOnElement } from "@utils/dom/dom-utils.ts";
 
 export class BlockquoteEnterPlugin extends Plugin {
 
@@ -67,7 +67,7 @@ export class BlockquoteEnterPlugin extends Plugin {
         }
 
         if (paragraph.textContent?.trim().length) {
-            paragraph.classList.remove(ClassName.Empty);
+            paragraph.classList.remove("empty");
         } else {
             paragraph.innerHTML = "<br />";
         }
@@ -111,9 +111,9 @@ export class BlockquoteEnterPlugin extends Plugin {
             if (!blockquote.querySelector("br")) {
                 blockquote.innerHTML = "<br />";
             }
-            blockquote.classList.add(ClassName.Empty);
+            blockquote.classList.add("empty");
         } else {
-            blockquote.classList.remove(ClassName.Empty);
+            blockquote.classList.remove("empty");
         }
     }
 

@@ -1,9 +1,13 @@
 /** @jsx h */
-import { h, icons, appendElementOnOverlayArea, t } from "../../index.ts";
-import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
+
+import { h } from "@core/jsx/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { SettingsIcon } from "@components/ui/primitives/icons.tsx";
+import { appendElementOnOverlayArea} from "@components/editor/core/index.tsx";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
+import { createAnchorAtSelection } from "@utils/selection/index.ts";
 import { EditorSettingsMenu } from "../components/editor-settings-menu.tsx";
 import { getEditorSettingsItems } from "../editor-settings-registry.ts";
-import { selection } from "../../index.ts";
 
 export class SlashMenuEditorSettingsExtension extends SlashMenuExtensionPlugin {
     
@@ -15,14 +19,14 @@ export class SlashMenuEditorSettingsExtension extends SlashMenuExtensionPlugin {
     constructor() {
         super();
 
-        this.icon = <icons.SettingsIcon />;
+        this.icon = <SettingsIcon />;
         this.label = t("settings");
         this.synonyms = [t("language"), t("theme")];
         this.sort = 120;
     }
 
     override onSelect(): void {
-        const anchor = selection.createAnchorAtSelection();
+        const anchor = createAnchorAtSelection();
         if (!anchor) return;
         const items = getEditorSettingsItems();
         appendElementOnOverlayArea(<EditorSettingsMenu anchor={anchor} items={items} />);

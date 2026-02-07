@@ -1,6 +1,6 @@
 /** @jsx h */
-import { h } from "../../jsx.ts";
-import { Component } from "../../components/component.ts";
+import { h } from "@core/jsx/index.ts";
+import { Component } from "@core/components/component.ts";
 
 export class Button10 extends Component {
     

@@ -1,7 +1,7 @@
 /** @jsx h */
-import { h } from "../../../jsx.ts";
-import { Component } from "../../component.ts";
-import { DefaultProps } from "../../types.ts";
+import { h } from "@core/jsx/index.ts";
+import { Component } from "@core/components/component.ts";
+import { DefaultProps } from "@core/components/types.ts";
 
 interface FetchComponentState {
     data: any | null;

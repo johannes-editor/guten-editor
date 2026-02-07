@@ -1,5 +1,6 @@
-import { Command, CommandContext } from "../../../core/command/command.ts";
-import { selection } from "../../index.ts";
+
+import { Command, CommandContext } from "@/core/command/index.ts";
+import { findClosestBlockBySelection } from "@utils/selection/index.ts";
 
 function rangesEqual(a: Range | null, b: Range | null): boolean {
     if (!a || !b) return false;
@@ -23,7 +24,7 @@ export const SelectBlockContent: Command = {
         const sel = globalThis.getSelection?.();
         if (!sel || sel.rangeCount === 0) return false;
 
-        const block = selection.findClosestBlockBySelection();
+        const block = findClosestBlockBySelection();
         if (!block) return false;
 
         const range = sel.getRangeAt(0);

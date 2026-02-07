@@ -1,9 +1,12 @@
 /** @jsx h */
-import { h, MenuItemUI, t, type DefaultProps } from "../../index.ts";
-import type { OverlayCtor } from "../../../components/overlay/overlay-component.tsx";
+
+import { h } from "@core/jsx/index.ts";
+import { DefaultProps } from "@core/components/types.ts";
+import type { OverlayCtor } from "@components/editor/overlay/overlay-component.tsx";
+import { MenuItemUI } from "@components/ui/composites/menu/menu-item-ui.tsx";
+import { MenuUIState } from "@components/ui/composites/menu/menu-ui.tsx";
+import { NavigationMenu } from "@components/ui/composites/navigation-menu/navigation-menu.tsx";
 import { EditorSettingsMenu } from "./editor-settings-menu.tsx";
-import { NavigationMenu } from "../../../design-system/components/navigation-menu.tsx";
-import { MenuUIState } from "../../../design-system/components/menu-ui.tsx";
 
 interface ThemeSelectItemProps extends DefaultProps {
     label: string;

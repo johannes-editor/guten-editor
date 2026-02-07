@@ -1,9 +1,12 @@
 /** @jsx h */
 
-import { EquationIcon } from "../../../design-system/components/icons.tsx";
-import { focusOnElement, h, runCommand, t } from "../../index.ts";
-import { SelectionUtils } from "../../../utils/selection/selection-utils.ts";
-import { SlashMenuExtensionPlugin } from "../../slash-menu/index.ts";
+import { t } from "@core/i18n/index.ts";
+import { h } from "@core/jsx/dom-factory.ts";
+import { runCommand } from "@core/command/index.ts";
+import { EquationIcon } from "@components/ui/primitives/icons.tsx";
+import { focusOnElement } from "@utils/dom/index.ts";
+import { getCurrentSelectionRange } from "@utils/selection/index.ts";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
 import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
 
 export class SlashMenuEquationExtension extends SlashMenuExtensionPlugin {
@@ -15,7 +18,7 @@ export class SlashMenuEquationExtension extends SlashMenuExtensionPlugin {
     onSelect(focusedBlock: HTMLElement): void {
         const placeholder: HTMLElement = <EquationPlaceholder />;
 
-        let range = SelectionUtils.getCurrentSelectionRange();
+        let range = getCurrentSelectionRange();
         if (!range || !focusedBlock.contains(range.startContainer)) {
             range = document.createRange();
             range.selectNodeContents(focusedBlock);
@@ -27,7 +30,7 @@ export class SlashMenuEquationExtension extends SlashMenuExtensionPlugin {
         range.insertNode(placeholder);
 
         const selection = globalThis.getSelection();
-        
+
         if (selection) {
             const placeholderRange = document.createRange();
             placeholderRange.selectNode(placeholder);

@@ -1,6 +1,7 @@
-import { EventTypes } from "../../utils/dom/events.ts";
-import { h, runCommand } from "../index.ts";
-import { Tooltip } from "../../design-system/components/tooltip.tsx";
+import { h } from "@core/jsx/index.ts";
+import { runCommand } from "@core/command/index.ts";
+import { Tooltip } from "@components/ui/primitives/tooltip.tsx";
+import { EventTypes } from "@utils/dom/events.ts";
 
 export class DragAndDropManager {
     private mutationObserver: MutationObserver | null = null;

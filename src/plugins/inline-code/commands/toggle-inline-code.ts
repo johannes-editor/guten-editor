@@ -1,5 +1,6 @@
-import { Command } from "../../../core/command/command.ts";
-import { dom, hasSelection } from "../../index.ts";
+import { Command } from "@core/command/command.ts";
+import { findCodeAncestor } from "@utils/dom/index.ts";
+import { hasSelection } from "@utils/selection/index.ts";
 
 export const ToggleInlineCode: Command = {
     id: "toggleInlineCode",
@@ -17,8 +18,8 @@ export const ToggleInlineCode: Command = {
 
         const documentRef = range.commonAncestorContainer.ownerDocument ?? document;
 
-        const startCode = dom.findCodeAncestor(range.startContainer);
-        const endCode = dom.findCodeAncestor(range.endContainer);
+        const startCode = findCodeAncestor(range.startContainer);
+        const endCode = findCodeAncestor(range.endContainer);
 
         if (startCode && startCode === endCode) {
             const codeElement = startCode;

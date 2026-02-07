@@ -1,9 +1,9 @@
 /** @jsx h */
 
-
-import { InsertResultContext } from "../../../core/command/types.ts";
-import { appendAfter, applyInstructionText, focusIfNeeded, getInstructionText, resolveAfterBlock, updateLastInserted } from "../../../utils/dom/index.ts";
-import { Command, h } from "../../index.ts";
+import { h } from "@core/jsx/index.ts";
+import { Command } from "@core/command/index.ts";
+import { InsertResultContext } from "@core/command/index.ts";
+import { appendAfter, applyInstructionText, focusIfNeeded, getInstructionText, resolveAfterBlock, updateLastInserted } from "@utils/dom/index.ts";
 import { CodeBlock } from "../components/code-block.tsx";
 
 export const InsertCodeBlockCommand: Command<InsertResultContext> = {

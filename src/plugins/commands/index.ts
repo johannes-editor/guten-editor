@@ -1,0 +1,1 @@
+export { CommandExtensionPlugin } from "./command-plugin.ts";

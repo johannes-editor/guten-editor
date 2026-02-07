@@ -1,7 +1,7 @@
 /** @jsx h */
 
-import { Command } from "../index.ts";
-import { CommandExtensionPlugin } from "../commands/command-plugin.ts";
+import { Command } from "@core/command/index.ts";
+import { CommandExtensionPlugin } from "@plugin/commands/command-plugin.ts";
 import { StateBold } from "./commands/state-bold.ts";
 import { StateItalic } from "./commands/state-italic.ts";
 import { StateStrike } from "./commands/state-strike.ts";

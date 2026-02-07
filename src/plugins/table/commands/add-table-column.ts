@@ -1,9 +1,5 @@
-+12
--0
-
-import type { Command } from "../../index.ts";
+import { Command } from "@core/command/index.ts";
 import { addColumnToTable, resolveTableFromContext } from "./table-command-utils.ts";
-
 
 export const AddTableColumnCommand: Command = {
     id: "table.addColumn",
