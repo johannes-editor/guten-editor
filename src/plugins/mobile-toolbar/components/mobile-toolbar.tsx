@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Component } from "@core/components";
 
 import style from "./style.css?inline";

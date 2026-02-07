@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { t } from "@core/i18n";
 import { SettingsIcon } from "@components/ui/icons";
 import { appendElementOnOverlayArea} from "@components/editor";

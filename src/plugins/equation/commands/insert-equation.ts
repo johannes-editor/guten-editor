@@ -1,4 +1,3 @@
-import { h } from "@core/jsx";
 import { t } from "@core/i18n";
 import { Command, CommandContext } from "@core/command";
 import { EquationInline } from "../components/equation-inline.tsx";

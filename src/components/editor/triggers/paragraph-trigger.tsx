@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Component } from "@core/components";
 import { appendElementOnContentArea } from "@components/editor";
 import { ParagraphBlock } from "../../blocks/paragraph.tsx";

@@ -1,6 +1,4 @@
-/** @jsx h */
 
-import { h, Fragment } from "@core/jsx";
 import { Component } from "@core/components";
 import { DefaultProps, DefaultState } from "@core/components";
 import { ChordModifiers, normalizeChord } from "@utils/keyboard";
@@ -130,10 +128,10 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
                         normalizeChord(shortcut)
                             .split("+")
                             .map((raw, i, arr) => (
-                                <Fragment>
+                                <>
                                     {this.renderKeycap(raw.trim())}
                                     {i < arr.length - 1 && <span class="plus">+</span>}
-                                </Fragment>
+                                </>
                             ))
                     }
                 </span>

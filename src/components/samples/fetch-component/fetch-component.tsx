@@ -1,5 +1,3 @@
-/** @jsx h */
-import { h } from "@core/jsx";
 import { Component } from "@core/components";
 import { DefaultProps } from "@core/components";
 

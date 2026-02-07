@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import type { DefaultProps, DefaultState } from "@core/components";
 import { KeyboardKeys } from "@utils/keyboard";
 import { EventTypes } from "@utils/dom";

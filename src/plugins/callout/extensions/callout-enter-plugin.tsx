@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Plugin } from "@core/plugin-engine";
 import { ParagraphBlock } from "@components/blocks";
 import { focusOnElement, } from "@utils/dom";

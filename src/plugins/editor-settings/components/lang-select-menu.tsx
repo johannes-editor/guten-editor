@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { DefaultProps } from "@core/components";
 import { LocaleMeta } from "@core/i18n";
 import { MenuItemUI,  } from "@components/ui/composites/menu";

@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Command } from "@core/command";
 import { appendElementOnOverlayArea } from "@components/editor";
 import { EquationPopover } from "../components/equation-popover.tsx";

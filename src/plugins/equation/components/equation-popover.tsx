@@ -1,5 +1,3 @@
-/** @jsx h */
-
 import { runCommand } from "@core/command";
 import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input";
 import { useContext } from "@core/context";

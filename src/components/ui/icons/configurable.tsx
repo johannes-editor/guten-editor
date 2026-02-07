@@ -1,6 +1,3 @@
-/**@jsx h */
-
-import { h } from "@core/jsx";
 import { IconProps } from "./types.ts";
 
 export const SwatchRoundedIcon = ({

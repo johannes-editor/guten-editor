@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import type { DefaultState } from "@core/components";
 import { OverlayCtor } from "@components/editor/overlay";
 import { MenuUI } from "@components/ui/composites/menu";

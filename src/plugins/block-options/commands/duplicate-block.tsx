@@ -1,4 +1,3 @@
-/** @jsx h */
 import { Command, CommandContext } from "@/core/command";
 import { duplicateBlock } from "@utils/dom";
 import { findClosestBlockBySelection } from "@utils/selection";

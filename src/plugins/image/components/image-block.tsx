@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { ensureBlockId } from "@utils/dom";
 
 export interface ImageBlockProps {

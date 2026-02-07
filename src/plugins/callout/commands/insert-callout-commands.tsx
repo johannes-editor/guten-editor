@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import * as dom from "@utils/dom";
 import type { InsertResultContext } from "@core/command";
 import type { Command } from "@core/command";

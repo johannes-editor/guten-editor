@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { ParagraphBlock } from "../../components/blocks/paragraph.tsx";
 import { focusOnElement } from "@utils/dom";
 

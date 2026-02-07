@@ -1,5 +1,3 @@
-/** @jsx h */
-
 import { t } from "@core/i18n";
 import { runCommand  } from "@core/command";
 import { InputPopover, InputPopoverProps } from "@components/ui/composites/input";

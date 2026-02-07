@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine";

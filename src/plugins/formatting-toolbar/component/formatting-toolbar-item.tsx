@@ -1,5 +1,3 @@
-/** @jsx h */
-
 import { KeyboardKeys } from "@utils/keyboard";
 import { EventTypes } from "@utils/dom";
 import { ToolbarItemUI } from "@components/ui/composites/toolbar";

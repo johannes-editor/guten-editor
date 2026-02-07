@@ -1,7 +1,4 @@
-/** @jsx h */
-
 import { t } from "@core/i18n";
-import { h } from "@core/jsx";
 import { runCommand } from "@core/command";
 import { AddRowBelow, AddColumnRight, DeleteRow, DeleteColumn } from "@components/ui/icons";
 import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar";

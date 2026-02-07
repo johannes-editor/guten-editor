@@ -1,5 +1,3 @@
-/** @jsx h */
-
 import { runCommand } from "@core/command";
 import { t } from "@core/i18n";
 import { InlineObjectPlaceholderUI } from "@components/ui/primitives/placeholder";

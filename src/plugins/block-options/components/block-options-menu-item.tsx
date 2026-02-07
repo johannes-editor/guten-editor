@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { DefaultProps } from "@core/components";
 import { MenuItemUI } from "@components/ui/composites/menu";
 import { DefaultState } from "@core/components";

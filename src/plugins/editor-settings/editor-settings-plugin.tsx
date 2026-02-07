@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine";
 import { appendElementOnOverlayArea } from "@components/editor";
 import { EditorSettingsMenu } from "./components/editor-settings-menu.tsx";

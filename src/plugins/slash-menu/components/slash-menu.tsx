@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { t } from "@core/i18n";
 import { EventTypes } from "@utils/dom"; 
 import { KeyboardKeys } from "@utils/keyboard";

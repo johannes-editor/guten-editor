@@ -1,7 +1,4 @@
-/** @jsx h */
-
 import { t } from "@core/i18n";
-import { h } from "@core/jsx";
 import { runCommand } from "@core/command";
 import { EquationIcon } from "@components/ui/icons";
 import { focusOnElement } from "@utils/dom";

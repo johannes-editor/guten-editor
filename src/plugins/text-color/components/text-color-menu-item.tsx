@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { t } from "@core/i18n";
 import { MenuItemUI } from "@components/ui/composites/menu/index.ts";
 import { DefaultState } from "@core/components";

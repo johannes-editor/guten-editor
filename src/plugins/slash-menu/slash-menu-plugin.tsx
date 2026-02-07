@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine";
 import { registerTranslation } from "@core/i18n";
 import { appendElementOnOverlayArea } from "@components/editor";

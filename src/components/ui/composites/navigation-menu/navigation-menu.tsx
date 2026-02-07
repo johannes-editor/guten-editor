@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { MenuUI, type MenuUIProps, type MenuUIState } from "@components/ui/composites/menu";
 
 export class NavigationMenu<P extends MenuUIProps = MenuUIProps, S extends MenuUIState = MenuUIState> extends MenuUI<P, S> {

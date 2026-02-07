@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { focusOnElement } from "@utils/dom";
 import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugin/markdown-shortcuts";
 import { createTodoList } from "../utils.tsx";

@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Command } from "../../../core/command/command.ts";
 import { appendElementOnOverlayArea } from "@components/editor";
 import { ImageMenu } from "../components/image-menu.tsx";

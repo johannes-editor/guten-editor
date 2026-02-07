@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { t, setLocale, getAvailableLocales } from "@core/i18n";
 import  * as localePreferences from "@core/i18n";
 import { appendElementOnOverlayArea } from "@components/editor";

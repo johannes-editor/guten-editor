@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { t, registerTranslation } from "@core/i18n";
 import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
 import { appendElementOnOverlayArea } from "@components/editor";

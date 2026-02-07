@@ -1,7 +1,3 @@
-/** @jsx h */
-/** @jsxFrag Fragment */
-
-import { h, Fragment } from "@core/jsx";
 import { EventTypes } from "@utils/dom";
 import { KeyboardKeys } from "@utils/keyboard";
 import { OverlayComponent } from "@components/editor/overlay";
@@ -224,7 +220,7 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
         const cats = this.state.categories;
 
         return (
-            <Fragment>
+            <>
                 <div class="emoji-wrap">
                     <ul part="emoji-menu" class="emoji-picker" role="listbox" aria-activedescendant={`emoji-${this.state.selectedIndex}`}>
                         {emojis.map((emoji, index) => (
@@ -258,7 +254,7 @@ export class EmojiPicker extends OverlayComponent<EmojiPickerOverlayProps, Emoji
                         ))}
                     </div>
                 </div>
-            </Fragment>
+            </>
         );
     }
 }

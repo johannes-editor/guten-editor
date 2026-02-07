@@ -1,5 +1,3 @@
-/** @jsx h */
-import { Fragment, h } from "../../../jsx.ts";
 import { Component } from "@core/components";
 import { Counter } from "./counter.tsx";
 import { DefaultProps } from "@core/components";
@@ -41,13 +39,13 @@ export class CounterToggle extends Component<DefaultProps, CounterToggleState> {
 
     render() {
         return (
-            <Fragment>
+            <>
                 <div class="counter-holder">
                     <span>mounted: {String(this.state.mounted)}</span>
                     {this.state.mounted && <Counter count={this.state.count} increment={this.increment} />}
                 </div>
                 <button type="button" onClick={this.toggle}>Toggle Counter</button>
-            </Fragment>
+            </>
         );
     }
 }

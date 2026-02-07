@@ -37,4 +37,8 @@ export default defineConfig({
         //     },
         // },
     },
+    esbuild: {
+        jsx: "automatic",
+        jsxImportSource: "@core/jsx",
+    },
 });

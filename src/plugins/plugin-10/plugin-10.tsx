@@ -1,5 +1,3 @@
-/** @jsx h */
-import { h } from "@core/jsx";
 import { Plugin } from "@core/plugin-engine";
 import { Button10 } from "./button-10.tsx";
 

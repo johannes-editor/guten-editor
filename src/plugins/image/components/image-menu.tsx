@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { DefaultProps, DefaultState } from "@core/components";

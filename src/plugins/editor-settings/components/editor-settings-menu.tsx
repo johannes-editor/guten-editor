@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { DefaultProps } from "@core/components";
 import { cleanupCaretAnchor } from "@utils/selection";
 import { NavigationMenu } from "@components/ui/composites/navigation-menu";

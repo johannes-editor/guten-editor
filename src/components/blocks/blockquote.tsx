@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@/core/jsx/index.ts";
 import { t } from "@core/i18n";
 import { DefaultProps } from "@core/components";
 

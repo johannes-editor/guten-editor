@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { DefaultState, DefaultProps } from "@core/components";
 import { OverlayComponent } from "@components/editor/overlay";
 

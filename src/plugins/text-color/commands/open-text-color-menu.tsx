@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Command } from "@core/command";
 import { hasSelection } from "@utils/selection";
 import { appendElementOnOverlayArea } from "@components/editor";

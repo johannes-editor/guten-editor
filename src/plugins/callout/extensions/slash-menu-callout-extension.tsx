@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { runCommand } from "@core/command";
 import { t } from "@core/i18n";
 import { CardTextIcon } from "@components/ui/icons";

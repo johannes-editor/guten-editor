@@ -1,5 +1,3 @@
-/** @jsx h */
-
 import { ToolbarUI } from "@components/ui/composites/toolbar";
 import { hasSelection, clearSelection } from "@utils/selection";
 import { EventTypes } from "@utils/dom";

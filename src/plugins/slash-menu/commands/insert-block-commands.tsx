@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Command, InsertResultContext } from "@core/command";
 import { focusOnElement } from "@utils/dom";
 import { BlockquoteBlock, BulletedListBlock, NumberedListBlock, ParagraphBlock, SeparatorBlock } from "@components/blocks";

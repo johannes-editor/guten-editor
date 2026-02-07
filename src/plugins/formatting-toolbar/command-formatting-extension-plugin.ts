@@ -1,5 +1,3 @@
-/** @jsx h */
-
 import { Command } from "@core/command";
 import { CommandExtensionPlugin } from "@plugin/commands";
 import { StateBold, StateItalic, StateStrike, StateUnderline } from "./commands";

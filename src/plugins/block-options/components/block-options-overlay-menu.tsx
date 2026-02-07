@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import type { DefaultState } from "@core/components";
 import type { OverlayCtor } from "@components/editor/overlay";
 import { BlockOptionsMenu, type BlockOptionsProps } from "./block-options-menu.tsx";

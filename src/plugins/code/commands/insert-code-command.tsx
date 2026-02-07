@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Command } from "@core/command";
 import { InsertResultContext } from "@core/command";
 import { appendAfter, applyInstructionText, focusIfNeeded, getInstructionText, resolveAfterBlock, updateLastInserted } from "@utils/dom";

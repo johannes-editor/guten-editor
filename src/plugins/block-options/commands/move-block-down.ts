@@ -1,4 +1,3 @@
-/** @jsx h */
 import { Command, CommandContext } from "@/core/command";
 import {  moveBlockDownPreservingCaret } from "@utils/dom";
 import { findClosestBlockBySelection } from "@utils/selection";

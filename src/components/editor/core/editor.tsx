@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Component } from "@core/components";
 import { BlockquoteEnterHandler } from "@core/ce-crossbrowser/blockquote-enter-handler.ts";
 import { NewContentChildrenObserver } from "@core/ce-crossbrowser/new-content-children-observer.tsx";

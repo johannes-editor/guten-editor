@@ -1,6 +1,3 @@
-/** @jsx h */
-
-import { h } from "@core/jsx";
 import { Command, CommandContext } from "@core/command";
 import { appendElementOnOverlayArea } from "@components/editor";
 import { findClosestBlockBySelection } from "@utils/selection";
