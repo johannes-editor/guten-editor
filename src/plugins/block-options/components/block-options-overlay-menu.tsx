@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import type { DefaultState } from "@core/components/types.ts";
-import type { OverlayCtor } from "@components/editor/overlay/overlay-component.tsx";
+import { h } from "@core/jsx";
+import type { DefaultState } from "@core/components";
+import type { OverlayCtor } from "@components/editor/overlay";
 import { BlockOptionsMenu, type BlockOptionsProps } from "./block-options-menu.tsx";
 
 export interface BlockOptionsOverlayMenuProps extends BlockOptionsProps {

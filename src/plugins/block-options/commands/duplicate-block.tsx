@@ -1,7 +1,7 @@
 /** @jsx h */
-import { Command, CommandContext } from "@/core/command/command.ts";
-import { duplicateBlock } from "@utils/dom/index.ts";
-import { findClosestBlockBySelection } from "@utils/selection/index.ts";
+import { Command, CommandContext } from "@/core/command";
+import { duplicateBlock } from "@utils/dom";
+import { findClosestBlockBySelection } from "@utils/selection";
 import { BlockOptionPayload } from "./types.ts";
 
 export const DuplicateBlock: Command = {

@@ -1,4 +1,4 @@
-import { Command } from "@core/command/command.ts";
+import { Command } from "@core/command";
 import { ensureBlockId } from "@utils/dom/block.ts";
 import { createImageBlock, extractImageBlockDataset, isImageBlockElement } from "../components/image-block.tsx";
 import { ImagePlaceholder } from "../components/image-placeholder.tsx";

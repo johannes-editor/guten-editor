@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Component } from "@core/components/component.ts";
-import { appendElementOnContentArea } from "@components/editor/core/index.tsx";
+import { h } from "@core/jsx";
+import { Component } from "@core/components";
+import { appendElementOnContentArea } from "@components/editor";
 import { ParagraphBlock } from "../../blocks/paragraph.tsx";
-import { focusOnElement } from "@utils/dom/dom-utils.ts";
+import { focusOnElement } from "@utils/dom";
 import { dom } from "../../../utils/index.ts";
 
 export class ParagraphTrigger extends Component {

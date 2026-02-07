@@ -1,8 +1,9 @@
 /** @jsx h */
-import { h } from "@core/jsx/index.ts";
-import { DefaultProps } from "@core/components/index.ts";
-import { MenuItemUI } from "@components/ui/composites/menu/menu-item-ui.tsx";
-import { DefaultState } from "@core/components/types.ts";
+
+import { h } from "@core/jsx";
+import { DefaultProps } from "@core/components";
+import { MenuItemUI } from "@components/ui/composites/menu";
+import { DefaultState } from "@core/components";
 import { BlockOptionsItemContext } from "../extensible/block-options-plugin.tsx";
 import { BlockOptionsMenu } from "./block-options-menu.tsx";
 

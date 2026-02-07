@@ -1,11 +1,11 @@
 /**@jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { ArrowLeftIcon, CloseIcon } from "@components/ui/primitives/icons.tsx";
-import { isMobileSheetViewport } from "@utils/platform/index.ts";
-import { Component } from "@core/components/component.ts";
-import { DefaultProps, DefaultState } from "@core/components/types.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { ArrowLeftIcon, CloseIcon } from "@components/ui/icons";
+import { isMobileSheetViewport } from "@utils/platform";
+import { Component } from "@core/components";
+import { DefaultProps, DefaultState } from "@core/components";
 import { pushOverlay, removeOverlay } from "./index.ts";
 import { CloseableOverlay } from "./types.ts";
 

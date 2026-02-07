@@ -1,11 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { CardImageIcon } from "@components/ui/primitives/icons.tsx";
-import { BlockObjectPlaceholderUI } from "@components/ui/primitives/placeholder/block-object-placeholder-ui.tsx";
-import { ensureBlockId } from "@utils/dom/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { CardImageIcon } from "@components/ui/icons";
+import { BlockObjectPlaceholderUI } from "@components/ui/primitives/placeholder";
+import { ensureBlockId } from "@utils/dom";
 
 export class ImagePlaceholder extends BlockObjectPlaceholderUI {
 

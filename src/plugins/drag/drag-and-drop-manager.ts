@@ -1,6 +1,6 @@
-import { h } from "@core/jsx/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { Tooltip } from "@components/ui/primitives/tooltip.tsx";
+import { h } from "@core/jsx";
+import { runCommand } from "@core/command";
+import { Tooltip } from "@components/ui/primitives/tooltip";
 import { EventTypes } from "@utils/dom/events.ts";
 
 export class DragAndDropManager {

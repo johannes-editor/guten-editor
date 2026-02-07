@@ -1,12 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { ExtensiblePlugin } from "@core/plugin-engine/index.ts";
-import { PluginExtension } from "@core/plugin-engine/index.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
-import { ArrowUpIcon, ArrowDownIcon, TrashIcon } from "@components/ui/primitives/icons.tsx";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { ExtensiblePlugin, PluginExtension } from "@core/plugin-engine";
+import { appendElementOnOverlayArea } from "@components/editor";
+import { ArrowUpIcon, ArrowDownIcon, TrashIcon } from "@components/ui/icons";
 import { BlockOptionsMenu } from "../components/block-options-menu.tsx";
 import { BlockOptionsMenuItem } from "../components/block-options-menu-item.tsx";
 

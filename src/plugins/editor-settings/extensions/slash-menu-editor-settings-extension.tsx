@@ -1,11 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { SettingsIcon } from "@components/ui/primitives/icons.tsx";
-import { appendElementOnOverlayArea} from "@components/editor/core/index.tsx";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
-import { createAnchorAtSelection } from "@utils/selection/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { SettingsIcon } from "@components/ui/icons";
+import { appendElementOnOverlayArea} from "@components/editor";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
+import { createAnchorAtSelection } from "@utils/selection";
 import { EditorSettingsMenu } from "../components/editor-settings-menu.tsx";
 import { getEditorSettingsItems } from "../editor-settings-registry.ts";
 

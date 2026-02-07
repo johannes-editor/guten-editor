@@ -1,5 +1,5 @@
-import { Command, CommandContext } from "@/core/command/command.ts";
-import { findClosestBlockBySelection, createAnchorAtSelection } from "@utils/selection/index.ts";
+import { Command, CommandContext } from "@/core/command";
+import { findClosestBlockBySelection, createAnchorAtSelection } from "@utils/selection";
 import { BlockOptionsPlugin } from "../extensible/block-options-plugin.tsx";
 
 export const OpenBlockOptions: Command = {

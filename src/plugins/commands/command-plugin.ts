@@ -1,7 +1,7 @@
 
-import { Command, ShortcutDef, registerCommand, runCommand} from "@core/command/index.ts";
-import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine/index.ts";
-import { normalizeChord, eventToChord } from "@utils/keyboard/index.ts";
+import { Command, ShortcutDef, registerCommand, runCommand} from "@core/command";
+import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine";
+import { normalizeChord, eventToChord } from "@utils/keyboard";
 
 type Binding = { cmdId: string; def: ShortcutDef };
 

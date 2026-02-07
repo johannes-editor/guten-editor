@@ -1,4 +1,4 @@
-import { Component } from "@core/components/component.ts";
+import { Component } from "@core/components";
 
 // deno-lint-ignore no-explicit-any
 export function h(tag: any, props: Record<string, any> | null, ...children: any[]) {

@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
-import { EventTypes } from "@utils/dom/index.ts";
-import { ToolbarItemUI } from "@components/ui/composites/toolbar/toolbar-item-ui.tsx";
-import { ArrowDownIcon } from "@components/ui/primitives/icons.tsx";
+import { KeyboardKeys } from "@utils/keyboard";
+import { EventTypes } from "@utils/dom";
+import { ToolbarItemUI } from "@components/ui/composites/toolbar";
+import { ArrowDownIcon } from "@components/ui/icons";
 
 interface FormattingToolbarItemProps {
 

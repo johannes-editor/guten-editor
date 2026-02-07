@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Command, CommandContext } from "@core/command/command.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
-import { findClosestBlockBySelection } from "@utils/selection/index.ts";
+import { h } from "@core/jsx";
+import { Command, CommandContext } from "@core/command";
+import { appendElementOnOverlayArea } from "@components/editor";
+import { findClosestBlockBySelection } from "@utils/selection";
 import { CalloutColorMenu } from "../components/callout-color-menu.tsx";
 
 export const OpenCalloutBlockOptions: Command = {

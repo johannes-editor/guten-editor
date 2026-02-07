@@ -1,12 +1,12 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { useContext } from "@core/context/context.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { useContext } from "@core/context";
 import { MenuUI, MenuUIProps } from "@components/ui/composites/menu/index.ts";
-import type { MenuUIState } from "@components/ui/composites/menu/menu-ui.tsx";
-import { FormattingToolbar, FormattingToolbarContext, FormattingToolbarCtx } from "@plugin/formatting-toolbar/index.ts";
+import type { MenuUIState } from "@components/ui/composites/menu";
+import { FormattingToolbar, FormattingToolbarContext, FormattingToolbarCtx } from "@plugin/formatting-toolbar";
 import { colorUtil } from "@utils/color/index.ts";
 import { TextColorMenuItem } from "./text-color-menu-item.tsx";
 import { HIGHLIGHT_COLOR_OPTIONS, normalizeColorValue, TEXT_COLOR_OPTIONS, type ColorOption } from "../color-options.ts";

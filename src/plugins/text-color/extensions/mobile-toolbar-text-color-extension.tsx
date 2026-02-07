@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { TextColorIcon } from "@components/ui/primitives/icons.tsx";
-import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { TextColorIcon } from "@components/ui/icons";
+import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar";
 
 /**
  * Mobile toolbar extension that adds the Text Color menu when text is selected.

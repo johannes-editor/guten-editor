@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Component } from "@core/components/component.ts";
-import { DefaultProps, DefaultState } from "@core/components/types.ts";
-import { Tooltip } from "@components/ui/primitives/tooltip.tsx";
+import { h } from "@core/jsx";
+import { Component } from "@core/components";
+import { DefaultProps, DefaultState } from "@core/components";
+import { Tooltip } from "@components/ui/primitives/tooltip";
 
 interface ToolbarItemUIProps extends DefaultProps {
     icon?: HTMLElement;

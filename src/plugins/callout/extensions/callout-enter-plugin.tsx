@@ -1,12 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Plugin } from "@core/plugin-engine/plugin.ts";
-import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
-import { focusOnElement } from "@utils/dom/dom-utils.ts";
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
-import { EventTypes } from "@utils/dom/index.ts";
-import { ClassName } from "@utils/dom/index.ts";
+import { h } from "@core/jsx";
+import { Plugin } from "@core/plugin-engine";
+import { ParagraphBlock } from "@components/blocks";
+import { focusOnElement, } from "@utils/dom";
+import { KeyboardKeys } from "@utils/keyboard";
+import { EventTypes, ClassName } from "@utils/dom";
 
 export class CalloutEnterPlugin extends Plugin {
 
@@ -63,7 +62,7 @@ export class CalloutEnterPlugin extends Plugin {
         event.preventDefault();
         event.stopPropagation();
 
-        if(this.isFirstParagraphInCallout(paragraph, callout)) {
+        if (this.isFirstParagraphInCallout(paragraph, callout)) {
             const newParagraph = this.createParagraph(doc);
             callout.insertAdjacentElement("afterend", newParagraph);
             focusOnElement(newParagraph);

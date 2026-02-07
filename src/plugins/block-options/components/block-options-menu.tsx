@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { cleanupCaretAnchor } from "@utils/selection/index.ts";
-import { MenuUI } from "@components/ui/composites/menu/menu-ui.tsx";
-import { DefaultProps } from "@core/components/types.ts";
+import { h } from "@core/jsx";
+import { cleanupCaretAnchor } from "@utils/selection";
+import { MenuUI } from "@components/ui/composites/menu";
+import { DefaultProps } from "@core/components";
 
 export interface BlockOptionsProps extends DefaultProps {
 

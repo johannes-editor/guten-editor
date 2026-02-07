@@ -1,5 +1,5 @@
-import { runCommand } from "@core/command/index.ts";
-import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugin/markdown-shortcuts/index.ts";
+import { runCommand } from "@core/command";
+import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugin/markdown-shortcuts";
 
 export class MarkdownShortcutCodeBlockExtension extends MarkdownShortcutExtensionPlugin {
 

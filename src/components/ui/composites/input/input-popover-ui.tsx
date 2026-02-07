@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h, Fragment } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { OverlayComponent } from "@components/editor/overlay/overlay-component.tsx";
-import { DefaultProps, DefaultState } from "@core/components/types.ts";
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { h, Fragment } from "@core/jsx";
+import { t } from "@core/i18n";
+import { OverlayComponent } from "@components/editor/overlay";
+import { DefaultProps, DefaultState } from "@core/components";
+import { KeyboardKeys } from "@utils/keyboard";
 import { EventTypes } from "@/utils/dom/index.ts";
 
 export interface InputPopoverUIProps extends DefaultProps {

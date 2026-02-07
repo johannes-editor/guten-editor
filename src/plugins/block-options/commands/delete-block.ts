@@ -1,7 +1,8 @@
 /** @jsx h */
-import { Command, CommandContext } from "@/core/command/index.ts";
-import { getNextBlockSibling, getPrevBlockSibling, focusStartOfBlock, removeBlockWithTransition } from "@utils/dom/index.ts";
-import { findClosestBlockBySelection } from "@utils/selection/index.ts";
+
+import { Command, CommandContext } from "@/core/command";
+import { getNextBlockSibling, getPrevBlockSibling, focusStartOfBlock, removeBlockWithTransition } from "@utils/dom";
+import { findClosestBlockBySelection } from "@utils/selection";
 import { BlockOptionPayload } from "./types.ts";
 
 

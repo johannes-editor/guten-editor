@@ -1,13 +1,13 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { EventTypes } from "@utils/dom/index.ts"; 
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
-import { isMobileSheetViewport } from "@utils/platform/index.ts";
-import { OverlayComponent } from "@components/editor/overlay/index.ts";
-import { findClosestAncestorOfSelectionByClass } from "@utils/dom/dom-utils.ts";
-import { getCurrentSelectionRange } from "@utils/selection/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { EventTypes } from "@utils/dom"; 
+import { KeyboardKeys } from "@utils/keyboard";
+import { isMobileSheetViewport } from "@utils/platform";
+import { OverlayComponent } from "@components/editor/overlay";
+import { findClosestAncestorOfSelectionByClass } from "@utils/dom";
+import { getCurrentSelectionRange } from "@utils/selection";
 import { SlashMenuItem } from "./slash-menu-item.tsx";
 import { SlashMenuItemData } from "./types.ts";
 

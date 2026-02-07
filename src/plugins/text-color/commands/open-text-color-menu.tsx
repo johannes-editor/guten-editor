@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Command } from "@core/command/command.ts";
-import { hasSelection } from "@utils/selection/index.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { h } from "@core/jsx";
+import { Command } from "@core/command";
+import { hasSelection } from "@utils/selection";
+import { appendElementOnOverlayArea } from "@components/editor";
 import { TextColorMenu } from "../components/text-color-menu.tsx";
 
 type OpenColorMenuPayload = {

@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { InlineObjectPlaceholderUI } from "@components/ui/primitives/placeholder/inline-object-placeholder-ui.tsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { InlineObjectPlaceholderUI } from "@components/ui/primitives/placeholder";
 
 export class EquationPlaceholder extends InlineObjectPlaceholderUI {
 

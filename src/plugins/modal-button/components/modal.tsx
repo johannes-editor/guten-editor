@@ -1,6 +1,6 @@
 /** @jsx h */
-import { h } from "@core/jsx/index.ts";
-import { Component } from "@core/components/component.ts";
+import { h } from "@core/jsx";
+import { Component } from "@core/components";
 
 interface ModalProps {
     onClose: () => void;

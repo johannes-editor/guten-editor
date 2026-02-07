@@ -1,4 +1,4 @@
-import { TranslationSchema } from "@core/i18n/types.ts";
+import { TranslationSchema } from "@core/i18n";
 
 export type ColorOption = {
     id: string;

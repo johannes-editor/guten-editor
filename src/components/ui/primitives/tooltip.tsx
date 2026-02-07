@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h, Fragment } from "@core/jsx/index.ts";
-import { Component } from "@core/components/component.ts";
-import { DefaultProps, DefaultState } from "@core/components/types.ts";
-import { ChordModifiers, normalizeChord } from "@utils/keyboard/index.ts";
+import { h, Fragment } from "@core/jsx";
+import { Component } from "@core/components";
+import { DefaultProps, DefaultState } from "@core/components";
+import { ChordModifiers, normalizeChord } from "@utils/keyboard";
 
 export type TooltipPlacement = "top" | "bottom" | "left" | "right";
 

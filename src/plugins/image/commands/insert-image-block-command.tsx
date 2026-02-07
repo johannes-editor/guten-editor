@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Command } from "@core/command/index.ts";
-import { InsertResultContext } from "@core/command/index.ts";
-import { appendAfter, focusIfNeeded, resolveAfterBlock, updateLastInserted } from "@utils/dom/index.ts";
+import { h } from "@core/jsx";
+import { Command } from "@core/command";
+import { InsertResultContext } from "@core/command";
+import { appendAfter, focusIfNeeded, resolveAfterBlock, updateLastInserted } from "@utils/dom";
 import { createImageBlock } from "../components/image-block.tsx";
 import { ImagePlaceholder } from "../components/image-placeholder.tsx";
 

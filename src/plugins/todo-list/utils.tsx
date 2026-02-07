@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { ClassName } from "@utils/dom/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { ClassName } from "@utils/dom";
 
 
 function adoptToDocument<T extends Node>(doc: Document, node: T): T {

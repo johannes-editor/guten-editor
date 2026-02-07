@@ -1,6 +1,6 @@
 
-import { Command, CommandContext } from "@/core/command/index.ts";
-import { findClosestBlockBySelection } from "@utils/selection/index.ts";
+import { Command, CommandContext } from "@/core/command";
+import { findClosestBlockBySelection } from "@utils/selection";
 
 function rangesEqual(a: Range | null, b: Range | null): boolean {
     if (!a || !b) return false;

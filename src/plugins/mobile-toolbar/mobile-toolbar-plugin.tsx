@@ -1,13 +1,13 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine/index.ts";
-import { SlashCommandIcon, UndoIcon, ArrowDownIcon, ArrowUpIcon, RedoIcon, UnderlineIcon, ItalicIcon, BoldIcon, StrikeThroughIcon, TrashIcon } from "@components/ui/primitives/icons.tsx";
-import { appendElementOnRootArea } from "@components/editor/core/index.tsx";
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
-import { hasSelection, } from "@utils/selection/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine";
+import { SlashCommandIcon, UndoIcon, ArrowDownIcon, ArrowUpIcon, RedoIcon, UnderlineIcon, ItalicIcon, BoldIcon, StrikeThroughIcon, TrashIcon } from "@components/ui/icons";
+import { appendElementOnRootArea } from "@components/editor";
+import { KeyboardKeys } from "@utils/keyboard";
+import { hasSelection, } from "@utils/selection";
 import { MobileToolbar, MobileToolbarButton } from "./components/mobile-toolbar.tsx";
 
 export type MobileToolbarMode = "default" | "selection";

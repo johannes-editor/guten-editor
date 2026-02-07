@@ -1,7 +1,7 @@
 /** @jsx h */
-import { Command, CommandContext } from "@/core/command/command.ts";
-import { findClosestBlockBySelection } from "@utils/selection/index.ts";
-import { moveBlockUpPreservingCaret } from "@utils/dom/index.ts";
+import { Command, CommandContext } from "@/core/command";
+import { findClosestBlockBySelection } from "@utils/selection";
+import { moveBlockUpPreservingCaret } from "@utils/dom";
 import { BlockOptionPayload } from "./types.ts";
 
 export const MoveBlockUp: Command = {

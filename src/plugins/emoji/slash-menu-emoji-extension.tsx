@@ -1,15 +1,15 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t, registerTranslation } from "@core/i18n/index.ts";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/slash-menu-plugin.tsx";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { h } from "@core/jsx";
+import { t, registerTranslation } from "@core/i18n";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
+import { appendElementOnOverlayArea } from "@components/editor";
 import { EmojiPicker } from "./components/emoji-picker.tsx";
-import { getCurrentSelectionRange } from "@utils/selection/index.ts";
-import { focusOnElement } from "@utils/dom/index.ts";
+import { getCurrentSelectionRange } from "@utils/selection";
+import { focusOnElement } from "@utils/dom";
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
-import { EmojiIcon } from "@components/ui/primitives/icons.tsx";
+import { EmojiIcon } from "@components/ui/icons";
 import { EmojiPlaceholder } from "./components/emoji-placeholder.tsx";
 
 export class SlashMenuEmojiExtension extends SlashMenuExtensionPlugin {

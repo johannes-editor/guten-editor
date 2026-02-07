@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Command } from "@core/command/index.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { h } from "@core/jsx";
+import { Command } from "@core/command";
+import { appendElementOnOverlayArea } from "@components/editor";
 import { EmojiPicker } from "../components/emoji-picker.tsx";
 
 type OpenEmojiPickerContext = {

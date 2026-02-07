@@ -1,12 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { DefaultProps, DefaultState } from "@core/components/index.ts";
-import { SwatchRoundedIcon, SwatchIcon } from "@components/ui/primitives/icons.tsx";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { DefaultProps, DefaultState } from "@core/components";
+import { SwatchRoundedIcon, SwatchIcon } from "@components/ui/icons";
+import { MenuItemUI } from "@components/ui/composites/menu";
 import { ColorVariant } from "./types.ts";
-
-import { MenuItemUI } from "@components/ui/composites/menu/menu-item-ui.tsx";
 
 interface CalloutColorMenuItemProps extends DefaultProps {
     variant: ColorVariant;

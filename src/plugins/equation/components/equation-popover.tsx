@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { runCommand } from "@core/command/index.ts";
-import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input/input-popover.ts";
-import { useContext } from "@core/context/context.ts";
-import { FormattingToolbarCtx } from "@plugin/formatting-toolbar/context/formatting-toolbar-context.ts";
+import { runCommand } from "@core/command";
+import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input";
+import { useContext } from "@core/context";
+import { FormattingToolbarCtx } from "@plugin/formatting-toolbar";
 import { EquationPlaceholder } from "./equation-placeholder.tsx";
 import { EquationInline } from "./equation-inline.tsx";
 

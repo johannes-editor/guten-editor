@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { t } from "@core/i18n/index.ts";
+import { h } from "@core/jsx";
+import { runCommand } from "@core/command";
+import { t } from "@core/i18n";
 import { SlashMenuItemData } from "./components/types.ts";
-import { Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon, ParagraphIcon, SeparatorIcon } from "@components/ui/primitives/icons.tsx";
+import { Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, AwesomeListOlIcon, QuotationIcon, AwesomeListUlIcon, ParagraphIcon, SeparatorIcon } from "@components/ui/icons";
 
 export function defaultSlashMenuItems(): SlashMenuItemData[] {
     return [

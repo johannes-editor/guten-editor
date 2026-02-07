@@ -1,8 +1,8 @@
 /** @jsx h */
 import { Fragment, h } from "../../../jsx.ts";
-import { Component } from "@core/components/component.ts";
+import { Component } from "@core/components";
 import { Counter } from "./counter.tsx";
-import { DefaultProps } from "@core/components/types.ts";
+import { DefaultProps } from "@core/components";
 
 interface CounterToggleState {
     mounted: boolean;

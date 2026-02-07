@@ -1,11 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { DefaultProps, DefaultState } from "@core/components/types.ts";
-import { Component } from "@core/components/component.ts";
-import { EventTypes } from "@utils/dom/index.ts";
-import { KeyboardKeys, ChordModifiers, normalizeChord } from "@utils/keyboard/index.ts";
-import { ArrowRightIcon, CheckIcon } from "@components/ui/primitives/icons.tsx";
+import { h } from "@core/jsx";
+import { DefaultProps, DefaultState } from "@core/components";
+import { Component } from "@core/components";
+import { EventTypes } from "@utils/dom";
+import { KeyboardKeys, ChordModifiers, normalizeChord } from "@utils/keyboard";
+import { ArrowRightIcon, CheckIcon } from "@components/ui/icons";
 
 
 export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Component<P, S> {

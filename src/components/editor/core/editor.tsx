@@ -1,13 +1,13 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Component } from "@core/components/index.ts";
+import { h } from "@core/jsx";
+import { Component } from "@core/components";
 import { BlockquoteEnterHandler } from "@core/ce-crossbrowser/blockquote-enter-handler.ts";
 import { NewContentChildrenObserver } from "@core/ce-crossbrowser/new-content-children-observer.tsx";
 import { PlaceholderObserver } from "@core/ce-crossbrowser/placeholder-observer.ts";
-import { EventTypes } from "@utils/dom/index.ts";
-import { focusOnElement } from "@utils/dom/index.ts";
-import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
+import { EventTypes } from "@utils/dom";
+import { focusOnElement } from "@utils/dom";
+import { ParagraphBlock } from "@components/blocks";
 
 import tokens from "@design-system/tokens.css?inline.css";
 import { themeStyles } from "@design-system/themes/index.ts";

@@ -1,20 +1,20 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine/index.ts";
-import { provideContext } from "@core/context/context.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
-import { BoldIcon, ItalicIcon, UnderlineIcon, StrikeThroughIcon } from "@components/ui/primitives/icons.tsx";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine";
+import { provideContext } from "@core/context";
+import { appendElementOnOverlayArea } from "@components/editor";
+import { BoldIcon, ItalicIcon, UnderlineIcon, StrikeThroughIcon } from "@components/ui/icons";
 import { hasSelection } from "@utils/selection/selection-utils.ts";
 import { debounce } from "@utils/timing/index.ts";
 import { FormattingToolbarItem } from "./component/formatting-toolbar-item.tsx";
 import { FormattingToolbar } from "./component/formatting-toolbar.tsx";
 import { FormattingToolbarCtx } from "./context/formatting-toolbar-context.ts";
 import { EventTypes } from "@utils/dom/events.ts";
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
-import { isMobileSheetViewport } from "@utils/platform/index.ts";
+import { KeyboardKeys } from "@utils/keyboard";
+import { isMobileSheetViewport } from "@utils/platform";
 
 export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarExtensionPlugin> {
 

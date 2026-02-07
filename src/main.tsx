@@ -1,15 +1,15 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t, setLocale, getAvailableLocales } from "@core/i18n/index.ts";
+import { h } from "@core/jsx";
+import { t, setLocale, getAvailableLocales } from "@core/i18n";
 import {
     applyLocalePreference,
     DEFAULT_LOCALE,
     getStoredLocalePreference,
 } from "@core/i18n/locale-preference.ts";
-import { appendElementOnContentArea, appendElementOnTitleArea, setRoot } from "@components/editor/core/index.tsx";
-import { init } from "@core/plugin-engine/index.ts";
-import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
+import { appendElementOnContentArea, appendElementOnTitleArea, setRoot } from "@components/editor";
+import { init } from "@core/plugin-engine";
+import { ParagraphBlock } from "@components/blocks";
 import { Heading1Block } from "@components/blocks/heading.tsx";
 import { getAvailableThemes } from "@design-system/themes/index.ts";
 

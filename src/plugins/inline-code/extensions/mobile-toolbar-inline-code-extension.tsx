@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { CodeSlashIcon } from "@components/ui/primitives/icons.tsx";
-import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { CodeSlashIcon } from "@components/ui/icons";
+import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar";
 
 /**
  * Mobile toolbar extension that adds the Inline Code toggle when text is selected.

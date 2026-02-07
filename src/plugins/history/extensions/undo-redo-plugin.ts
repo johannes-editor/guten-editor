@@ -1,5 +1,5 @@
-import { Command, registerCommand } from "@core/command/index.ts";
-import { Plugin } from "@core/plugin-engine/plugin.ts";
+import { Command, registerCommand } from "@core/command";
+import { Plugin } from "@core/plugin-engine";
 import { historyManager } from "../utils/history-manager-instance.ts";
 
 

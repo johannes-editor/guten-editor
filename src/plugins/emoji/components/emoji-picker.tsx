@@ -1,11 +1,11 @@
 /** @jsx h */
 /** @jsxFrag Fragment */
 
-import { h, Fragment } from "@core/jsx/index.ts";
-import { EventTypes } from "@utils/dom/index.ts";
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
-import { OverlayComponent } from "@components/editor/overlay/overlay-component.tsx";
-import { EmojiClapIcon, EmojiHeartIcon, EmojiSmileyIcon } from "@components/ui/primitives/icons.tsx";
+import { h, Fragment } from "@core/jsx";
+import { EventTypes } from "@utils/dom";
+import { KeyboardKeys } from "@utils/keyboard";
+import { OverlayComponent } from "@components/editor/overlay";
+import { EmojiClapIcon, EmojiHeartIcon, EmojiSmileyIcon } from "@components/ui/icons";
 
 interface EmojiPickerOverlayProps {
     range: Range;

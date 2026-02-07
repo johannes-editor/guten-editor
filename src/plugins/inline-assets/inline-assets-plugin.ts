@@ -1,5 +1,5 @@
-import { ExtensiblePlugin, PluginExtension } from "@core/plugin-engine/index.ts";
-import { WhenToLoad } from "@core/asset-loader/types.ts";
+import { ExtensiblePlugin, PluginExtension } from "@core/plugin-engine";
+import { WhenToLoad } from "@core/asset-loader";
 
 type InlineAssetTarget = "head" | "body" | "root";
 

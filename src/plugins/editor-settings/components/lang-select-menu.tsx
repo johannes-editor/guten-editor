@@ -1,12 +1,12 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { DefaultProps } from "@core/components/types.ts";
-import { LocaleMeta } from "@core/i18n/index.ts";
-import { MenuItemUI,  } from "@components/ui/composites/menu/menu-item-ui.tsx";
-import type { OverlayCtor } from "@components/editor/overlay/overlay-component.tsx";
-import { NavigationMenu } from "@components/ui/composites/navigation-menu/navigation-menu.tsx";
-import { MenuUIState } from "@components/ui/composites/menu/menu-ui.tsx";
+import { h } from "@core/jsx";
+import { DefaultProps } from "@core/components";
+import { LocaleMeta } from "@core/i18n";
+import { MenuItemUI,  } from "@components/ui/composites/menu";
+import type { OverlayCtor } from "@components/editor/overlay";
+import { NavigationMenu } from "@components/ui/composites/navigation-menu";
+import { MenuUIState } from "@components/ui/composites/menu";
 import { EditorSettingsMenu } from "./editor-settings-menu.tsx";
 
 interface LangSelectItemProps extends DefaultProps {

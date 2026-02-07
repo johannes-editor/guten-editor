@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { YouTubeIcon } from "@components/ui/primitives/icons.tsx";
-import { focusOnElement } from "@utils/dom/index.ts";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { YouTubeIcon } from "@components/ui/icons";
+import { focusOnElement } from "@utils/dom";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
 import { YouTubePlaceholder } from "../components/youtube-placeholder.tsx";
 
 

@@ -1,9 +1,9 @@
 
 
-import { findCodeAncestor} from "@utils/dom/index.ts";
-import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine/index.ts";
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
-import { findClosestBlockBySelection } from "@utils/selection/index.ts";
+import { findCodeAncestor} from "@utils/dom";
+import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine";
+import { KeyboardKeys } from "@utils/keyboard";
+import { findClosestBlockBySelection } from "@utils/selection";
 
 import {
     MarkdownShortcutContext,

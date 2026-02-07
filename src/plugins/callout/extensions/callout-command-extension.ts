@@ -1,5 +1,5 @@
-import { Command } from "@core/command/index.ts";
-import { CommandExtensionPlugin } from "@plugin/commands/command-plugin.ts";
+import { Command } from "@core/command";
+import { CommandExtensionPlugin } from "@plugin/commands";
 import { InsertCalloutCommand } from "../commands/insert-callout-commands.tsx";
 import { OpenCalloutBlockOptions } from "../commands/open-callout-color-options.tsx";
 

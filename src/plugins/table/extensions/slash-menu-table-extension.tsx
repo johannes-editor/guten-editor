@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { t } from "@core/i18n/index.ts";
-import { h } from "@core/jsx/index.ts";
-import { GridIcon } from "@components/ui/primitives/icons.tsx";
-import { focusOnElement, } from "@utils/dom/index.ts";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
+import { t } from "@core/i18n";
+import { h } from "@core/jsx";
+import { GridIcon } from "@components/ui/icons";
+import { focusOnElement, } from "@utils/dom";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
 import { TableBlock } from "../components/table-block.tsx";
 
 export class SlashMenuTableExtension extends SlashMenuExtensionPlugin {

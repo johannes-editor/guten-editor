@@ -1,4 +1,4 @@
-import { focusOnElement } from "@utils/dom/dom-utils.ts";
+import { focusOnElement } from "@utils/dom";
 import { t } from "../i18n/index.ts";
 
 export class BlockquoteEnterHandler {

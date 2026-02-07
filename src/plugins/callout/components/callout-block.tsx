@@ -1,7 +1,7 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
 
 export function CalloutBlock(): HTMLDivElement {
     return (

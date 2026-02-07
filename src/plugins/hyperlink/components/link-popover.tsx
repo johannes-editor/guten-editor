@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { runCommand } from "@core/command/index.ts";
-import { useContext } from "@core/context/context.ts";
-import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input/input-popover.ts";
-import { OverlayCtor } from "@components/editor/overlay/overlay-component.tsx";
-import { FormattingToolbar, FormattingToolbarCtx } from "@plugin/formatting-toolbar/index.ts";
+import { runCommand } from "@core/command";
+import { useContext } from "@core/context";
+import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input";
+import { OverlayCtor } from "@components/editor/overlay";
+import { FormattingToolbar, FormattingToolbarCtx } from "@plugin/formatting-toolbar";
 
 /**
  * UI popover for inserting hyperlinks.

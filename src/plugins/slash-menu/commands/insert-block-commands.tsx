@@ -1,16 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Command, InsertResultContext } from "@core/command/index.ts";
-import { focusOnElement } from "@utils/dom/index.ts";
-import { BlockquoteBlock } from "@components/blocks/blockquote.tsx";
-import { BulletedListBlock } from "@components/blocks/bulleted-list.tsx";
-import { Heading1Block, Heading2Block, Heading3Block, Heading4Block, Heading5Block } from "@components/blocks/heading.tsx";
-import { NumberedListBlock } from "@components/blocks/numbered-list.tsx";
-import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
-import { SeparatorBlock } from "@components/blocks/separator.tsx";
-import { appendAfter, getInstructionText, resolveAfterBlock } from "@utils/dom/index.ts";
-
+import { h } from "@core/jsx";
+import { Command, InsertResultContext } from "@core/command";
+import { focusOnElement } from "@utils/dom";
+import { BlockquoteBlock, BulletedListBlock, NumberedListBlock, ParagraphBlock, SeparatorBlock } from "@components/blocks";
+import { Heading1Block, Heading2Block, Heading3Block, Heading4Block, Heading5Block } from "@components/blocks";
+import { appendAfter, getInstructionText, resolveAfterBlock } from "@utils/dom";
 
 
 function focusIfNeeded(element: HTMLElement | null, context?: InsertResultContext) {

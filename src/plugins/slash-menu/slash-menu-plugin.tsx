@@ -1,16 +1,16 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine/index.ts";
-import { registerTranslation } from "@core/i18n/index.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { h } from "@core/jsx";
+import { Plugin, ExtensiblePlugin, PluginExtension } from "@core/plugin-engine";
+import { registerTranslation } from "@core/i18n";
+import { appendElementOnOverlayArea } from "@components/editor";
 import { SlashMenuOverlay } from "./components/slash-menu.tsx";
 import { SlashMenuItemData } from "./components/types.ts";
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
 import { defaultSlashMenuItems } from "./default-items.tsx";
-import { EventTypes } from "@utils/dom/index.ts";
-import { KeyboardKeys } from "@utils/keyboard/index.ts";
+import { EventTypes } from "@utils/dom";
+import { KeyboardKeys } from "@utils/keyboard";
 import { waitFrames } from "@utils/timing/index.ts";
 
 

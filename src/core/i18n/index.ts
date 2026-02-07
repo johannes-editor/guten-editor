@@ -6,10 +6,13 @@ const i18n = new I18n();
 export const setLocale = (locale: string) => i18n.setLocale(locale);
 export const t = (key: keyof TranslationSchema): string => i18n.t(key);
 export const registerTranslation = (locale: string, translations: Record<string, string>, namespace?: string) => i18n.register(locale, translations, namespace);
+export type { TranslationSchema } from './types.ts';
 
 export const getLocale = (): string => i18n.getLocale();
 
 export { i18n };
+
+export * from "./locale-preference.ts";
 
 export interface LocaleMeta {
     code: string;

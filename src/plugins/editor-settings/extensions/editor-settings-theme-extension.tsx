@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { PaletteIcon } from "@components/ui/primitives/icons.tsx";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
-import { getAvailableThemes } from "@design-system/themes/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { PaletteIcon } from "@components/ui/icons";
+import { appendElementOnOverlayArea } from "@components/editor";
+import { getAvailableThemes } from "@design-system/themes";
 import * as themePreferences from "@/utils/color/theme-preference.ts";
 import { ThemeSelectMenu } from "../components/theme-select-menu.tsx";
 import { EditorSettingsExtensionPlugin } from "../editor-settings-plugin.tsx";

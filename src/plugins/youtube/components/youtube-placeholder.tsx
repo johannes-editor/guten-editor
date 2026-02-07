@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { YouTubeIcon } from "@components/ui/primitives/icons.tsx";
-import { BlockObjectPlaceholderUI } from "@components/ui/primitives/placeholder/block-object-placeholder-ui.tsx";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { YouTubeIcon } from "@components/ui/icons";
+import { BlockObjectPlaceholderUI } from "@components/ui/primitives/placeholder";
 
 export class YouTubePlaceholder extends BlockObjectPlaceholderUI {
 

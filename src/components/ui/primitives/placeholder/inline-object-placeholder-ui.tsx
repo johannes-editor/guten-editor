@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Component } from "@core/components/index.ts";
-import { EventTypes } from "@utils/dom/index.ts";
+import { h } from "@core/jsx";
+import { Component } from "@core/components";
+import { EventTypes } from "@utils/dom";
 
 export abstract class InlineObjectPlaceholderUI extends Component {
 

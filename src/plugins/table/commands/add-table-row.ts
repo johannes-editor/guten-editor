@@ -1,4 +1,4 @@
-import { Command } from "@core/command/index.ts";
+import { Command } from "@core/command";
 import { addRowToTable, resolveTableFromContext } from "./table-command-utils.ts";
 
 export const AddTableRowCommand: Command = {

@@ -1,4 +1,4 @@
-import { Plugin } from "@core/plugin-engine/plugin.ts";
+import { Plugin } from "@core/plugin-engine";
 
 export class SampleButtonPlugin extends Plugin {
   override setup(root: HTMLElement, plugins: Plugin[]): void {

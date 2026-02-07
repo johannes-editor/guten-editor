@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { focusOnElement } from "@utils/dom/index.ts";
-import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugin/markdown-shortcuts/index.ts";
+import { h } from "@core/jsx";
+import { focusOnElement } from "@utils/dom";
+import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugin/markdown-shortcuts";
 import { createTodoList } from "../utils.tsx";
 
 export class MarkdownShortcutTodoListExtension extends MarkdownShortcutExtensionPlugin {

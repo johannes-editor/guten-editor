@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { CardTextIcon } from "@components/ui/primitives/icons.tsx";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
+import { h } from "@core/jsx";
+import { runCommand } from "@core/command";
+import { t } from "@core/i18n";
+import { CardTextIcon } from "@components/ui/icons";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
 
 export class SlashMenuCalloutExtension extends SlashMenuExtensionPlugin {
 

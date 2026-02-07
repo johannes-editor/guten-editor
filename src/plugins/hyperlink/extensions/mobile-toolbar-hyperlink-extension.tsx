@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { LinkIcon } from "@components/ui/primitives/icons.tsx";
-import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar/index.ts";
+import { h } from "@core/jsx";
+import { runCommand } from "@core/command";
+import { t } from "@core/i18n";
+import { LinkIcon } from "@components/ui/icons";
+import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar";
 
 
 /**

@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
 import { MenuItemUI } from "@components/ui/composites/menu/index.ts";
-import { DefaultState } from "@core/components/types.ts";
-import { AlphabetIcon, SwatchIcon } from "@components/ui/primitives/icons.tsx";
+import { DefaultState } from "@core/components";
+import { AlphabetIcon, SwatchIcon } from "@components/ui/icons";
 import { ColorOption } from "../color-options.ts";
 
 

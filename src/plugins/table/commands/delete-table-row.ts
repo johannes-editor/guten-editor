@@ -1,4 +1,4 @@
-import { Command } from "@core/command/index.ts";
+import { Command } from "@core/command";
 import { deleteRowFromTable, resolveTableFromContext } from "./table-command-utils.ts";
 
 export const DeleteTableRowCommand: Command = {

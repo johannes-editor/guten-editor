@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from '@core/jsx/index.ts';
-import { Component } from "@core/components/component.ts";
-import { DefaultProps } from "@core/components/types.ts";
+import { h } from '@core/jsx';
+import { Component } from "@core/components";
+import { DefaultProps } from "@core/components";
 import { Modal } from "./modal.tsx";
 
 interface ModalButtonUIState {

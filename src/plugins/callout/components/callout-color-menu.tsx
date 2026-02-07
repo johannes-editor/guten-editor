@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import type { DefaultState } from "@core/components/types.ts";
-import { OverlayCtor } from "@components/editor/overlay/index.ts";
-import { MenuUI } from "@components/ui/composites/menu/menu-ui.tsx";
-import { BlockOptionsMenu, type BlockOptionsProps } from "@plugin/block-options/components/block-options-menu.tsx";
+import { h } from "@core/jsx";
+import type { DefaultState } from "@core/components";
+import { OverlayCtor } from "@components/editor/overlay";
+import { MenuUI } from "@components/ui/composites/menu";
+import { BlockOptionsMenu, type BlockOptionsProps } from "@plugin/block-options";
 import { ColorVariant } from "./types.ts";
 import { CalloutColorMenuItem } from "./callout-color-menu-item.tsx";
 

@@ -1,6 +1,6 @@
 
-import { Command } from "@core/command/index.ts";
-import { CommandExtensionPlugin } from "@plugin/commands/index.ts";
+import { Command } from "@core/command";
+import { CommandExtensionPlugin } from "@plugin/commands";
 import { SlashMenuCommands } from "../commands/insert-block-commands.tsx";
 
 export class SlashMenuCommandExtension extends CommandExtensionPlugin {

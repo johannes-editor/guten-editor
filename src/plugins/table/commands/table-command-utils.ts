@@ -1,5 +1,5 @@
-import { focusOnElement } from "@utils/dom/index.ts";
-import type { CommandContext } from "@core/command/index.ts";
+import { focusOnElement } from "@utils/dom";
+import type { CommandContext } from "@core/command";
 
 function findClosestTable(node: Node | null | undefined): HTMLTableElement | null {
     let current: Node | null | undefined = node;

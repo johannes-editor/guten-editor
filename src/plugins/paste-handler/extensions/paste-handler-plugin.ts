@@ -1,7 +1,7 @@
 
-import { Plugin } from "@core/plugin-engine/index.ts";
-import { InsertResultContext, PasteBlockInstruction, PasteBlocksEventDetail, runCommand } from "@core/command/index.ts";
-import { getCurrentSelectionRange, findClosestBlockBySelection } from "@utils/selection/index.ts";
+import { Plugin } from "@core/plugin-engine";
+import { InsertResultContext, PasteBlockInstruction, PasteBlocksEventDetail, runCommand } from "@core/command";
+import { getCurrentSelectionRange, findClosestBlockBySelection } from "@utils/selection";
 import { isEquationElement } from "@plugin/equation/utils/equation-element.ts";
 
 export const PASTE_BLOCKS_EVENT = "guten:paste-blocks";

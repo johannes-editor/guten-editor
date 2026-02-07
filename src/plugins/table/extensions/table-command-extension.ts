@@ -1,5 +1,5 @@
-import { Command } from "@core/command/index.ts";
-import { CommandExtensionPlugin } from "@plugin/commands/index.ts";
+import { Command } from "@core/command";
+import { CommandExtensionPlugin } from "@plugin/commands";
 import { AddTableColumnCommand } from "../commands/add-table-column.ts";
 import { AddTableRowCommand } from "../commands/add-table-row.ts";
 import { DeleteTableColumnCommand } from "../commands/delete-table-column.ts";

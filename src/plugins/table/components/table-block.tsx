@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { DefaultProps } from "@core/components/index.ts";
-import { runCommand } from "@core/command/index.ts";
+import { h } from "@core/jsx";
+import { DefaultProps } from "@core/components";
+import { runCommand } from "@core/command";
 
 export function TableBlock({ children, className = "", ...props }: DefaultProps): HTMLTableElement {
     const blockClass = ["block", "table-block", className].filter(Boolean).join(" ");

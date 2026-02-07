@@ -1,6 +1,6 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
+import { h } from "@core/jsx";
 import { Editor } from "./editor.tsx";
 
 const editor = <Editor />;

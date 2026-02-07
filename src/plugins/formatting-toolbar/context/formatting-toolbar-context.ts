@@ -1,4 +1,4 @@
-import { createContext } from "@core/context/context.ts";
+import { createContext } from "@core/context";
 
 export interface FormattingToolbarContext {
   lock(): void;

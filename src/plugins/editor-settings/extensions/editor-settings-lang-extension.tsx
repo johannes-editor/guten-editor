@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t, setLocale, getAvailableLocales } from "@core/i18n/index.ts";
-import  * as localePreferences from "@core/i18n/locale-preference.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
-import { TranslationIcon } from "@components/ui/primitives/icons.tsx";
+import { h } from "@core/jsx";
+import { t, setLocale, getAvailableLocales } from "@core/i18n";
+import  * as localePreferences from "@core/i18n";
+import { appendElementOnOverlayArea } from "@components/editor";
+import { TranslationIcon } from "@components/ui/icons";
 import { LangSelectMenu } from "../components/lang-select-menu.tsx";
 import { EditorSettingsExtensionPlugin } from "../editor-settings-plugin.tsx";
 

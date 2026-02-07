@@ -1,8 +1,8 @@
 
 
-import { t } from "@core/i18n/index.ts";
-import { Plugin } from "@core/plugin-engine/plugin.ts";
-import { runCommand } from "@core/command/index.ts";
+import { t } from "@core/i18n";
+import { Plugin } from "@core/plugin-engine";
+import { runCommand } from "@core/command";
 import { closestEquationElement, EQUATION_DATA_ATTRIBUTE, isEquationElement } from "../utils/equation-element.ts";
 
 export class EquationClickPlugin extends Plugin {

@@ -1,6 +1,6 @@
 
 
-import { DefaultState } from "@core/components/types.ts";
+import { DefaultState } from "@core/components";
 import { InputPopoverUI, InputPopoverUIProps } from "./input-popover-ui.tsx";
 
 export interface SelectionController {

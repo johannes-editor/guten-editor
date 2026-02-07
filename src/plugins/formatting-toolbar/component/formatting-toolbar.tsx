@@ -1,8 +1,8 @@
 /** @jsx h */
 
-import { Toolbar } from "../../../design-system/index.ts";
-import { hasSelection, clearSelection } from "../../../utils/selection/selection-utils.ts";
-import { EventTypes } from "@utils/dom/index.ts";
+import { ToolbarUI } from "@components/ui/composites/toolbar";
+import { hasSelection, clearSelection } from "@utils/selection";
+import { EventTypes } from "@utils/dom";
 import { FormattingToolbarItem } from "./formatting-toolbar-item.tsx";
 
 import style from "./style.css?inline"
@@ -11,7 +11,7 @@ interface FormattingToolbarProps {
     removeInstance: () => void;
 }
 
-export class FormattingToolbar extends Toolbar<FormattingToolbarProps> {
+export class FormattingToolbar extends ToolbarUI<FormattingToolbarProps> {
 
     override closeOnClickOutside: boolean = false;
     private selectionRange: Range | null = null;

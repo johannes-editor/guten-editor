@@ -1,4 +1,4 @@
-import { runCommand } from "@core/command/index.ts";
+import { runCommand } from "@core/command";
 import { MarkdownShortcutContext, MarkdownShortcutRule } from "../types.ts";
 import { MarkdownShortcutExtensionPlugin } from "../markdown-shortcuts-plugin.ts";
 

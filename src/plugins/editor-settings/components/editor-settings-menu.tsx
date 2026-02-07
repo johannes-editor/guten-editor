@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { DefaultProps } from "@core/components/types.ts";
-import { cleanupCaretAnchor } from "@utils/selection/index.ts";
-import { NavigationMenu } from "@components/ui/composites/navigation-menu/navigation-menu.tsx";
-import { MenuItemUI } from "@components/ui/composites/menu/menu-item-ui.tsx";
+import { h } from "@core/jsx";
+import { DefaultProps } from "@core/components";
+import { cleanupCaretAnchor } from "@utils/selection";
+import { NavigationMenu } from "@components/ui/composites/navigation-menu";
+import { MenuItemUI } from "@components/ui/composites/menu";
 import type { EditorSettingsItemData } from "../types.ts";
 
 interface EditorSettingsMenuItemProps extends DefaultProps {

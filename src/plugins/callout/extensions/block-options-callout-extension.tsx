@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { PaletteIcon } from "@components/ui/primitives/icons.tsx";
-import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "@plugin/block-options/extensible/block-options-plugin.tsx";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { PaletteIcon } from "@components/ui/icons";
+import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "@plugin/block-options";
 
 export class BlockOptionsCalloutExtension extends BlockOptionsExtensionPlugin {
 

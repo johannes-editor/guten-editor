@@ -1,11 +1,11 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { Command } from "@core/command/command.ts";
-import { InputTypes } from "@utils/dom/index.ts";
-import { hasSelection } from "@utils/selection/index.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { Command } from "@core/command";
+import { InputTypes } from "@utils/dom";
+import { hasSelection } from "@utils/selection";
+import { appendElementOnOverlayArea } from "@components/editor";
 import { LinkPopover } from "../components/link-popover.tsx";
 
 /**

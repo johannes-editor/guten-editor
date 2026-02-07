@@ -1,6 +1,6 @@
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { Command, CommandContext } from "@core/command/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { Command, CommandContext } from "@core/command";
 import { EquationInline } from "../components/equation-inline.tsx";
 import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
 import { createEquationElement } from "../utils/equation-element.ts";

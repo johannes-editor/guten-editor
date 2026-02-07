@@ -1,7 +1,7 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { ensureBlockId } from "@utils/dom/index.ts";
+import { h } from "@core/jsx";
+import { ensureBlockId } from "@utils/dom";
 
 export interface ImageBlockProps {
     src: string;

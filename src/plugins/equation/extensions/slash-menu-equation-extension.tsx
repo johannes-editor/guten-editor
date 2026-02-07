@@ -1,12 +1,12 @@
 /** @jsx h */
 
-import { t } from "@core/i18n/index.ts";
-import { h } from "@core/jsx/dom-factory.ts";
-import { runCommand } from "@core/command/index.ts";
-import { EquationIcon } from "@components/ui/primitives/icons.tsx";
-import { focusOnElement } from "@utils/dom/index.ts";
-import { getCurrentSelectionRange } from "@utils/selection/index.ts";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu/index.ts";
+import { t } from "@core/i18n";
+import { h } from "@core/jsx";
+import { runCommand } from "@core/command";
+import { EquationIcon } from "@components/ui/icons";
+import { focusOnElement } from "@utils/dom";
+import { getCurrentSelectionRange } from "@utils/selection";
+import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
 import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
 
 export class SlashMenuEquationExtension extends SlashMenuExtensionPlugin {

@@ -1,4 +1,4 @@
-import { Plugin } from "@core/plugin-engine/plugin.ts";
+import { Plugin } from "@core/plugin-engine";
 
 export class CodeBlockEnterPlugin extends Plugin {
 

@@ -1,8 +1,16 @@
 {
+    "unstable": [
+        "sloppy-imports"
+    ],
     "compilerOptions": {
-        "lib": ["dom", "esnext"],
+        "lib": [
+            "dom",
+            "esnext"
+        ],
         "strict": true,
-        "types": ["npm:vite/client"]
+        "types": [
+            "npm:vite/client"
+        ]
     },
     "imports": {
         "@/": "./src/",
@@ -12,10 +20,17 @@
         "@plugin/": "./src/plugins/",
         "@utils/": "./src/utils/"
     },
+    "lint": {
+        "rules": {
+            "exclude": [
+                "no-sloppy-imports"
+            ]
+        }
+    },
     "tasks": {
-    "dev": "deno run -A npm:vite --config vite.config.demo.ts",
-    "build": "deno run -A npm:vite build",
-    "build-demo": "deno run -A npm:vite build --config vite.config.demo.ts",
-    "test": "deno test -A"
-  }
+        "dev": "deno run -A npm:vite --config vite.config.demo.ts",
+        "build": "deno run -A npm:vite build",
+        "build-demo": "deno run -A npm:vite build --config vite.config.demo.ts",
+        "test": "deno test -A"
+    }
 }

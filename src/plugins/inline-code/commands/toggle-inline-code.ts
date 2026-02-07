@@ -1,6 +1,6 @@
-import { Command } from "@core/command/command.ts";
-import { findCodeAncestor } from "@utils/dom/index.ts";
-import { hasSelection } from "@utils/selection/index.ts";
+import { Command } from "@core/command";
+import { findCodeAncestor } from "@utils/dom";
+import { hasSelection } from "@utils/selection";
 
 export const ToggleInlineCode: Command = {
     id: "toggleInlineCode",

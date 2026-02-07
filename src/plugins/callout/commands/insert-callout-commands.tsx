@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import * as dom from "@utils/dom/index.ts";
-import type { InsertResultContext } from "@core/command/index.ts";
-import type { Command } from "@core/command/index.ts";
+import { h } from "@core/jsx";
+import * as dom from "@utils/dom";
+import type { InsertResultContext } from "@core/command";
+import type { Command } from "@core/command";
 import { CalloutBlock } from "../components/callout-block.tsx";
 
 export const InsertCalloutCommand: Command<InsertResultContext> = {

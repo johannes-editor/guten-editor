@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { t } from "@core/i18n/index.ts";
-import { runCommand } from "@core/command/index.ts";
-import { Component } from "@core/components/component.ts";
-import { EventTypes } from "@utils/dom/index.ts";
+import { t } from "@core/i18n";
+import { runCommand } from "@core/command";
+import { Component } from "@core/components";
+import { EventTypes } from "@utils/dom";
 
 export type EquationInlineProps = {
     latex: string;

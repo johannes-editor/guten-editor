@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { t } from "@core/i18n/index.ts";
-import { Command } from "@core/command/command.ts";
-import { appendElementOnOverlayArea } from "@components/editor/core/index.tsx";
-import { InputTypes } from "@utils/dom/index.ts";
+import { h } from "@core/jsx";
+import { t } from "@core/i18n";
+import { Command } from "@core/command";
+import { appendElementOnOverlayArea } from "@components/editor";
+import { InputTypes } from "@utils/dom";
 import { YouTubePopover } from "../components/youtube-popover.tsx";
 
 export type OpenYouTubePopoverPayload = {

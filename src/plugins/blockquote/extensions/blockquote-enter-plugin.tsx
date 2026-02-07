@@ -1,9 +1,9 @@
 /** @jsx h */
 
-import { h } from "@core/jsx/index.ts";
-import { Plugin } from "@core/plugin-engine/plugin.ts";
-import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
-import { focusOnElement } from "@utils/dom/dom-utils.ts";
+import { h } from "@core/jsx";
+import { Plugin } from "@core/plugin-engine";
+import { ParagraphBlock } from "@components/blocks";
+import { focusOnElement } from "@utils/dom";
 
 export class BlockquoteEnterPlugin extends Plugin {
 
