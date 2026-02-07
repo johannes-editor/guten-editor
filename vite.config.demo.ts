@@ -41,6 +41,6 @@ export default defineConfig({
     esbuild: {
         jsx: "automatic",
         jsxImportSource: "@core/jsx",
-        keepNames: true,
+        keepNames: false,
     },
 });
