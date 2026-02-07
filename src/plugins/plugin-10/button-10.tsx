@@ -1,4 +1,5 @@
 /** @jsx h */
+
 import { h } from "@core/jsx/index.ts";
 import { Component } from "@core/components/component.ts";
 
