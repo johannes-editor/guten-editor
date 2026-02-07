@@ -42,5 +42,6 @@ export default defineConfig({
         jsx: "automatic",
         jsxImportSource: "@core/jsx",
         keepNames: false,
+        minifyIdentifiers: true,
     },
 });
