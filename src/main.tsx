@@ -3,12 +3,11 @@ import {
     applyLocalePreference,
     DEFAULT_LOCALE,
     getStoredLocalePreference,
-} from "@core/i18n/locale-preference.ts";
+} from "@core/i18n";
 import { appendElementOnContentArea, appendElementOnTitleArea, setRoot } from "@components/editor";
 import { init } from "@core/plugin-engine";
-import { ParagraphBlock } from "@components/blocks";
-import { Heading1Block } from "@components/blocks/heading.tsx";
-import { getAvailableThemes } from "@design-system/themes/index.ts";
+import { Heading1Block, ParagraphBlock } from "@components/blocks";
+import { getAvailableThemes } from "@design-system/themes";
 
 
 import {
@@ -18,10 +17,11 @@ import {
     getStoredThemePreference,
 } from "@utils/color/theme-preference.ts";
 import { initLocaleDomSync } from "@core/i18n/locale-dom-sync.ts";
+import { focusOnElement } from "@utils/dom";
 
 /**
 * Initializes the text editor.
-* 
+*
 * @param root The root HTML element where the editor will be mounted.
 */
 export async function initEditor(root: HTMLElement) {
@@ -39,9 +39,10 @@ export async function initEditor(root: HTMLElement) {
 
     const requestedTheme = storedThemeValid ? storedTheme! : requestedThemeAttribute;
 
-    applyEditorTheme(requestedTheme, supportedThemes);    
+    applyEditorTheme(requestedTheme, supportedThemes);
 
     setRoot(root);
+
     // Set the language for the interface, defaulting to English if not specified.
     const availableLocales = getAvailableLocales();
     const supportedLocales = new Set(availableLocales.map((locale) => locale.code));
@@ -58,7 +59,8 @@ export async function initEditor(root: HTMLElement) {
     appendElementOnTitleArea(
         <Heading1Block data-placeholder={t("untitled")} data-placeholder-key="untitled" />
     );
-    appendElementOnContentArea(<ParagraphBlock />);
+
+    focusOnElement(appendElementOnContentArea(<ParagraphBlock />));
 
     /** Init plugins */
     await init(root);
