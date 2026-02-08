@@ -3,6 +3,9 @@ import { h } from "@core/jsx";
 import { runCommand } from "@core/command";
 import { Tooltip } from "@components/ui/primitives/tooltip";
 import { EventTypes } from "@utils/dom/events.ts";
+import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
+import { focusOnElement } from "@utils/dom";
+import { GripVerticalIcon, PlusIcon } from "@components/ui/icons";
 
 export class DragAndDropManager {
     private mutationObserver: MutationObserver | null = null;
@@ -10,7 +13,9 @@ export class DragAndDropManager {
     private currentDrag: HTMLElement | null = null;
     private currentTarget: HTMLElement | null = null;
     private handleWrap: HTMLElement | null = null;
+    private controlsWrap: HTMLElement | null = null;
     private handle: HTMLElement | null = null;
+    private addButton: HTMLElement | null = null;
     private hideTimer: number | null = null;
     private placeholder: HTMLElement | null = null;
     private layer: HTMLElement | null = null;
@@ -23,10 +28,10 @@ export class DragAndDropManager {
         this.bindHandleEvents();
         this.observeOverlay();
         this.updateTargets();
-        
+
         this.mutationObserver = new MutationObserver(() => this.updateTargets());
         this.mutationObserver.observe(this.content, { childList: true, subtree: true });
-        
+
         globalThis.addEventListener(EventTypes.Scroll, () => this.updateHandlePosition());
         globalThis.addEventListener(EventTypes.Resize, () => this.updateHandlePosition());
     }
@@ -39,11 +44,12 @@ export class DragAndDropManager {
 
         document.removeEventListener(EventTypes.PointerMove, this.onPointerMove);
         document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
-        
+
         this.unbindHandleEvents();
-        this.handleWrap?.remove();
-        this.handleWrap = null;
+        this.controlsWrap?.remove();
+        this.controlsWrap = null;
         this.handle = null;
+        this.addButton = null;
         this.layer?.remove();
         this.layer = null;
     }
@@ -66,46 +72,75 @@ export class DragAndDropManager {
     private createHandle() {
 
         if (!this.layer || !this.layer.isConnected) return;
-        
+
+        const controlsWrap = document.createElement('div');
+        controlsWrap.style.position = 'absolute';
+        controlsWrap.style.display = 'none';
+        controlsWrap.style.pointerEvents = 'auto';
+        controlsWrap.style.alignItems = 'center';
+        controlsWrap.style.gap = '6px';
+
+        const addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.setAttribute('aria-label', 'Add paragraph below (Alt+Click to add above)');
+        addButton.style.display = 'flex';
+        addButton.style.alignItems = 'center';
+        addButton.style.justifyContent = 'center';
+        addButton.style.cursor = 'pointer';
+        addButton.style.opacity = '0.35';
+        addButton.style.border = '0';
+        addButton.style.padding = '0';
+        addButton.style.background = 'transparent';
+        addButton.style.lineHeight = '1';
+
+        const addIcon = h(PlusIcon, { size: '1.125rem', 'aria-hidden': 'true' }) as HTMLElement;
+        addButton.append(addIcon);
+
+        const addWrap = h(
+            Tooltip,
+            { text: 'Add paragraph below\nAlt+Click to add above', shortcut: '', placement: 'right' },
+            addButton,
+        ) as HTMLElement;
+
         const handle = document.createElement('div');
         handle.className = 'drag-handle';
-        handle.textContent = '⠿';
-        handle.style.width = '1.1rem';
-        handle.style.height = '1.1rem';
         handle.style.display = 'flex';
         handle.style.alignItems = 'center';
         handle.style.justifyContent = 'center';
-        handle.style.fontSize = '1.1rem';
         handle.style.cursor = 'grab';
-        handle.style.opacity = '0.45';
+        handle.style.opacity = '0.35';
 
-        const wrap = h(
+        const handleIcon = h(GripVerticalIcon, { size: '1.125rem' }) as HTMLElement;
+        handle.append(handleIcon);
+
+        const handleWrap = h(
             Tooltip,
             { text: 'Drag to move block \n Right click to open menu', shortcut: '', placement: 'right' },
             handle,
         ) as HTMLElement;
-        
-        wrap.style.position = 'absolute';
-        wrap.style.display = 'none';
-        wrap.style.pointerEvents = 'auto';
 
-        this.layer?.appendChild(wrap);
+        controlsWrap.append(addWrap, handleWrap);
+
+        this.layer?.appendChild(controlsWrap);
         this.handle = handle;
-        this.handleWrap = wrap;
+        this.controlsWrap = controlsWrap;
+        this.addButton = addButton;
     }
 
     private bindHandleEvents() {
         this.handle?.addEventListener(EventTypes.PointerDown, this.onPointerDown);
-        this.handleWrap?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.handleWrap?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
+        this.controlsWrap?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
+        this.controlsWrap?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
         this.handle?.addEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
+        this.addButton?.addEventListener(EventTypes.Click, this.onAddClick);
     }
 
     private unbindHandleEvents() {
         this.handle?.removeEventListener(EventTypes.PointerDown, this.onPointerDown);
-        this.handleWrap?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.handleWrap?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
+        this.controlsWrap?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
+        this.controlsWrap?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
         this.handle?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
+        this.addButton?.removeEventListener(EventTypes.Click, this.onAddClick);
     }
 
     private observeOverlay() {
@@ -142,14 +177,15 @@ export class DragAndDropManager {
         if (!overlayRoot) return;
 
         const layerMissing = !this.layer || !this.layer.isConnected || !overlayRoot.contains(this.layer);
-        const handleMissing = !this.handleWrap || !this.handleWrap.isConnected || !this.handle || !this.handle.isConnected;
+        const handleMissing = !this.controlsWrap || !this.controlsWrap.isConnected || !this.handle || !this.handle.isConnected || !this.addButton || !this.addButton.isConnected;
         this.observeOverlay();
 
         if (layerMissing) {
             this.layer?.remove();
-            this.handleWrap?.remove();
+            this.controlsWrap?.remove();
             this.handle = null;
-            this.handleWrap = null;
+            this.controlsWrap = null;
+            this.addButton = null;
             this.setupOverlayArea();
             this.createHandle();
             this.bindHandleEvents();
@@ -157,9 +193,10 @@ export class DragAndDropManager {
         }
 
         if (handleMissing) {
-            this.handleWrap?.remove();
+            this.controlsWrap?.remove();
             this.handle = null;
-            this.handleWrap = null;
+            this.controlsWrap = null;
+            this.addButton = null;
             this.createHandle();
             this.bindHandleEvents();
         }
@@ -199,16 +236,39 @@ export class DragAndDropManager {
 
     private onHandleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
-        if (!this.currentTarget || !this.handleWrap) return;
-        const rect = this.handleWrap.getBoundingClientRect();
+        if (!this.currentTarget || !this.controlsWrap) return;
+        const rect = this.controlsWrap.getBoundingClientRect();
         const block = this.currentTarget;
         this.hideHandle();
         runCommand('openBlockOptions', { content: { block, rect } });
     };
 
+    private onAddClick = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!this.currentTarget) return;
+
+        const anchorBlock = this.currentTarget;
+        const paragraph = h(ParagraphBlock, {}) as HTMLElement;
+        const parent = anchorBlock.parentElement;
+        if (!parent) return;
+
+        if (e.altKey) {
+            parent.insertBefore(paragraph, anchorBlock);
+        } else {
+            parent.insertBefore(paragraph, anchorBlock.nextSibling);
+        }
+
+        focusOnElement(paragraph);
+        paragraph.dispatchEvent(new Event(EventTypes.Input, { bubbles: true }));
+        this.currentTarget = paragraph;
+        this.updateTargets();
+        this.showHandle();
+    };
+
     private startHideTimer() {
         this.clearHideTimer();
-        this.hideTimer = window.setTimeout(() => this.hideHandle(), 200);
+        this.hideTimer = globalThis.setTimeout(() => this.hideHandle(), 200);
     }
 
     private clearHideTimer() {
@@ -220,26 +280,27 @@ export class DragAndDropManager {
 
     private showHandle() {
         this.ensureOverlayIntegrity();
-        if (!this.currentTarget || !this.handleWrap) return;
-        this.handleWrap.style.display = 'block';
+        if (!this.currentTarget || !this.controlsWrap) return;
+        this.controlsWrap.style.display = 'flex';
         this.updateHandlePosition();
     }
 
     private hideHandle() {
-        if (!this.handleWrap) return;
-        this.handleWrap.style.display = 'none';
+        if (!this.controlsWrap) return;
+        this.controlsWrap.style.display = 'none';
         this.currentTarget = null;
     }
 
     private updateHandlePosition() {
-        if (!this.currentTarget || !this.handle || !this.handleWrap) return;
+        if (!this.currentTarget || !this.handle || !this.controlsWrap) return;
         const textRect = this.getFirstLineRect(this.currentTarget);
         const blockRect = this.currentTarget.getBoundingClientRect();
         const rect = textRect ?? blockRect;
         const top = rect.top + rect.height / 2 - this.handle.offsetHeight / 2;
-        const left = blockRect.left - this.handle.offsetWidth - 8;
-        this.handleWrap.style.top = `${top}px`;
-        this.handleWrap.style.left = `${left}px`;
+        const controlsWidth = this.controlsWrap.offsetWidth;
+        const left = blockRect.left - controlsWidth - 8;
+        this.controlsWrap.style.top = `${top}px`;
+        this.controlsWrap.style.left = `${left}px`;
     }
 
     private getFirstLineRect(el: HTMLElement): DOMRect | null {
