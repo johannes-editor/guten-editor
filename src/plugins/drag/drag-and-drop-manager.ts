@@ -92,6 +92,7 @@ export class DragAndDropManager {
         addButton.style.padding = '0';
         addButton.style.background = 'transparent';
         addButton.style.lineHeight = '1';
+        addButton.style.color = 'var(--color-ui-text)';
 
         const addIcon = h(PlusIcon, { size: '1.125rem', 'aria-hidden': 'true' }) as HTMLElement;
         addButton.append(addIcon);
@@ -109,6 +110,7 @@ export class DragAndDropManager {
         handle.style.justifyContent = 'center';
         handle.style.cursor = 'grab';
         handle.style.opacity = '0.35';
+        handle.style.color = 'var(--color-ui-text)';
 
         const handleIcon = h(GripVerticalIcon, { size: '1.125rem' }) as HTMLElement;
         handle.append(handleIcon);
