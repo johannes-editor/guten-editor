@@ -60,12 +60,20 @@ export function focusNextBlock(currentBlock: HTMLElement | null) {
 }
 
 export function focusOnElement(currentBlock: HTMLElement | null) {
+    focusOnElementWithCaretPosition(currentBlock, "smart");
+}
+
+export function focusOnElementAtStart(currentBlock: HTMLElement | null) {
+    focusOnElementWithCaretPosition(currentBlock, "start");
+}
+
+function focusOnElementWithCaretPosition(currentBlock: HTMLElement | null, position: "start" | "smart") {
     if (!currentBlock) return;
 
     const selection = globalThis.getSelection();
     currentBlock.focus();
 
-    if (selection?.rangeCount) {
+    if (position === "smart" && selection?.rangeCount) {
         const currentRange = selection.getRangeAt(0);
 
         if (
@@ -82,13 +90,13 @@ export function focusOnElement(currentBlock: HTMLElement | null) {
     if (firstTextNode) {
         range.setStart(firstTextNode, 0);
     } else {
-        range.setStart(currentBlock, currentBlock.childNodes.length);
+        const offset = position === "start" ? 0 : currentBlock.childNodes.length;
+        range.setStart(currentBlock, offset);
     }
 
     range.collapse(true);
     selection?.removeAllRanges();
     selection?.addRange(range);
-
 }
 
 export function getFirstTextNode(element: HTMLElement): Text | null {

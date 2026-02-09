@@ -73,6 +73,8 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
             if (refreshedSelection && refreshedSelection.rangeCount > 0) {
                 const range = refreshedSelection.getRangeAt(0);
 
+                this.normalizeCaretInEmptyBlock(range, refreshedSelection);
+
                 const slashNode = document.createTextNode("/");
                 range.insertNode(slashNode);
 
@@ -95,6 +97,28 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
             }
         }
     }
+
+    private normalizeCaretInEmptyBlock(range: Range, selection: Selection): void {
+        const startNode = range.startContainer;
+        const startElement = startNode instanceof HTMLElement ? startNode : startNode.parentElement;
+        const block = startElement?.closest?.(".block") as HTMLElement | null;
+        if (!block) return;
+
+        const text = block.textContent?.trim() ?? "";
+        const html = block.innerHTML.trim().toLowerCase();
+        const isEmptyWithBreak = text.length === 0 && (html === "<br>" || html === "<br />");
+        if (!isEmptyWithBreak) return;
+
+        const normalizedRange = document.createRange();
+        normalizedRange.setStart(block, 0);
+        normalizedRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(normalizedRange);
+
+        range.setStart(normalizedRange.startContainer, normalizedRange.startOffset);
+        range.collapse(true);
+    }
+
 
     private mounted(): boolean {
         return document.getElementsByTagName(SlashMenuOverlay.getTagName()).length > 0;

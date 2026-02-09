@@ -1,5 +1,5 @@
 import { ParagraphBlock } from "../../components/blocks/paragraph.tsx";
-import { focusOnElement } from "@utils/dom";
+import { focusOnElementAtStart } from "@utils/dom";
 
 /**
  * Observes the insertion of new blocks directly into the contentEditable DOM (e.g., when pressing Enter).
@@ -35,7 +35,7 @@ export class NewContentChildrenObserver {
 
                             const p = <ParagraphBlock />;
                             node.replaceWith(p);
-                            focusOnElement(p);
+                            focusOnElementAtStart(p);
                         } catch (e) {
                             console.error("Error:", e);
                         }

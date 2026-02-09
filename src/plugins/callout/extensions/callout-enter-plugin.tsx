@@ -1,6 +1,6 @@
 import { Plugin } from "@core/plugin-engine";
 import { ParagraphBlock } from "@components/blocks";
-import { focusOnElement, } from "@utils/dom";
+import { focusOnElement, focusOnElementAtStart, } from "@utils/dom";
 import { KeyboardKeys } from "@utils/keyboard";
 import { EventTypes, ClassName } from "@utils/dom";
 
@@ -62,7 +62,7 @@ export class CalloutEnterPlugin extends Plugin {
         if (this.isFirstParagraphInCallout(paragraph, callout)) {
             const newParagraph = this.createParagraph(doc);
             callout.insertAdjacentElement("afterend", newParagraph);
-            focusOnElement(newParagraph);
+            focusOnElementAtStart(newParagraph);
             this.dispatchInput(newParagraph);
             return;
         }

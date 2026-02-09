@@ -1,19 +1,9 @@
 import { Command, InsertResultContext } from "@core/command";
-import { focusOnElement } from "@utils/dom";
+import { focusIfNeeded, updateLastInserted } from "@utils/dom";
 import { BlockquoteBlock, BulletedListBlock, NumberedListBlock, ParagraphBlock, SeparatorBlock } from "@components/blocks";
 import { Heading1Block, Heading2Block, Heading3Block, Heading4Block, Heading5Block } from "@components/blocks";
 import { appendAfter, getInstructionText, resolveAfterBlock } from "@utils/dom";
 
-
-function focusIfNeeded(element: HTMLElement | null, context?: InsertResultContext) {
-    if (!element) return;
-    if (context?.focus === false) return;
-    focusOnElement(element);
-}
-
-function updateLastInserted(element: HTMLElement | null, context?: InsertResultContext) {
-    if (context) context.lastInsertedBlock = element;
-}
 
 function createListItems(context?: InsertResultContext): HTMLElement[] | undefined {
     const items = context?.instruction?.items;

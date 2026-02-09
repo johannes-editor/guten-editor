@@ -1,5 +1,5 @@
 import { InsertResultContext } from "../../core/command/types.ts";
-import { focusOnElement } from "./dom-utils.ts";
+import { focusOnElementAtStart } from "./dom-utils.ts";
 import { selection } from "../index.ts";
 
 const BLOCK_ID_PREFIX = "block-";
@@ -248,23 +248,7 @@ export function focusStartOfBlock(block: HTMLElement) {
         (block.matches('[contenteditable="true"]') ? block : block.querySelector('[contenteditable="true"]')) as HTMLElement | null;
 
     if (editable) {
-        editable.focus({ preventScroll: false });
-        const sel = globalThis.getSelection?.();
-        if (sel) {
-            const r = document.createRange();
-
-            const walker = document.createTreeWalker(editable, NodeFilter.SHOW_TEXT, null);
-            const firstText = walker.nextNode();
-            if (firstText) {
-                r.setStart(firstText, 0);
-            } else {
-                r.selectNodeContents(editable);
-                r.collapse(true);
-            }
-            r.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(r);
-        }
+        focusOnElementAtStart(editable);
         return;
     }
 
@@ -322,12 +306,6 @@ export function duplicateBlock(
     return clone;
 }
 
-
-
-
-
-
-
 export function findCodeAncestor(node: Node | null): HTMLElement | null {
     let current: Node | null = node;
 
@@ -384,7 +362,7 @@ export function appendAfter(afterBlock: HTMLElement | null, element: HTMLElement
 export function focusIfNeeded(element: HTMLElement | null, context?: InsertResultContext) {
     if (!element) return;
     if (context?.focus === false) return;
-    focusOnElement(element);
+    focusOnElementAtStart(element)
 }
 
 export function updateLastInserted(element: HTMLElement | null, context?: InsertResultContext) {

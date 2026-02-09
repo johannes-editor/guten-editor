@@ -17,7 +17,7 @@ import {
     getStoredThemePreference,
 } from "@utils/color/theme-preference.ts";
 import { initLocaleDomSync } from "@core/i18n/locale-dom-sync.ts";
-import { focusOnElement } from "@utils/dom";
+import { focusOnElementAtStart } from "@utils/dom";
 
 /**
 * Initializes the text editor.
@@ -60,7 +60,7 @@ export async function initEditor(root: HTMLElement) {
         <Heading1Block data-placeholder={t("untitled")} data-placeholder-key="untitled" />
     );
 
-    focusOnElement(appendElementOnContentArea(<ParagraphBlock />));
+    focusOnElementAtStart(appendElementOnContentArea(<ParagraphBlock />));
 
     /** Init plugins */
     await init(root);

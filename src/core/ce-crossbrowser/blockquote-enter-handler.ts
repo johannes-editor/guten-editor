@@ -1,4 +1,4 @@
-import { focusOnElement } from "@utils/dom";
+import { focusOnElementAtStart } from "@utils/dom";
 import { t } from "../i18n/index.ts";
 
 export class BlockquoteEnterHandler {
@@ -21,7 +21,7 @@ export class BlockquoteEnterHandler {
     private handleKeyDown = (e: KeyboardEvent) => {
         if (e.key !== "Enter") return;
 
-        const selection = window.getSelection();
+        const selection = globalThis.getSelection();
         if (!selection || selection.rangeCount === 0) return;
 
         const range = selection.getRangeAt(0);
@@ -46,7 +46,7 @@ export class BlockquoteEnterHandler {
 
         blockquote.insertAdjacentElement("afterend", newParagraph);
 
-        focusOnElement(newParagraph);
+        focusOnElementAtStart(newParagraph);
     };
 
     private getClosestBlockquote(node: Node): HTMLElement | null {
