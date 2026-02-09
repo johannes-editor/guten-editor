@@ -5,7 +5,10 @@
 
 
     /* === TYPOGRAPHY === */
-    --font-family: system-ui, sans-serif;
+    --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
+        "Noto Sans", "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
     --button-font-family: var(--font-family);
 
     --font-size-xxs: 0.625rem;

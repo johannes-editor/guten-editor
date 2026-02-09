@@ -8,6 +8,7 @@ body {
     max-width: var(--editor-max-width, 710px);
     margin-left: auto;
     margin-right: auto;
+    font-family: var(--font-family);
 }
 
 #contentArea {
