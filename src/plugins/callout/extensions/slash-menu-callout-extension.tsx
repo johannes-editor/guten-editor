@@ -1,7 +1,7 @@
 import { runCommand } from "@core/command";
 import { t } from "@core/i18n";
 import { CardTextIcon } from "@components/ui/icons";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
+import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 
 export class SlashMenuCalloutExtension extends SlashMenuExtensionPlugin {
 

@@ -3,7 +3,7 @@ import { runCommand } from "@core/command";
 import { useContext } from "@core/context";
 import { MenuUI, MenuUIProps } from "@components/ui/composites/menu/index.ts";
 import type { MenuUIState } from "@components/ui/composites/menu";
-import { FormattingToolbar, FormattingToolbarContext, FormattingToolbarCtx } from "@plugin/formatting-toolbar";
+import { FormattingToolbar, FormattingToolbarContext, FormattingToolbarCtx } from "@plugins/formatting-toolbar";
 import { colorUtil } from "@utils/color/index.ts";
 import { TextColorMenuItem } from "./text-color-menu-item.tsx";
 import { HIGHLIGHT_COLOR_OPTIONS, normalizeColorValue, TEXT_COLOR_OPTIONS, type ColorOption } from "../color-options.ts";

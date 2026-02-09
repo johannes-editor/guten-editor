@@ -3,7 +3,7 @@ import { runCommand } from "@core/command";
 import { EquationIcon } from "@components/ui/icons";
 import { focusOnElement } from "@utils/dom";
 import { getCurrentSelectionRange } from "@utils/selection";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
+import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { EquationPlaceholder } from "../components/equation-placeholder.tsx";
 
 export class SlashMenuEquationExtension extends SlashMenuExtensionPlugin {

@@ -1,7 +1,7 @@
 import { runCommand } from "@core/command";
 import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input";
 import { useContext } from "@core/context";
-import { FormattingToolbarCtx } from "@plugin/formatting-toolbar";
+import { FormattingToolbarCtx } from "@plugins/formatting-toolbar";
 import { EquationPlaceholder } from "./equation-placeholder.tsx";
 import { EquationInline } from "./equation-inline.tsx";
 

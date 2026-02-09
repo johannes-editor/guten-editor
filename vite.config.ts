@@ -12,7 +12,7 @@ export default defineConfig({
             { find: "@core/", replacement: `${srcPath}/core/` },
             { find: "@design-system/", replacement: `${srcPath}/design-system/` },
             { find: "@components/", replacement: `${srcPath}/components/` },
-            { find: "@plugin/", replacement: `${srcPath}/plugins/` },
+            { find: "@plugins/", replacement: `${srcPath}/plugins/` },
             { find: "@utils/", replacement: `${srcPath}/utils/` },
         ],
     },

@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { OpenEmojiPicker } from "./commands/open-emoji-picker.tsx";
 
 export class CommandEmojiExtension extends CommandExtensionPlugin {

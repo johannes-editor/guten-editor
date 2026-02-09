@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { TextColorIcon } from "@components/ui/icons";
-import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar";
+import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugins/mobile-toolbar";
 
 /**
  * Mobile toolbar extension that adds the Text Color menu when text is selected.

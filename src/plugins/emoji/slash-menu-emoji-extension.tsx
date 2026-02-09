@@ -1,5 +1,5 @@
 import { t, registerTranslation } from "@core/i18n";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
+import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { appendElementOnOverlayArea } from "@components/editor";
 import { EmojiPicker } from "./components/emoji-picker.tsx";
 import { getCurrentSelectionRange } from "@utils/selection";

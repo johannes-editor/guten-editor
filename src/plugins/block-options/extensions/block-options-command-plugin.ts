@@ -1,5 +1,5 @@
 import { Command } from "@/core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { DeleteBlock } from "../commands/delete-block.ts";
 import { DuplicateBlock } from "../commands/duplicate-block.tsx";
 import { MoveBlockDown } from "../commands/move-block-down.ts";

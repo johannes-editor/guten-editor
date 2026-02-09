@@ -1,7 +1,7 @@
 import { runCommand } from "@core/command";
 import { t } from "@core/i18n";
 import { PaletteIcon } from "@components/ui/icons";
-import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugin/mobile-toolbar";
+import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugins/mobile-toolbar";
 
 export class CalloutMobileToolbarExtension extends MobileToolbarButtonExtensionPlugin {
 

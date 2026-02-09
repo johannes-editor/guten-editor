@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { StateBold, StateItalic, StateStrike, StateUnderline } from "./commands";
 import { ToggleBold, ToggleItalic, ToggleStrike, ToggleUnderline } from "./commands";
 

@@ -1,5 +1,5 @@
 import { AssetBundle } from "@core/asset-loader/types.ts";
-import { ExternalAssetsExtensionPlugin } from "@plugin/external-assets";
+import { ExternalAssetsExtensionPlugin } from "@plugins/external-assets";
 
 /**
  * Loads KaTeX CSS/JS at editor startup

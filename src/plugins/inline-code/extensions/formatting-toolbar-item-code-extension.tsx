@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { CodeSlashIcon } from "@components/ui/icons";
-import { FormattingToolbarExtensionPlugin } from "@plugin/formatting-toolbar";
+import { FormattingToolbarExtensionPlugin } from "@plugins/formatting-toolbar";
 
 export class FormattingToolbarItemCodeExtension extends FormattingToolbarExtensionPlugin {
     readonly icon: SVGElement = <CodeSlashIcon />;

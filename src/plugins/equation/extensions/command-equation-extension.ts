@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { InsertEquation } from "../commands/insert-equation.ts";
 import { OpenEquationPopover } from "../commands/open-math-popover.tsx";
 

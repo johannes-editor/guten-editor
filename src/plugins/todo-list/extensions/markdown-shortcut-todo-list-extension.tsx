@@ -1,5 +1,5 @@
 import { focusOnElement } from "@utils/dom";
-import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugin/markdown-shortcuts";
+import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugins/markdown-shortcuts";
 import { createTodoList } from "../utils.tsx";
 
 export class MarkdownShortcutTodoListExtension extends MarkdownShortcutExtensionPlugin {

@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { PaletteIcon } from "@components/ui/icons";
-import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "@plugin/block-options";
+import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "@plugins/block-options";
 
 export class BlockOptionsCalloutExtension extends BlockOptionsExtensionPlugin {
 

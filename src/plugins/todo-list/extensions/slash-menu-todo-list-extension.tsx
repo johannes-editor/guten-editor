@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { MaterialChecklist } from "@components/ui/icons";
 import { focusOnElement } from "@utils/dom";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
+import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { createTodoList } from "../utils.tsx";
 
 export class SlashMenuTodoListExtension extends SlashMenuExtensionPlugin {

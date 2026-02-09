@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { InsertCodeBlockCommand } from "../commands/insert-code-command.tsx";
 
 export class CodeCommandExtension extends CommandExtensionPlugin {

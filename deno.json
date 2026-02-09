@@ -19,7 +19,7 @@
         "@core/": "./src/core/",
         "@design-system/": "./src/design-system/",
         "@components/": "./src/components/",
-        "@plugin/": "./src/plugins/",
+        "@plugins/": "./src/plugins/",
         "@utils/": "./src/utils/"
     },
     "lint": {

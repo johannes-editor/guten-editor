@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { historyManager } from "../utils/history-manager-instance.ts";
 
 export class UndoRedoCommandExtension extends CommandExtensionPlugin {

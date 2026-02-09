@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { CreateLink } from "./commands/create-link.ts";
 import { OpenLinkPopover } from "./commands/open-link-popover.tsx";
 import { RemoveLink } from "./commands/remove-link.ts";

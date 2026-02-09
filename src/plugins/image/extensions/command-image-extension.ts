@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { InsertImageBlockCommand } from "../commands/insert-image-block-command.tsx";
 import { InsertImage } from "../commands/insert-image.tsx";
 import { OpenImageMenu } from "../commands/open-image-menu.tsx";

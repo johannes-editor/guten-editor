@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { StateInlineCode } from "../commands/state-inline-code.ts";
 import { ToggleInlineCode } from "../commands/toggle-inline-code.ts";
 

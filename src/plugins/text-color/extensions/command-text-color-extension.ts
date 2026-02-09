@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { OpenTextColorMenu } from "../commands/open-text-color-menu.tsx";
 import { SetHighlightColor } from "../commands/set-highlight-color.ts";
 import { SetTextColor } from "../commands/set-text-color.ts";

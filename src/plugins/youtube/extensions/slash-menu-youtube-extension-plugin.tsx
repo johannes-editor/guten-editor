@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { YouTubeIcon } from "@components/ui/icons";
 import { focusOnElement } from "@utils/dom";
-import { SlashMenuExtensionPlugin } from "@plugin/slash-menu";
+import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { YouTubePlaceholder } from "../components/youtube-placeholder.tsx";
 
 

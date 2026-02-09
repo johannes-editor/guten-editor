@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { CommandExtensionPlugin } from "@plugin/commands";
+import { CommandExtensionPlugin } from "@plugins/commands";
 import { SelectBlockContent } from "../commands/select-block-content.ts";
 
 export class BlockSelectionCommandExtension extends CommandExtensionPlugin {

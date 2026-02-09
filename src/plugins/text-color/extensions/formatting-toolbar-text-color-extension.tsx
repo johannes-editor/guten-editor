@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { TextColorIcon } from "@components/ui/icons"
-import { FormattingToolbarExtensionPlugin } from "@plugin/formatting-toolbar";
+import { FormattingToolbarExtensionPlugin } from "@plugins/formatting-toolbar";
 
 /**
  * FormattingToolbar extension that adds the "Text Color" button.

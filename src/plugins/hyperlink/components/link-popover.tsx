@@ -2,7 +2,7 @@ import { runCommand } from "@core/command";
 import { useContext } from "@core/context";
 import { InputPopover, InputPopoverProps, SelectionController } from "@components/ui/composites/input";
 import { OverlayCtor } from "@components/editor/overlay";
-import { FormattingToolbar, FormattingToolbarCtx } from "@plugin/formatting-toolbar";
+import { FormattingToolbar, FormattingToolbarCtx } from "@plugins/formatting-toolbar";
 
 /**
  * UI popover for inserting hyperlinks.
