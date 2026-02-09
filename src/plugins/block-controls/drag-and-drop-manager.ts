@@ -79,6 +79,7 @@ export class DragAndDropManager {
         controlsWrap.style.pointerEvents = 'auto';
         controlsWrap.style.alignItems = 'center';
         controlsWrap.style.gap = '6px';
+        controlsWrap.classList.add("block-controls");
 
         const addButton = document.createElement('button');
         addButton.type = 'button';

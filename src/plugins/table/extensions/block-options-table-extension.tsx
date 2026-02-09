@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { AddColumnRight, AddRowBelow, DeleteColumn, DeleteRow, } from "@components/ui/icons";
-import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "@plugins/block-options";
+import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "../../block-controls/index.ts";
 
 export class BlockOptionsTableExtension extends BlockOptionsExtensionPlugin {
 

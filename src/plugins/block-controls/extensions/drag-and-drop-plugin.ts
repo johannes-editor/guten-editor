@@ -1,5 +1,5 @@
 import { Plugin } from "@core/plugin-engine";
-import { DragAndDropManager } from "./drag-and-drop-manager.ts";
+import { DragAndDropManager } from "../drag-and-drop-manager.ts";
 
 export class DragAndDropPlugin extends Plugin {
     private manager: DragAndDropManager | null = null;

@@ -1,7 +1,7 @@
 import type { DefaultState } from "@core/components";
 import { OverlayCtor } from "@components/editor/overlay";
 import { MenuUI } from "@components/ui/composites/menu";
-import { BlockOptionsMenu, type BlockOptionsProps } from "@plugins/block-options";
+import { BlockOptionsMenu, type BlockOptionsProps } from "../../block-controls/index.ts";
 import { ColorVariant } from "./types.ts";
 import { CalloutColorMenuItem } from "./callout-color-menu-item.tsx";
 

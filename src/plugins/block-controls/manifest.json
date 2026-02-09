@@ -1,9 +1,13 @@
 {
-    "name": "Block options",
-    "author": "Alexandre Tavares",
-    "description": "Adds block options menu.",
+    "name": "Block controls",
     "version": "1.0.0",
+    "description": "Provides block-level controls such as the block options menu, default control commands, add (+) buttons, and drag-and-drop handling",
     "entries": [
+        {
+            "path": "./extensions/drag-and-drop-plugin.ts",
+            "class": "DragAndDropPlugin",
+            "active": true
+        },
         {
             "path": "./extensible/block-options-plugin.tsx",
             "class": "BlockOptionsPlugin",
