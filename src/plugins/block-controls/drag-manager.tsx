@@ -4,6 +4,9 @@ import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
 import { focusOnElementAtStart } from "@utils/dom";
 import { BlockControls } from "./components/block-controls.tsx";
 
+import { DragSessionController } from "./controllers/drag-session-controller.ts";
+import { BlockControlsPositioner } from "./controllers/block-controls-positioner.ts";
+
 export class DragManager {
 
     private mutationObserver: MutationObserver | null = null;
@@ -15,10 +18,28 @@ export class DragManager {
     private dragControl: HTMLButtonElement | null = null;
     private addControl: HTMLButtonElement | null = null;
     private hideTimer: number | null = null;
-    private placeholder: HTMLElement | null = null;
+    // private placeholder: HTMLElement | null = null;
     private layer: HTMLElement | null = null;
 
-    constructor(private content: HTMLElement, private overlay: HTMLElement) { }
+    // constructor(private content: HTMLElement, private overlay: HTMLElement) { }
+
+
+
+    private dragSession: DragSessionController;
+    private positioner = new BlockControlsPositioner();
+
+    constructor(private content: HTMLElement, private overlay: HTMLElement) {
+        this.dragSession = new DragSessionController(this.content, {
+            onDragStart: () => {
+                this.hideHandle();
+            },
+            onDragEnd: (draggedBlock) => {
+                this.updateTargets();
+                this.currentTarget = draggedBlock;
+                this.showHandle();
+            },
+        });
+    }
 
     start() {
         this.setupOverlayArea();
@@ -30,8 +51,8 @@ export class DragManager {
         this.mutationObserver = new MutationObserver(() => this.updateTargets());
         this.mutationObserver.observe(this.content, { childList: true, subtree: true });
 
-        globalThis.addEventListener(EventTypes.Scroll, () => this.updateHandlePosition());
-        globalThis.addEventListener(EventTypes.Resize, () => this.updateHandlePosition());
+        globalThis.addEventListener(EventTypes.Scroll, this.onViewportChange);
+        globalThis.addEventListener(EventTypes.Resize, this.onViewportChange);
     }
 
     stop() {
@@ -40,8 +61,10 @@ export class DragManager {
         this.overlayObserver?.disconnect();
         this.overlayObserver = null;
 
-        document.removeEventListener(EventTypes.PointerMove, this.onPointerMove);
-        document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
+        this.dragSession.dispose();
+
+        globalThis.removeEventListener(EventTypes.Scroll, this.onViewportChange);
+        globalThis.removeEventListener(EventTypes.Resize, this.onViewportChange);
 
         this.unbindHandleEvents();
         this.controlsHost?.remove();
@@ -183,7 +206,7 @@ export class DragManager {
     };
 
     private onMouseLeave = () => {
-        if (this.currentDrag) return;
+        if (this.dragSession.isDragging()) return;
         this.clearHideTimer();
         this.hideTimer = globalThis.setTimeout(() => this.hideHandle(), 200);
     }
@@ -193,7 +216,7 @@ export class DragManager {
     };
 
     private onHandleLeave = () => {
-        if (this.currentDrag) return;
+        if (this.dragSession.isDragging()) return;
         this.startHideTimer();
     };
 
@@ -202,7 +225,7 @@ export class DragManager {
         if (!this.currentTarget || !this.controlsWrap) return;
         const rect = this.controlsWrap.getBoundingClientRect();
         const block = this.currentTarget;
-        this.hideHandle();
+        // this.hideHandle();
         runCommand('openBlockOptions', { content: { block, rect } });
     };
 
@@ -255,100 +278,17 @@ export class DragManager {
     }
 
     private updateHandlePosition() {
-        if (!this.currentTarget || !this.dragControl || !this.controlsWrap) return;
-        const textRect = this.getFirstLineRect(this.currentTarget);
-        const blockRect = this.currentTarget.getBoundingClientRect();
-        const rect = textRect ?? blockRect;
-        const top = rect.top + rect.height / 2 - this.dragControl.offsetHeight / 2;
-        const controlsWidth = this.controlsWrap.offsetWidth;
-        const left = blockRect.left - controlsWidth - 8;
-        this.controlsWrap.style.top = `${top}px`;
-        this.controlsWrap.style.left = `${left}px`;
+        this.positioner.updatePosition(this.currentTarget, this.dragControl, this.controlsWrap);
     }
 
-    private getFirstLineRect(el: HTMLElement): DOMRect | null {
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-        const node = walker.nextNode();
-        if (!node || !node.textContent) return null;
-        const range = document.createRange();
-        range.setStart(node, 0);
-        range.setEnd(node, Math.min(1, node.textContent.length));
-        const rect = range.getBoundingClientRect();
-        range.detach?.();
-        return rect.height ? rect : null;
-    }
+    private onViewportChange = () => {
+        this.updateHandlePosition();
+    };
 
     private onPointerDown = (e: PointerEvent) => {
         if (e.button !== 0 || !this.currentTarget) return;
+
         e.preventDefault();
-        this.currentDrag = this.currentTarget;
-        this.createPlaceholder();
-        this.hideHandle();
-        this.currentDrag.style.opacity = '0.5';
-        this.currentDrag.style.pointerEvents = 'none';
-        if (this.dragControl) this.dragControl.style.cursor = 'grabbing';
-        document.body.style.cursor = 'grabbing';
-        document.addEventListener(EventTypes.PointerMove, this.onPointerMove);
-        document.addEventListener(EventTypes.PointerUp, this.onPointerUp);
+        this.dragSession.startDrag(this.currentTarget, this.dragControl);
     };
-
-    private onPointerMove = (e: PointerEvent) => {
-        if (!this.currentDrag || !this.placeholder) return;
-
-        const contentRect = this.content.getBoundingClientRect();
-        let x = e.clientX;
-        let y = e.clientY;
-        if (x < contentRect.left) {
-            x = contentRect.left + 1;
-        } else if (x > contentRect.right) {
-            x = contentRect.right - 1;
-        }
-        if (y < contentRect.top) {
-            y = contentRect.top + 1;
-        } else if (y > contentRect.bottom) {
-            y = contentRect.bottom - 1;
-        }
-
-        const element = document.elementFromPoint(x, y) as HTMLElement | null;
-        const target = element?.closest('.block') as HTMLElement | null;
-        if (!target || target === this.currentDrag || target === this.placeholder) {
-            return;
-        }
-        const rect = target.getBoundingClientRect();
-        const before = y < rect.top + rect.height / 2;
-        target.parentElement!.insertBefore(this.placeholder, before ? target : target.nextSibling);
-    };
-
-    private onPointerUp = () => {
-        if (!this.currentDrag || !this.placeholder) return;
-        this.placeholder.parentElement!.insertBefore(this.currentDrag, this.placeholder);
-        this.currentDrag.style.removeProperty('opacity');
-        this.currentDrag.style.removeProperty('pointer-events');
-        this.removePlaceholder();
-        this.updateTargets();
-        this.currentTarget = this.currentDrag;
-        this.currentDrag = null;
-        document.removeEventListener(EventTypes.PointerMove, this.onPointerMove);
-        document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
-        document.body.style.removeProperty('cursor');
-        if (this.dragControl) this.dragControl.style.cursor = 'grab';
-        this.showHandle();
-    };
-
-    private createPlaceholder() {
-        this.placeholder = document.createElement('div');
-        const ph = this.placeholder;
-        ph.className = 'drag-placeholder';
-        ph.style.height = '2px';
-        ph.style.background = 'var(--color-primary, #0078d4)';
-        ph.style.margin = '4px 0';
-        ph.style.pointerEvents = 'none';
-        ph.contentEditable = 'false';
-        this.currentDrag!.parentElement!.insertBefore(ph, this.currentDrag!.nextSibling);
-    }
-
-    private removePlaceholder() {
-        this.placeholder?.remove();
-        this.placeholder = null;
-    }
 }
