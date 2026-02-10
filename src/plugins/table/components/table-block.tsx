@@ -7,12 +7,12 @@ export function TableBlock({ children, className = "", ...props }: DefaultProps)
         <table>
             <tbody>
                 <tr>
-                    <td contentEditable="true"><br /></td>
-                    <td contentEditable="true"><br /></td>
+                    <td contentEditable="true">{"\u00A0"}<br /></td>
+                    <td contentEditable="true">{"\u00A0"}<br /></td>
                 </tr>
                 <tr>
-                    <td contentEditable="true"><br /></td>
-                    <td contentEditable="true"><br /></td>
+                    <td contentEditable="true">{"\u00A0"}<br /></td>
+                    <td contentEditable="true">{"\u00A0"}<br /></td>
                 </tr>
             </tbody>
         </table>
