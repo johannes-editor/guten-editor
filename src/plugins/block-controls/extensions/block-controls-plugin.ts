@@ -1,8 +1,9 @@
 import { Plugin } from "@core/plugin-engine";
-import { DragAndDropManager } from "../drag-and-drop-manager.tsx";
+import { DragManager } from "../drag-manager.tsx";
 
-export class DragAndDropPlugin extends Plugin {
-    private manager: DragAndDropManager | null = null;
+export class BlockControlsPlugin extends Plugin {
+
+    private manager: DragManager | null = null;
 
     //Add Editor as parameter
     setup(root: HTMLElement, _plugins: Plugin[]): void {
@@ -11,7 +12,7 @@ export class DragAndDropPlugin extends Plugin {
         const overlay = root.querySelector('#overlayArea') as HTMLElement | null;
 
         if (content && overlay) {
-            this.manager = new DragAndDropManager(content, overlay);
+            this.manager = new DragManager(content, overlay);
             this.manager.start();
         }
     }

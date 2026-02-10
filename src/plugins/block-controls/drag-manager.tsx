@@ -1,10 +1,10 @@
 import { runCommand } from "@core/command";
 import { EventTypes } from "@utils/dom/events.ts";
 import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
-import { focusOnElement } from "@utils/dom";
+import { focusOnElementAtStart } from "@utils/dom";
 import { BlockControls } from "./components/block-controls.tsx";
 
-export class DragAndDropManager {
+export class DragManager {
 
     private mutationObserver: MutationObserver | null = null;
     private overlayObserver: MutationObserver | null = null;
@@ -222,7 +222,7 @@ export class DragAndDropManager {
             parent.insertBefore(paragraph, anchorBlock.nextSibling);
         }
 
-        focusOnElement(paragraph);
+        focusOnElementAtStart(paragraph);
         paragraph.dispatchEvent(new Event(EventTypes.Input, { bubbles: true }));
         this.currentTarget = paragraph;
         this.updateTargets();

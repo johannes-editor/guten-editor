@@ -1,11 +1,11 @@
 {
     "name": "Block controls",
     "version": "1.0.0",
-    "description": "Provides block-level controls such as the block options menu, default control commands, add (+) buttons, and drag-and-drop handling",
+    "description": "Provides block-level controls such as the block options menu, default control commands, add buttons and drag-and-drop handling",
     "entries": [
         {
-            "path": "./extensions/drag-and-drop-plugin.ts",
-            "class": "DragAndDropPlugin",
+            "path": "./extensions/block-controls-plugin.ts",
+            "class": "BlockControlsPlugin",
             "active": true
         },
         {
