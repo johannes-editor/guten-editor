@@ -19,6 +19,11 @@ export class ToolbarUI<P extends DefaultProps = DefaultProps, S = DefaultState> 
         .guten-toolbar li{
             list-style: none;
         }
+
+        .block-controls{
+            visibility: hidden ;
+            transition: opacity 120ms ease-out, visibility 0s linear;
+        }
     `);
 
     override connectedCallback(): void {

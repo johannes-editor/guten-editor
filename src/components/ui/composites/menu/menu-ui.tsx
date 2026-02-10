@@ -75,6 +75,11 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
               transparent
             );
         }
+
+        .block-controls{
+            visibility: hidden ;
+            transition: opacity 120ms ease-out, visibility 0s linear;
+        }
     `);
 
     override connectedCallback(): void {
@@ -87,7 +92,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         this.registerEvent(this, EventTypes.Mouseover, this.onMouseOver as EventListener);
         this.registerEvent(this, EventTypes.MouseMove, this.onMouseMove as EventListener);
 
-        if (this.autoFocusFirst !== false ) {
+        if (this.autoFocusFirst !== false) {
             this.setState({ selectedIndex: 0 } as Partial<S>);
         }
     }

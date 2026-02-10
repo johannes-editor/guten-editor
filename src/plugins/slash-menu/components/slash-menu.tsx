@@ -109,6 +109,11 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             color: var(--menu-item-color-selected);
         }
 
+        .block-controls{
+            visibility: hidden ;
+            transition: opacity 120ms ease-out, visibility 0s linear;
+        }
+
     ` );
 
     constructor() {
