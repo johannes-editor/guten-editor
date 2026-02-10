@@ -1,21 +1,19 @@
-
-import { h } from "@core/jsx";
 import { runCommand } from "@core/command";
-import { Tooltip } from "@components/ui/primitives/tooltip";
 import { EventTypes } from "@utils/dom/events.ts";
 import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
 import { focusOnElement } from "@utils/dom";
-import { GripVerticalIcon, PlusIcon } from "@components/ui/icons";
+import { BlockControls } from "./components/block-controls.tsx";
 
 export class DragAndDropManager {
+
     private mutationObserver: MutationObserver | null = null;
     private overlayObserver: MutationObserver | null = null;
     private currentDrag: HTMLElement | null = null;
     private currentTarget: HTMLElement | null = null;
-    private handleWrap: HTMLElement | null = null;
+    private controlsHost: HTMLElement | null = null;
     private controlsWrap: HTMLElement | null = null;
-    private handle: HTMLElement | null = null;
-    private addButton: HTMLElement | null = null;
+    private dragControl: HTMLButtonElement | null = null;
+    private addControl: HTMLButtonElement | null = null;
     private hideTimer: number | null = null;
     private placeholder: HTMLElement | null = null;
     private layer: HTMLElement | null = null;
@@ -46,10 +44,12 @@ export class DragAndDropManager {
         document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
 
         this.unbindHandleEvents();
+        this.controlsHost?.remove();
+        this.controlsHost = null;
         this.controlsWrap?.remove();
         this.controlsWrap = null;
-        this.handle = null;
-        this.addButton = null;
+        this.dragControl = null;
+        this.addControl = null;
         this.layer?.remove();
         this.layer = null;
     }
@@ -73,77 +73,33 @@ export class DragAndDropManager {
 
         if (!this.layer || !this.layer.isConnected) return;
 
-        const controlsWrap = document.createElement('div');
-        controlsWrap.style.position = 'absolute';
-        controlsWrap.style.display = 'none';
-        controlsWrap.style.pointerEvents = 'auto';
-        controlsWrap.style.alignItems = 'center';
-        controlsWrap.style.gap = '6px';
-        controlsWrap.classList.add("block-controls");
+        const controlsHost = <BlockControls />;
 
-        const addButton = document.createElement('button');
-        addButton.type = 'button';
-        addButton.setAttribute('aria-label', 'Add paragraph below (Alt+Click to add above)');
-        addButton.style.display = 'flex';
-        addButton.style.alignItems = 'center';
-        addButton.style.justifyContent = 'center';
-        addButton.style.cursor = 'pointer';
-        addButton.style.opacity = '0.35';
-        addButton.style.border = '0';
-        addButton.style.padding = '0';
-        addButton.style.background = 'transparent';
-        addButton.style.lineHeight = '1';
-        addButton.style.color = 'var(--color-ui-text)';
-
-        const addIcon = h(PlusIcon, { size: '1.125rem', 'aria-hidden': 'true' }) as HTMLElement;
-        addButton.append(addIcon);
-
-        const addWrap = h(
-            Tooltip,
-            { text: 'Add paragraph below\nAlt+Click to add above', shortcut: '', placement: 'right' },
-            addButton,
-        ) as HTMLElement;
-
-        const handle = document.createElement('div');
-        handle.className = 'drag-handle';
-        handle.style.display = 'flex';
-        handle.style.alignItems = 'center';
-        handle.style.justifyContent = 'center';
-        handle.style.cursor = 'grab';
-        handle.style.opacity = '0.35';
-        handle.style.color = 'var(--color-ui-text)';
-
-        const handleIcon = h(GripVerticalIcon, { size: '1.125rem' }) as HTMLElement;
-        handle.append(handleIcon);
-
-        const handleWrap = h(
-            Tooltip,
-            { text: 'Drag to move block \n Right click to open menu', shortcut: '', placement: 'right' },
-            handle,
-        ) as HTMLElement;
-
-        controlsWrap.append(addWrap, handleWrap);
+        this.layer?.appendChild(controlsHost);
+        this.controlsHost = controlsHost;
+        const controlsWrap = controlsHost.querySelector('.block-controls') as HTMLElement | null;
+        if (!controlsWrap) return;
 
         this.layer?.appendChild(controlsWrap);
-        this.handle = handle;
         this.controlsWrap = controlsWrap;
-        this.addButton = addButton;
+        this.addControl = controlsWrap.querySelector('button[data-control-type="add"]');
+        this.dragControl = controlsWrap.querySelector('button[data-control-type="drag"]');
     }
 
     private bindHandleEvents() {
-        this.handle?.addEventListener(EventTypes.PointerDown, this.onPointerDown);
+        this.dragControl?.addEventListener(EventTypes.PointerDown, this.onPointerDown);
         this.controlsWrap?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
         this.controlsWrap?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
-        this.handle?.addEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
-        this.addButton?.addEventListener(EventTypes.Click, this.onAddClick);
+        this.dragControl?.addEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
+        this.addControl?.addEventListener(EventTypes.Click, this.onAddClick);
     }
 
     private unbindHandleEvents() {
-        this.handle?.removeEventListener(EventTypes.PointerDown, this.onPointerDown);
+        this.dragControl?.removeEventListener(EventTypes.PointerDown, this.onPointerDown);
         this.controlsWrap?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
         this.controlsWrap?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
-        this.handle?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
-        this.addButton?.removeEventListener(EventTypes.Click, this.onAddClick);
+        this.dragControl?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
+        this.addControl?.removeEventListener(EventTypes.Click, this.onAddClick);
     }
 
     private observeOverlay() {
@@ -180,15 +136,16 @@ export class DragAndDropManager {
         if (!overlayRoot) return;
 
         const layerMissing = !this.layer || !this.layer.isConnected || !overlayRoot.contains(this.layer);
-        const handleMissing = !this.controlsWrap || !this.controlsWrap.isConnected || !this.handle || !this.handle.isConnected || !this.addButton || !this.addButton.isConnected;
+        const handleMissing = !this.controlsWrap || !this.controlsWrap.isConnected || !this.dragControl || !this.dragControl.isConnected || !this.addControl || !this.addControl.isConnected;
         this.observeOverlay();
 
         if (layerMissing) {
-            this.layer?.remove();
+            this.controlsHost?.remove();
+            this.controlsHost = null;
             this.controlsWrap?.remove();
-            this.handle = null;
+            this.dragControl = null;
             this.controlsWrap = null;
-            this.addButton = null;
+            this.addControl = null;
             this.setupOverlayArea();
             this.createHandle();
             this.bindHandleEvents();
@@ -196,10 +153,12 @@ export class DragAndDropManager {
         }
 
         if (handleMissing) {
+            this.controlsHost?.remove();
+            this.controlsHost = null;
             this.controlsWrap?.remove();
-            this.handle = null;
+            this.dragControl = null;
             this.controlsWrap = null;
-            this.addButton = null;
+            this.addControl = null;
             this.createHandle();
             this.bindHandleEvents();
         }
@@ -225,8 +184,9 @@ export class DragAndDropManager {
 
     private onMouseLeave = () => {
         if (this.currentDrag) return;
-        this.startHideTimer();
-    };
+        this.clearHideTimer();
+        this.hideTimer = globalThis.setTimeout(() => this.hideHandle(), 200);
+    }
 
     private onHandleEnter = () => {
         this.clearHideTimer();
@@ -252,7 +212,7 @@ export class DragAndDropManager {
         if (!this.currentTarget) return;
 
         const anchorBlock = this.currentTarget;
-        const paragraph = h(ParagraphBlock, {}) as HTMLElement;
+        const paragraph = <ParagraphBlock />;
         const parent = anchorBlock.parentElement;
         if (!parent) return;
 
@@ -295,11 +255,11 @@ export class DragAndDropManager {
     }
 
     private updateHandlePosition() {
-        if (!this.currentTarget || !this.handle || !this.controlsWrap) return;
+        if (!this.currentTarget || !this.dragControl || !this.controlsWrap) return;
         const textRect = this.getFirstLineRect(this.currentTarget);
         const blockRect = this.currentTarget.getBoundingClientRect();
         const rect = textRect ?? blockRect;
-        const top = rect.top + rect.height / 2 - this.handle.offsetHeight / 2;
+        const top = rect.top + rect.height / 2 - this.dragControl.offsetHeight / 2;
         const controlsWidth = this.controlsWrap.offsetWidth;
         const left = blockRect.left - controlsWidth - 8;
         this.controlsWrap.style.top = `${top}px`;
@@ -326,7 +286,7 @@ export class DragAndDropManager {
         this.hideHandle();
         this.currentDrag.style.opacity = '0.5';
         this.currentDrag.style.pointerEvents = 'none';
-        if (this.handle) this.handle.style.cursor = 'grabbing';
+        if (this.dragControl) this.dragControl.style.cursor = 'grabbing';
         document.body.style.cursor = 'grabbing';
         document.addEventListener(EventTypes.PointerMove, this.onPointerMove);
         document.addEventListener(EventTypes.PointerUp, this.onPointerUp);
@@ -371,7 +331,7 @@ export class DragAndDropManager {
         document.removeEventListener(EventTypes.PointerMove, this.onPointerMove);
         document.removeEventListener(EventTypes.PointerUp, this.onPointerUp);
         document.body.style.removeProperty('cursor');
-        if (this.handle) this.handle.style.cursor = 'grab';
+        if (this.dragControl) this.dragControl.style.cursor = 'grab';
         this.showHandle();
     };
 
