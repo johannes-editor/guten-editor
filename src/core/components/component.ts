@@ -9,6 +9,10 @@ import { DefaultProps, DefaultState } from "./types.ts";
  */
 export abstract class Component<P = DefaultProps, S = DefaultState> extends HTMLElement {
 
+    private static tagNameCache = new WeakMap<typeof Component, string>();
+    private static tagOwners = new Map<string, typeof Component>();
+    private static tagSuffixCounter = 0;
+
     /** The properties of the component */
     props: P = {} as P;
 
@@ -106,7 +110,26 @@ export abstract class Component<P = DefaultProps, S = DefaultState> extends HTML
      * @returns {string} The tag name of the component.
      */
     static get tagName(): string {
-        return `x-${Component.toKebabCase(this.name)}`;
+        const ctor = this as typeof Component;
+        const cached = Component.tagNameCache.get(ctor);
+        if (cached) return cached;
+
+        const normalizedName = Component.toKebabCase(ctor.name)
+            .replace(/[^a-z0-9._-]/g, "-")
+            .replace(/^-+|-+$/g, "") || "component";
+
+        let candidate = `x-${normalizedName}`;
+        const owner = Component.tagOwners.get(candidate);
+
+        if (owner && owner !== ctor) {
+            Component.tagSuffixCounter += 1;
+            candidate = `${candidate}-${Component.tagSuffixCounter}`;
+        }
+
+        Component.tagOwners.set(candidate, ctor);
+        Component.tagNameCache.set(ctor, candidate);
+
+        return candidate;
     }
 
     /**
