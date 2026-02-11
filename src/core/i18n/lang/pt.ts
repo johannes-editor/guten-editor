@@ -19,7 +19,7 @@ const pt: TranslationSchema = {
     divider: 'Divisor',
     line: 'Linha',
     untitled: 'Título',
-    start_typing: 'Digite aqui...',
+    start_typing: 'Digite algo ou pressione "/" para escolher um bloco',
     paragraph: 'Parágrafo',
     text: 'texto',
     title: 'Título',

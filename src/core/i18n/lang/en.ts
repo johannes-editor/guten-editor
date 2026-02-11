@@ -16,7 +16,7 @@ const en: TranslationSchema = {
     link: "Link",
     equation: "Equation",
     untitled: 'Untitled',
-    start_typing: 'Start typing...',
+    start_typing: 'Start typing or press "/" to choose a block',
     paragraph: 'Paragraph',
     text: 'Text',
     title: 'Title',
