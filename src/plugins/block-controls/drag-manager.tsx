@@ -57,6 +57,9 @@ export class DragManager {
         this.titleArea = this.editorContainer?.querySelector('#titleArea') as HTMLElement | null;
         this.editorContainer?.addEventListener(EventTypes.MouseLeave, this.onEditorContainerLeave);
         this.titleArea?.addEventListener(EventTypes.MouseEnter, this.onTitleAreaEnter);
+        
+        document.addEventListener(EventTypes.KeyDown, this.onEditorKeyDown, true);
+        document.addEventListener(EventTypes.Input, this.onEditorInput, true);    
     }
 
     stop() {
@@ -72,6 +75,9 @@ export class DragManager {
 
         this.editorContainer?.removeEventListener(EventTypes.MouseLeave, this.onEditorContainerLeave);
         this.titleArea?.removeEventListener(EventTypes.MouseEnter, this.onTitleAreaEnter);
+
+        document.removeEventListener(EventTypes.KeyDown, this.onEditorKeyDown, true);
+        document.removeEventListener(EventTypes.Input, this.onEditorInput, true);
 
         this.unbindHandleEvents();
         this.controlsHost?.remove();
@@ -201,10 +207,18 @@ export class DragManager {
 
     private attachListeners(el: HTMLElement) {
         el.addEventListener(EventTypes.MouseEnter, this.onMouseEnter);
+        el.addEventListener(EventTypes.MouseMove, this.onMouseMove);
     }
 
     private onMouseEnter = (e: MouseEvent) => {
         this.clearHideTimer();
+        this.currentTarget = e.currentTarget as HTMLElement;
+        this.showHandle();
+    };
+
+    private onMouseMove = (e: MouseEvent) => {
+        if (this.dragSession.isDragging() || !this.controlsWrap || this.controlsWrap.style.display !== 'none') return;
+
         this.currentTarget = e.currentTarget as HTMLElement;
         this.showHandle();
     };
@@ -299,4 +313,42 @@ export class DragManager {
         if (this.dragSession.isDragging()) return;
         this.hideHandle();
     };
+
+    private onEditorInput = (_event: Event) => {
+        if (this.dragSession.isDragging() || !this.isHandleVisible()) return;
+        this.hideHandle();
+    };
+
+    private onEditorKeyDown = (event: KeyboardEvent) => {
+        if (this.dragSession.isDragging() || !this.isHandleVisible()) return;
+        if (!this.shouldHideHandleOnKeyDown(event)) return;
+        this.hideHandle();
+    };
+
+    private isHandleVisible() {
+        return Boolean(this.controlsWrap && this.controlsWrap.style.display !== 'none');
+    }
+
+    private shouldHideHandleOnKeyDown(event: KeyboardEvent) {
+        if (this.isDirectionalKey(event.key)) return true;
+
+        if (event.metaKey || event.ctrlKey || event.altKey) return false;
+
+        return event.key.length === 1
+            || event.key === 'Backspace'
+            || event.key === 'Delete'
+            || event.key === 'Enter'
+            || event.key === 'Tab';
+    }
+
+    private isDirectionalKey(key: string) {
+        return key === 'ArrowUp' ||
+            key === 'ArrowDown' ||
+            key === 'ArrowLeft' ||
+            key === 'ArrowRight' ||
+            key === 'Home' ||
+            key === 'End' ||
+            key === 'PageUp' ||
+            key === 'PageDown';
+    }
 }
