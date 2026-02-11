@@ -34,6 +34,7 @@ export class DragManager {
             onDragEnd: (draggedBlock) => {
                 this.updateTargets();
                 this.currentTarget = draggedBlock;
+                focusOnElementAtStart(draggedBlock);
                 this.showHandle();
             },
         });
