@@ -5,27 +5,32 @@ body {
 }
 
 .editor-container {
-    max-width: var(--editor-max-width, 710px);
+    max-width: var(--editor-container-max-width, 770px);
     margin-left: auto;
     margin-right: auto;
     font-family: var(--font-family);
+
+    color: var(--color-text);
+    background-color: var(--color-bg);
+
+    box-sizing: border-box;
 }
 
 #contentArea {
     padding-left: 2rem;
     color: var(--color-text);
     background-color: var(--color-bg);
+
+    width: 710px;
+    max-width: 100%;
 }
 
 #titleArea {
     padding-left: 2rem;
     color: var(--color-text);
     background-color: var(--color-bg);
-}
-
-.editor-container {
-    color: var(--color-text);
-    background-color: var(--color-bg);
+    width: 710px;
+    max-width: 100%;
 }
 
 .unselectable {

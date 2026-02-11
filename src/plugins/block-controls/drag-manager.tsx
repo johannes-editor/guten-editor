@@ -11,24 +11,22 @@ export class DragManager {
 
     private mutationObserver: MutationObserver | null = null;
     private overlayObserver: MutationObserver | null = null;
-    private currentDrag: HTMLElement | null = null;
     private currentTarget: HTMLElement | null = null;
     private controlsHost: HTMLElement | null = null;
     private controlsWrap: HTMLElement | null = null;
     private dragControl: HTMLButtonElement | null = null;
     private addControl: HTMLButtonElement | null = null;
+    private editorContainer: HTMLElement | null = null;
+    private titleArea: HTMLElement | null = null;
     private hideTimer: number | null = null;
-    // private placeholder: HTMLElement | null = null;
     private layer: HTMLElement | null = null;
-
-    // constructor(private content: HTMLElement, private overlay: HTMLElement) { }
-
-
 
     private dragSession: DragSessionController;
     private positioner = new BlockControlsPositioner();
 
     constructor(private content: HTMLElement, private overlay: HTMLElement) {
+        this.editorContainer = this.content.closest('.editor-container') as HTMLElement | null;
+        this.titleArea = this.editorContainer?.querySelector('#titleArea') as HTMLElement | null;
         this.dragSession = new DragSessionController(this.content, {
             onDragStart: () => {
                 this.hideHandle();
@@ -53,6 +51,11 @@ export class DragManager {
 
         globalThis.addEventListener(EventTypes.Scroll, this.onViewportChange);
         globalThis.addEventListener(EventTypes.Resize, this.onViewportChange);
+
+        this.editorContainer = this.content.closest('.editor-container') as HTMLElement | null;
+        this.titleArea = this.editorContainer?.querySelector('#titleArea') as HTMLElement | null;
+        this.editorContainer?.addEventListener(EventTypes.MouseLeave, this.onEditorContainerLeave);
+        this.titleArea?.addEventListener(EventTypes.MouseEnter, this.onTitleAreaEnter);
     }
 
     stop() {
@@ -65,6 +68,9 @@ export class DragManager {
 
         globalThis.removeEventListener(EventTypes.Scroll, this.onViewportChange);
         globalThis.removeEventListener(EventTypes.Resize, this.onViewportChange);
+
+        this.editorContainer?.removeEventListener(EventTypes.MouseLeave, this.onEditorContainerLeave);
+        this.titleArea?.removeEventListener(EventTypes.MouseEnter, this.onTitleAreaEnter);
 
         this.unbindHandleEvents();
         this.controlsHost?.remove();
@@ -112,7 +118,6 @@ export class DragManager {
     private bindHandleEvents() {
         this.dragControl?.addEventListener(EventTypes.PointerDown, this.onPointerDown);
         this.controlsWrap?.addEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.controlsWrap?.addEventListener(EventTypes.MouseLeave, this.onHandleLeave);
         this.dragControl?.addEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
         this.addControl?.addEventListener(EventTypes.Click, this.onAddClick);
     }
@@ -120,7 +125,6 @@ export class DragManager {
     private unbindHandleEvents() {
         this.dragControl?.removeEventListener(EventTypes.PointerDown, this.onPointerDown);
         this.controlsWrap?.removeEventListener(EventTypes.MouseEnter, this.onHandleEnter);
-        this.controlsWrap?.removeEventListener(EventTypes.MouseLeave, this.onHandleLeave);
         this.dragControl?.removeEventListener(EventTypes.ContextMenu, this.onHandleContextMenu);
         this.addControl?.removeEventListener(EventTypes.Click, this.onAddClick);
     }
@@ -196,7 +200,6 @@ export class DragManager {
 
     private attachListeners(el: HTMLElement) {
         el.addEventListener(EventTypes.MouseEnter, this.onMouseEnter);
-        el.addEventListener(EventTypes.MouseLeave, this.onMouseLeave);
     }
 
     private onMouseEnter = (e: MouseEvent) => {
@@ -215,17 +218,11 @@ export class DragManager {
         this.clearHideTimer();
     };
 
-    private onHandleLeave = () => {
-        if (this.dragSession.isDragging()) return;
-        this.startHideTimer();
-    };
-
     private onHandleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
         if (!this.currentTarget || !this.controlsWrap) return;
         const rect = this.controlsWrap.getBoundingClientRect();
         const block = this.currentTarget;
-        // this.hideHandle();
         runCommand('openBlockOptions', { content: { block, rect } });
     };
 
@@ -290,5 +287,15 @@ export class DragManager {
 
         e.preventDefault();
         this.dragSession.startDrag(this.currentTarget, this.dragControl);
+    };
+
+    private onTitleAreaEnter = () => {
+        if (this.dragSession.isDragging()) return;
+        this.hideHandle();
+    };
+
+    private onEditorContainerLeave = () => {
+        if (this.dragSession.isDragging()) return;
+        this.hideHandle();
     };
 }
