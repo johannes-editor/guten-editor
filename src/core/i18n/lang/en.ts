@@ -85,6 +85,10 @@ const en: TranslationSchema = {
     align_justify: 'Justify',
 
     image: 'Image',
+
+    mosaic: 'Mosaic',
+    mosaic_add_image: 'Add image to mosaic',
+
     photo: 'Photo',
     picture: 'Picture',
     img: 'img',

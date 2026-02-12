@@ -1,0 +1,25 @@
+{
+    "name": "Mosaic",
+    "author": "Alexandre Tavares",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./extensions/slash-menu-mosaic-extension.tsx",
+            "class": "SlashMenuMosaicExtension",
+            "active": true,
+            "description": "Adds the Mosaic block to the slash menu."
+        },
+        {
+            "path": "./extensions/command-mosaic-extension.ts",
+            "class": "CommandMosaicExtension",
+            "active": true,
+            "description": "Registers Mosaic image insertion command."
+        },
+        {
+            "path": "./extensions/block-options-mosaic-extension.tsx",
+            "class": "BlockOptionsMosaicExtension",
+            "active": true,
+            "description": "Adds Mosaic-specific actions to block options menu."
+        }
+    ]
+}

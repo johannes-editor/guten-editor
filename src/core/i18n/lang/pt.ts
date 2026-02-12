@@ -84,6 +84,10 @@ const pt: TranslationSchema = {
     align_justify: 'Justificar',
 
     image: 'Imagem',
+
+    mosaic: 'Mosaico',
+    mosaic_add_image: 'Adicionar imagem ao mosaico',
+
     photo: 'Foto',
     picture: 'Figura',
     img: 'img',
