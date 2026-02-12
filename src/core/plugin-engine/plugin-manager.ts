@@ -8,12 +8,6 @@ const manifests = import.meta.glob(
     { eager: true },
 ) as unknown as Record<string, { default: PluginManifest }>;
 
-// const pluginModules = import.meta.glob(
-//     ["../../plugins/**/*.{ts,tsx}",
-//     "!../../plugins/**/*.test.{ts,tsx}"],
-//     { eager: true }
-// ) as unknown as Record<string, () => Promise<Record<string, unknown>>>;
-
 const pluginModules = import.meta.glob(
     ["../../plugins/**/*.{ts,tsx}", "!../../plugins/**/*.test.{ts,tsx}"],
     { eager: true },
@@ -21,8 +15,8 @@ const pluginModules = import.meta.glob(
 
 
 export class PluginManager {
-    async init(root: HTMLElement): Promise<void> {
-        const plugins = await this.fetchPlugins();
+    init(root: HTMLElement): void {
+        const plugins = this.fetchPlugins();
 
         for (const plugin of plugins) {
             plugin.setup(root, plugins);
@@ -53,7 +47,7 @@ export class PluginManager {
         }
     }
 
-    private async fetchPlugins(): Promise<Plugin[]> {
+    private fetchPlugins(): Plugin[] {
         const loaded: Plugin[] = [];
 
         for (const manifestPath in manifests) {
