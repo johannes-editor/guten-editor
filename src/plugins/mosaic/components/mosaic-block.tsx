@@ -22,19 +22,20 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
         overflow: hidden;
         position: relative;
         padding: 0;
-        height: fit-content;
+        height: 100%;
+        min-height: 0;
     }
 
     .mosaic-block__tile--tall {
-        min-height: 220px;
+        grid-row: span 28;
     }
 
     .mosaic-block__tile--short {
-        min-height: 150px;
+        grid-row: span 19;
     }
 
     .mosaic-block__tile--mid {
-        min-height: 185px;
+        grid-row: span 23;
     }
 
     .mosaic-block__tile-content {
@@ -138,6 +139,43 @@ export function applyMosaicTileImage(payload: MosaicTileImagePayload): boolean {
     renderTileImage(tile, payload.sourceUrl, payload.alt);
     return true;
 }
+
+function getNextMosaicTileId(block: HTMLElement): string {
+    const tiles = block.querySelectorAll<HTMLElement>(".mosaic-block__tile[data-mosaic-tile]");
+    let maxTileId = 0;
+
+    for (const tile of Array.from(tiles)) {
+        const tileId = Number.parseInt(tile.dataset.mosaicTile ?? "", 10);
+        if (!Number.isNaN(tileId)) {
+            maxTileId = Math.max(maxTileId, tileId);
+        }
+    }
+
+    return String(maxTileId + 1);
+}
+
+export function createMosaicTile(block: HTMLElement, size: "tall" | "short" | "mid" = "mid"): HTMLElement {
+    
+    const tile = (
+        <button
+            type="button"
+            className={`mosaic-block__tile mosaic-block__tile--${size}`}
+            data-mosaic-tile={getNextMosaicTileId(block)}
+            
+            onClick={(event: MouseEvent) => {
+                event.preventDefault();
+                openTileImageMenu(event.currentTarget as HTMLElement);
+            }}
+        >
+            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
+        </button>
+    ) as HTMLElement;
+
+    block.appendChild(tile);
+    return tile;
+}
+
+
 
 export function MosaicBlock() {
     ensureMosaicStyles();
