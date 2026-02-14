@@ -3,6 +3,9 @@ import { t } from "@core/i18n";
 import { ImageUpIcon } from "@components/ui/icons";
 import { ensureBlockId } from "@utils/dom";
 
+const MOSAIC_COLUMN_COUNT = 3;
+const DEFAULT_TILE_RATIO = 4 / 3;
+
 const MOSAIC_BLOCK_STYLE_ID = "guten-mosaic-block-styles";
 const TILE_RESERVED_DATASET_KEYS = new Set(["mosaicTile", "imageSource", "imageAlt", "mosaicImage"]);
 
@@ -14,6 +17,13 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
         margin: var(--space-sm) 0;
     }
 
+    .mosaic-block__column {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        min-width: 0;
+    }
+
     .mosaic-block__tile {
         border: 0;
         border-radius: var(--radius-md);
@@ -22,7 +32,6 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
         overflow: hidden;
         position: relative;
         padding: 0;
-        height: 100%;
         min-height: 0;
     }
 
@@ -41,7 +50,7 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
     .mosaic-block__tile-content {
         display: flex;
         width: 100%;
-        height: 100%;
+        aspect-ratio: var(--mosaic-tile-ratio, 4/3);
         color: var(--color-muted);
         align-items: center;
         justify-content: center;
@@ -55,8 +64,7 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
     .mosaic-block__tile img {
         display: block;
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: auto;
         user-select: none;
         pointer-events: none;
     }
@@ -109,9 +117,96 @@ function renderTileImage(tile: HTMLElement, src: string, alt?: string): void {
         tile.appendChild(img);
     }
 
+    img.onload = () => {
+        const width = img?.naturalWidth ?? 0;
+        const height = img?.naturalHeight ?? 0;
+        if (!width || !height) return;
+
+        tile.style.setProperty("--mosaic-tile-ratio", `${width} / ${height}`);
+        tile.dataset.mosaicTileRatio = String(width / height);
+    };
+
     img.src = src;
     img.alt = alt ?? "";
     img.draggable = false;
+}
+
+function getTileRatio(tile: HTMLElement): number {
+    const value = Number.parseFloat(tile.dataset.mosaicTileRatio ?? "");
+    if (!Number.isFinite(value) || value <= 0) return DEFAULT_TILE_RATIO;
+    return value;
+}
+
+function getColumnHeightScore(column: HTMLElement): number {
+    const tiles = column.querySelectorAll<HTMLElement>(".mosaic-block__tile");
+    let totalHeight = 0;
+
+    for (const tile of Array.from(tiles)) {
+        totalHeight += 1 / getTileRatio(tile);
+    }
+
+    return totalHeight;
+}
+
+function getOrCreateColumns(block: HTMLElement): HTMLElement[] {
+    const existingColumns = Array.from(block.querySelectorAll<HTMLElement>(":scope > .mosaic-block__column"));
+    if (existingColumns.length === MOSAIC_COLUMN_COUNT) {
+        return existingColumns;
+    }
+
+    const columns = Array.from({ length: MOSAIC_COLUMN_COUNT }, () => (
+        <div className="mosaic-block__column" data-mosaic-column="true"></div>
+    ) as HTMLElement);
+
+    const tiles = Array.from(block.querySelectorAll<HTMLElement>(":scope > .mosaic-block__tile"));
+    block.innerHTML = "";
+
+    for (const column of columns) {
+        block.appendChild(column);
+    }
+
+    for (const [index, tile] of tiles.entries()) {
+        columns[index % MOSAIC_COLUMN_COUNT].appendChild(tile);
+    }
+
+    return columns;
+}
+
+function getColumnWithMostSpace(block: HTMLElement): HTMLElement {
+    const columns = getOrCreateColumns(block);
+    return columns.reduce((smallest, current) => {
+        if (getColumnHeightScore(current) < getColumnHeightScore(smallest)) {
+            return current;
+        }
+
+        return smallest;
+    }, columns[0]);
+}
+
+function createDefaultTile(tileId: string): HTMLElement {
+    const tile = (
+        <div
+            className="mosaic-block__tile"
+            data-mosaic-tile={tileId}
+            data-mosaic-tile-ratio={String(DEFAULT_TILE_RATIO)}
+            style="--mosaic-tile-ratio: 4 / 3"
+            role="button"
+            tabIndex={0}
+            onClick={(event: MouseEvent) => {
+                event.preventDefault();
+                openTileImageMenu(event.currentTarget as HTMLElement);
+            }}
+            onKeyDown={(event: KeyboardEvent) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                event.preventDefault();
+                openTileImageMenu(event.currentTarget as HTMLElement);
+            }}
+        >
+            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
+        </div>
+    ) as HTMLElement;
+
+    return tile;
 }
 
 export type MosaicTileImagePayload = {
@@ -154,28 +249,9 @@ function getNextMosaicTileId(block: HTMLElement): string {
     return String(maxTileId + 1);
 }
 
-export function createMosaicTile(block: HTMLElement, size: "tall" | "short" | "mid" = "mid"): HTMLElement {
-    const tile = (
-        <div
-            className={`mosaic-block__tile mosaic-block__tile--${size}`}
-            data-mosaic-tile={getNextMosaicTileId(block)}
-            role="button"
-            tabIndex={0}
-            onClick={(event: MouseEvent) => {
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }}
-            onKeyDown={(event: KeyboardEvent) => {
-                if (event.key !== "Enter" && event.key !== " ") return;
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }}
-        >
-            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
-        </div>
-    ) as HTMLElement;
-
-    block.appendChild(tile);
+export function createMosaicTile(block: HTMLElement): HTMLElement {
+    const tile = createDefaultTile(getNextMosaicTileId(block));
+    getColumnWithMostSpace(block).appendChild(tile);
     return tile;
 }
 
@@ -193,41 +269,9 @@ export function MosaicBlock() {
                 ensureBlockId(element);
             }}
         >
-            <div className="mosaic-block__tile mosaic-block__tile--tall" data-mosaic-tile="1" role="button" tabIndex={0} onClick={(event: MouseEvent) => {
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }} onKeyDown={(event: KeyboardEvent) => {
-                if (event.key !== "Enter" && event.key !== " ") return;
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }}>
-                <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon  style="opacity: 0.4"/></span>
-            </div>
-
-                       
-            <div className="mosaic-block__tile mosaic-block__tile--short" data-mosaic-tile="2" role="button" tabIndex={0} onClick={(event: MouseEvent) => {
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }} onKeyDown={(event: KeyboardEvent) => {
-                if (event.key !== "Enter" && event.key !== " ") return;
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }}>
-                <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
-            </div>
-
-            <div className="mosaic-block__tile mosaic-block__tile--mid" data-mosaic-tile="3" role="button" tabIndex={0} onClick={(event: MouseEvent) => {
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }} onKeyDown={(event: KeyboardEvent) => {
-                if (event.key !== "Enter" && event.key !== " ") return;
-                event.preventDefault();
-                openTileImageMenu(event.currentTarget as HTMLElement);
-            }}>
-                <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
-            </div>
-
-            
+            <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("1")}</div>
+            <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("2")}</div>
+            <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("3")}</div>
         </figure>
     );
 }
