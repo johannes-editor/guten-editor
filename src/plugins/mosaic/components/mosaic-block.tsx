@@ -3,6 +3,7 @@ import { t } from "@core/i18n";
 import { ImageUpIcon } from "@components/ui/icons";
 import { ensureBlockId } from "@utils/dom";
 import { AddCircleButton } from "@components/ui/buttons/add-circle-button.tsx";
+import { applyImageSourceToElement } from "@utils/media";
 
 const MOSAIC_COLUMN_COUNT = 3;
 const DEFAULT_TILE_RATIO = 4 / 3;
@@ -403,7 +404,7 @@ function renderTileImage(tile: HTMLElement, src: string, alt?: string): void {
         tile.dataset.mosaicTileRatio = String(width / height);
     };
 
-    img.src = src;
+    void applyImageSourceToElement(img, src);
     img.alt = alt ?? "";
     img.draggable = false;
 }

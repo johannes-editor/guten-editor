@@ -3,6 +3,7 @@ import { runCommand } from "@core/command";
 import { DefaultProps, DefaultState } from "@core/components";
 import { OverlayComponent } from "@components/editor/overlay";
 import { ImagePlugin, type ImageUploadResult } from "../extensions/image-plugin.ts";
+import { saveLocalImage } from "@utils/media";
 
 export interface ImageMenuProps extends DefaultProps {
     target?: HTMLElement | null;
@@ -320,7 +321,7 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
         this.setState({ isUploading: true, error: null } as Partial<ImageMenuState>);
         try {
             const handler = ImagePlugin.getOptions().upload;
-            const result = await (handler ? handler(file) : this.readFileAsDataURL(file));
+            const result = await (handler ? handler(file) : this.saveFileAsLocalReference(file));
             const payload = this.normalizeUploadResult(result, file);
 
             if (!payload.url) {
@@ -336,6 +337,14 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
         }
     }
 
+    private async saveFileAsLocalReference(file: File): Promise<ImageUploadResult> {
+        const url = await saveLocalImage(file);
+        return {
+            url,
+            alt: file.name,
+        };
+    }
+
     private normalizeUploadResult(result: ImageUploadResult | string, file: File): ImageUploadResult {
         if (typeof result === "string") {
             return { url: result, alt: file.name };
@@ -346,15 +355,6 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
             alt: result.alt ?? file.name,
             dataset: result.dataset,
         };
-    }
-
-    private readFileAsDataURL(file: File): Promise<ImageUploadResult> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve({ url: typeof reader.result === "string" ? reader.result : "", alt: file.name });
-            reader.onerror = () => reject(new Error(t("image_upload_error")));
-            reader.readAsDataURL(file);
-        });
     }
 
     private handleEmbedInsert(): void {
@@ -377,7 +377,7 @@ export class ImageMenu extends OverlayComponent<ImageMenuProps, ImageMenuState> 
     }
 
     private isValidUrl(value: string): boolean {
-        if (value.startsWith("data:")) return true;
+        if (value.startsWith("data:") || value.startsWith("guten-image://")) return true;
         try {
             const url = new URL(value);
             return url.protocol === "http:" || url.protocol === "https:" || url.protocol === "data:";

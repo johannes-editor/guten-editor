@@ -1,4 +1,5 @@
 import { ensureBlockId } from "@utils/dom";
+import { applyImageSourceToElement } from "@utils/media";
 
 export interface ImageBlockProps {
     src: string;
@@ -94,7 +95,15 @@ export function ImageBlock(props: ImageBlockProps) {
 
     return (
         <figure {...figureProps} ref={assignRef}>
-            <img src={src} alt={alt ?? ""} draggable={false} />
+            <img
+                src={src}
+                alt={alt ?? ""}
+                draggable={false}
+                ref={(image: HTMLImageElement | null) => {
+                    if (!image) return;
+                    void applyImageSourceToElement(image, src);
+                }}
+            />
         </figure>
     );
 }
@@ -114,6 +123,8 @@ export function updateImageBlockElement(element: HTMLElement, props: ImageBlockP
     if (!isImageBlockElement(element)) return;
     const img = element.querySelector<HTMLImageElement>("img");
     if (!img) return;
+
+    void applyImageSourceToElement(img, props.src);
 
     if (img.src !== props.src) {
         img.src = props.src;

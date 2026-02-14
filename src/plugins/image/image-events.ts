@@ -1,7 +1,7 @@
 export const IMAGE_ADDED_EVENT = "guten:image-added";
 export const IMAGE_REPLACE_EVENT = "guten:image-replace";
 
-export type ImageSourceType = "data-url" | "external-url";
+export type ImageSourceType = "data-url" | "external-url" | "local-reference";
 
 export interface ImageAddedEventDetail {
     blockId: string;
@@ -21,5 +21,7 @@ export interface ImageReplaceEventDetail {
 }
 
 export function getImageSourceType(value: string): ImageSourceType {
-    return value.startsWith("data:") ? "data-url" : "external-url";
+    if (value.startsWith("data:")) return "data-url";
+    if (value.startsWith("guten-image://")) return "local-reference";
+    return "external-url";
 }

@@ -2,6 +2,7 @@ import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
 import { DefaultProps, DefaultState } from "@core/components";
 import { OverlayComponent } from "@components/editor/overlay";
+import { saveLocalImage } from "@utils/media";
 
 export interface MosaicImageMenuProps extends DefaultProps {
     target?: HTMLElement | null;
@@ -279,7 +280,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
         this.setState({ isUploading: true, error: null } as Partial<MosaicImageMenuState>);
 
         try {
-            const url = await this.readFileAsDataURL(file);
+            const url = await saveLocalImage(file);
             this.insertImage({
                 url,
                 alt: file.name,
@@ -289,15 +290,6 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
         } finally {
             this.setState({ isUploading: false } as Partial<MosaicImageMenuState>);
         }
-    }
-
-    private readFileAsDataURL(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
-            reader.onerror = () => reject(new Error(t("image_upload_error")));
-            reader.readAsDataURL(file);
-        });
     }
 
     private handleEmbedInsert(): void {
@@ -322,7 +314,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
     }
 
     private isValidUrl(value: string): boolean {
-        if (value.startsWith("data:")) return true;
+        if (value.startsWith("data:") || value.startsWith("guten-image://")) return true;
 
         try {
             const url = new URL(value);
