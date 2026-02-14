@@ -6,6 +6,7 @@ import { AddCircleButton } from "@components/ui/buttons/add-circle-button.tsx";
 
 const MOSAIC_COLUMN_COUNT = 3;
 const DEFAULT_TILE_RATIO = 4 / 3;
+const DRAGGED_TILE_OPACITY = "0.45";
 
 const MOSAIC_BLOCK_STYLE_ID = "guten-mosaic-block-styles";
 const TILE_RESERVED_DATASET_KEYS = new Set(["mosaicTile", "imageSource", "imageAlt", "mosaicImage"]);
@@ -40,6 +41,24 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
         position: relative;
         padding: 0;
         min-height: 0;
+    }
+
+    .mosaic-block__tile[draggable="true"] {
+        cursor: grab;
+    }
+
+    .mosaic-block__tile[data-mosaic-dragging="true"] {
+        opacity: ${DRAGGED_TILE_OPACITY};
+    }
+
+    .mosaic-block__tile[data-mosaic-drop-target="true"] {
+        outline: 2px dashed var(--accent-primary);
+        outline-offset: 1px;
+    }
+
+    .mosaic-block__column[data-mosaic-drop-target="true"] {
+        box-shadow: inset 0 0 0 2px var(--accent-primary);
+        border-radius: var(--radius-md);
     }
 
     .mosaic-block__tile--tall {
@@ -93,6 +112,235 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
     }
 `;
 
+function getTileWeight(tile: HTMLElement): number {
+    return 1 / getTileRatio(tile);
+}
+
+function getColumnInsertReference(column: HTMLElement, draggedTile: HTMLElement, clientY: number): HTMLElement | null {
+    const tiles = Array.from(column.querySelectorAll<HTMLElement>(":scope > .mosaic-block__tile"))
+        .filter((tile) => tile !== draggedTile);
+
+    for (const tile of tiles) {
+        const rect = tile.getBoundingClientRect();
+        const midpoint = rect.top + (rect.height / 2);
+        if (clientY < midpoint) {
+            return tile;
+        }
+    }
+
+    return null;
+}
+
+function clearDropHighlights(block: HTMLElement): void {
+    const highlighted = block.querySelectorAll<HTMLElement>("[data-mosaic-drop-target='true']");
+    for (const element of Array.from(highlighted)) {
+        delete element.dataset.mosaicDropTarget;
+    }
+}
+
+function canMoveTileToColumn(
+    columns: HTMLElement[],
+    sourceColumn: HTMLElement,
+    destinationColumn: HTMLElement,
+    tile: HTMLElement,
+): boolean {
+    if (sourceColumn === destinationColumn) return true;
+
+    const tileWeight = getTileWeight(tile);
+    const sourceHeight = getColumnHeightScore(sourceColumn);
+    const destinationHeight = getColumnHeightScore(destinationColumn);
+    const currentTallest = Math.max(...columns.map((column) => getColumnHeightScore(column)));
+    const projectedSourceHeight = sourceHeight - tileWeight;
+    const projectedDestinationHeight = destinationHeight + tileWeight;
+
+    if (projectedSourceHeight < 0) return false;
+    return projectedDestinationHeight <= currentTallest + 0.0001;
+}
+
+function canSwapTilesBetweenColumns(
+    columns: HTMLElement[],
+    sourceColumn: HTMLElement,
+    destinationColumn: HTMLElement,
+    draggedTile: HTMLElement,
+    targetTile: HTMLElement,
+): boolean {
+    if (!columns.length) return false;
+    if (sourceColumn === destinationColumn) return false;
+    if (draggedTile === targetTile) return false;
+
+    return true;
+}
+
+function findFallbackSwapTile(
+    columns: HTMLElement[],
+    sourceColumn: HTMLElement,
+    destinationColumn: HTMLElement,
+    draggedTile: HTMLElement,
+    preferredTile: HTMLElement | null,
+): HTMLElement | null {
+    const destinationTiles = Array.from(destinationColumn.querySelectorAll<HTMLElement>(":scope > .mosaic-block__tile"));
+
+    if (preferredTile && destinationTiles.includes(preferredTile)) {
+        if (canSwapTilesBetweenColumns(columns, sourceColumn, destinationColumn, draggedTile, preferredTile)) {
+            return preferredTile;
+        }
+    }
+
+    for (const candidate of destinationTiles) {
+        if (candidate === draggedTile) continue;
+        if (canSwapTilesBetweenColumns(columns, sourceColumn, destinationColumn, draggedTile, candidate)) {
+            return candidate;
+        }
+    }
+
+    return null;
+}
+
+function swapTiles(draggedTile: HTMLElement, targetTile: HTMLElement): void {
+    const sourceParent = draggedTile.parentElement;
+    const targetParent = targetTile.parentElement;
+    if (!sourceParent || !targetParent) return;
+
+    const draggedNextSibling = draggedTile.nextSibling;
+    const targetNextSibling = targetTile.nextSibling;
+
+    if (sourceParent === targetParent) {
+        const parent = sourceParent;
+        if (draggedNextSibling === targetTile) {
+            parent.insertBefore(targetTile, draggedTile);
+            return;
+        }
+
+        if (targetNextSibling === draggedTile) {
+            parent.insertBefore(draggedTile, targetTile);
+            return;
+        }
+
+        parent.insertBefore(draggedTile, targetNextSibling);
+        parent.insertBefore(targetTile, draggedNextSibling);
+        return;
+    }
+
+    sourceParent.insertBefore(targetTile, draggedNextSibling);
+    targetParent.insertBefore(draggedTile, targetNextSibling);
+}
+
+function setupMosaicTileDragAndDrop(block: HTMLElement): void {
+    if (block.dataset.mosaicDndReady === "true") return;
+    block.dataset.mosaicDndReady = "true";
+
+    for (const tile of Array.from(block.querySelectorAll<HTMLElement>(".mosaic-block__tile"))) {
+        ensureTileIsDraggable(tile);
+    }
+
+    let draggedTile: HTMLElement | null = null;
+    let sourceColumn: HTMLElement | null = null;
+
+    block.addEventListener("dragstart", (event) => {
+        const tile = (event.target as HTMLElement | null)?.closest<HTMLElement>(".mosaic-block__tile");
+        if (!tile || !block.contains(tile)) return;
+
+        ensureTileIsDraggable(tile);
+
+        draggedTile = tile;
+        sourceColumn = tile.closest<HTMLElement>(".mosaic-block__column");
+        tile.dataset.mosaicDragging = "true";
+
+        if (event.dataTransfer) {
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", tile.dataset.mosaicTile ?? "mosaic-tile");
+        }
+    });
+
+    block.addEventListener("dragover", (event) => {
+        if (!draggedTile || !sourceColumn) return;
+
+        const target = event.target as HTMLElement | null;
+        const targetTile = target?.closest<HTMLElement>(".mosaic-block__tile");
+        const targetColumn = target?.closest<HTMLElement>(".mosaic-block__column");
+
+        if (!targetColumn || !block.contains(targetColumn)) return;
+
+        const columns = getOrCreateColumns(block);
+        const canMove = canMoveTileToColumn(columns, sourceColumn, targetColumn, draggedTile);
+        const swapTile = findFallbackSwapTile(
+            columns,
+            sourceColumn,
+            targetColumn,
+            draggedTile,
+            targetTile && targetTile !== draggedTile ? targetTile : null,
+        );
+        const canSwap = Boolean(swapTile);
+
+        if (!canMove && !canSwap) {
+            if (event.dataTransfer) event.dataTransfer.dropEffect = "none";
+            clearDropHighlights(block);
+            return;
+        }
+
+        event.preventDefault();
+        if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+
+        clearDropHighlights(block);
+        if (targetTile && targetTile !== draggedTile) {
+            targetTile.dataset.mosaicDropTarget = "true";
+        } else if (swapTile) {
+            swapTile.dataset.mosaicDropTarget = "true";
+        } else {
+            targetColumn.dataset.mosaicDropTarget = "true";
+        }
+    });
+
+    block.addEventListener("drop", (event) => {
+        if (!draggedTile || !sourceColumn) return;
+
+        const target = event.target as HTMLElement | null;
+        const targetColumn = target?.closest<HTMLElement>(".mosaic-block__column");
+        if (!targetColumn || !block.contains(targetColumn)) return;
+
+        const columns = getOrCreateColumns(block);
+        const targetTile = target?.closest<HTMLElement>(".mosaic-block__tile");
+        const canMove = canMoveTileToColumn(columns, sourceColumn, targetColumn, draggedTile);
+        const swapTile = findFallbackSwapTile(
+            columns,
+            sourceColumn,
+            targetColumn,
+            draggedTile,
+            targetTile && targetTile !== draggedTile ? targetTile : null,
+        );
+        const canSwap = Boolean(swapTile);
+
+        if (!canMove && canSwap && swapTile) {
+            swapTiles(draggedTile, swapTile);
+            clearDropHighlights(block);
+            return;
+        }
+
+        event.preventDefault();
+
+        if (!canMove && canSwap && targetTile) {
+            swapTiles(draggedTile, targetTile);
+            clearDropHighlights(block);
+            return;
+        }
+
+        const reference = getColumnInsertReference(targetColumn, draggedTile, event.clientY);
+        targetColumn.insertBefore(draggedTile, reference);
+
+        clearDropHighlights(block);
+    });
+
+    block.addEventListener("dragend", () => {
+        if (draggedTile) {
+            delete draggedTile.dataset.mosaicDragging;
+        }
+
+        clearDropHighlights(block);
+        draggedTile = null;
+        sourceColumn = null;
+    });
+}
+
 function ensureMosaicStyles(): void {
     if (typeof document === "undefined") return;
     if (document.getElementById(MOSAIC_BLOCK_STYLE_ID)) return;
@@ -114,6 +362,11 @@ function openTileImageMenu(tile: HTMLElement): void {
     });
 }
 
+function ensureTileIsDraggable(tile: HTMLElement): void {
+    tile.draggable = true;
+    tile.setAttribute("draggable", "true");
+}
+
 function clearTileDataset(tile: HTMLElement): void {
     for (const key of Object.keys(tile.dataset)) {
         if (TILE_RESERVED_DATASET_KEYS.has(key)) continue;
@@ -122,6 +375,7 @@ function clearTileDataset(tile: HTMLElement): void {
 }
 
 function renderTileImage(tile: HTMLElement, src: string, alt?: string): void {
+    ensureTileIsDraggable(tile);
     tile.dataset.imageSource = src;
     if (alt) {
         tile.dataset.imageAlt = alt;
@@ -228,6 +482,7 @@ function createDefaultTile(tileId: string): HTMLElement {
             className="mosaic-block__tile"
             data-mosaic-tile={tileId}
             data-mosaic-tile-ratio={String(DEFAULT_TILE_RATIO)}
+            draggable="true"
             style="--mosaic-tile-ratio: 4 / 3"
             role="button"
             tabIndex={0}
@@ -314,6 +569,7 @@ export function MosaicBlock() {
             ref={(element: HTMLElement | null) => {
                 if (!element) return;
                 ensureBlockId(element);
+                setupMosaicTileDragAndDrop(element);
             }}
         >
             <div className="mosaic-block__grid" data-mosaic-grid="true">
