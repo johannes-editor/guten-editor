@@ -3,7 +3,7 @@ import { t } from "@core/i18n";
 import { ImageUpIcon } from "@components/ui/icons";
 import { ensureBlockId } from "@utils/dom";
 import { AddCircleButton } from "@components/ui/buttons/add-circle-button.tsx";
-import { applyImageSourceToElement } from "@utils/media";
+import { applyImageSourceToElement, saveLocalImage } from "@utils/media";
 
 const MOSAIC_COLUMN_COUNT = 3;
 const DEFAULT_TILE_RATIO = 4 / 3;
@@ -139,6 +139,22 @@ function clearDropHighlights(block: HTMLElement): void {
     }
 }
 
+function hasImageFiles(dataTransfer: DataTransfer | null): boolean {
+    if (!dataTransfer) return false;
+
+    for (const item of Array.from(dataTransfer.items ?? [])) {
+        if (item.kind === "file" && item.type.startsWith("image/")) {
+            return true;
+        }
+    }
+
+    return Array.from(dataTransfer.files ?? []).some((file) => file.type.startsWith("image/"));
+}
+
+function getImageFilesFromFileList(files: FileList): File[] {
+    return Array.from(files).filter((file) => file.type.startsWith("image/"));
+}
+
 function canMoveTileToColumn(
     columns: HTMLElement[],
     sourceColumn: HTMLElement,
@@ -254,9 +270,24 @@ function setupMosaicTileDragAndDrop(block: HTMLElement): void {
     });
 
     block.addEventListener("dragover", (event) => {
+        const target = event.target as HTMLElement | null;
+
+        if (!draggedTile && hasImageFiles(event.dataTransfer)) {
+            event.preventDefault();
+            if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+
+            clearDropHighlights(block);
+
+            const targetTile = target?.closest<HTMLElement>(".mosaic-block__tile");
+            if (targetTile && block.contains(targetTile)) {
+                targetTile.dataset.mosaicDropTarget = "true";
+            }
+
+            return;
+        }
+
         if (!draggedTile || !sourceColumn) return;
 
-        const target = event.target as HTMLElement | null;
         const targetTile = target?.closest<HTMLElement>(".mosaic-block__tile");
         const targetColumn = target?.closest<HTMLElement>(".mosaic-block__column");
 
@@ -293,9 +324,23 @@ function setupMosaicTileDragAndDrop(block: HTMLElement): void {
     });
 
     block.addEventListener("drop", (event) => {
+        const target = event.target as HTMLElement | null;
+
+        if (!draggedTile && hasImageFiles(event.dataTransfer)) {
+            event.preventDefault();
+
+            const targetTile = target?.closest<HTMLElement>(".mosaic-block__tile");
+            const dropTarget = targetTile && block.contains(targetTile) ? targetTile : null;
+            clearDropHighlights(block);
+
+            if (event.dataTransfer?.files?.length) {
+                void insertDroppedImages(block, dropTarget, event.dataTransfer.files);
+            }
+            return;
+        }
+
         if (!draggedTile || !sourceColumn) return;
 
-        const target = event.target as HTMLElement | null;
         const targetColumn = target?.closest<HTMLElement>(".mosaic-block__column");
         if (!targetColumn || !block.contains(targetColumn)) return;
 
@@ -327,6 +372,13 @@ function setupMosaicTileDragAndDrop(block: HTMLElement): void {
 
         const reference = getColumnInsertReference(targetColumn, draggedTile, event.clientY);
         targetColumn.insertBefore(draggedTile, reference);
+
+        clearDropHighlights(block);
+    });
+
+    block.addEventListener("dragleave", (event) => {
+        const relatedTarget = event.relatedTarget as Node | null;
+        if (relatedTarget && block.contains(relatedTarget)) return;
 
         clearDropHighlights(block);
     });
@@ -372,6 +424,74 @@ function clearTileDataset(tile: HTMLElement): void {
     for (const key of Object.keys(tile.dataset)) {
         if (TILE_RESERVED_DATASET_KEYS.has(key)) continue;
         delete (tile.dataset as Record<string, string | undefined>)[key];
+    }
+}
+
+function getTileCustomDataset(tile: HTMLElement): Record<string, string> | undefined {
+    const dataset: Record<string, string> = {};
+
+    for (const [key, value] of Object.entries(tile.dataset)) {
+        if (TILE_RESERVED_DATASET_KEYS.has(key)) continue;
+        if (value) dataset[key] = value;
+    }
+
+    return Object.keys(dataset).length ? dataset : undefined;
+}
+
+function getNextTileForImageInsertion(block: HTMLElement, currentTile: HTMLElement): HTMLElement | null {
+    const tiles = Array.from(block.querySelectorAll<HTMLElement>(".mosaic-block__tile[data-mosaic-tile]"));
+    if (!tiles.length) return null;
+
+    const currentIndex = tiles.indexOf(currentTile);
+    if (currentIndex === -1) return tiles[0];
+
+    const startIndex = (currentIndex + 1) % tiles.length;
+
+    for (let offset = 0; offset < tiles.length; offset += 1) {
+        const tile = tiles[(startIndex + offset) % tiles.length];
+        if (!tile.dataset.imageSource) return tile;
+    }
+
+    return tiles[startIndex];
+}
+
+async function insertDroppedImages(block: HTMLElement, initialTarget: HTMLElement | null, files: FileList): Promise<void> {
+    const imageFiles = getImageFilesFromFileList(files);
+    if (!imageFiles.length) return;
+
+    let currentTarget = initialTarget;
+    if (!currentTarget) {
+        const tiles = Array.from(block.querySelectorAll<HTMLElement>(".mosaic-block__tile[data-mosaic-tile]"));
+        currentTarget = tiles.find((tile) => !tile.dataset.imageSource) ?? tiles[0] ?? null;
+    }
+
+    if (!currentTarget) return;
+
+    try {
+        const uploads = await Promise.all(
+            imageFiles.map(async (file) => ({
+                url: await saveLocalImage(file),
+                alt: file.name,
+            })),
+        );
+
+        for (const [index, upload] of uploads.entries()) {
+            if (!currentTarget) break;
+
+            applyMosaicTileImage({
+                target: currentTarget,
+                sourceUrl: upload.url,
+                alt: upload.alt,
+                dataset: getTileCustomDataset(currentTarget),
+            });
+
+            const isLastImage = index === uploads.length - 1;
+            if (isLastImage) continue;
+
+            currentTarget = getNextTileForImageInsertion(block, currentTarget);
+        }
+    } catch {
+        // Ignore failed drops when local image storage is unavailable.
     }
 }
 
