@@ -155,20 +155,24 @@ function getNextMosaicTileId(block: HTMLElement): string {
 }
 
 export function createMosaicTile(block: HTMLElement, size: "tall" | "short" | "mid" = "mid"): HTMLElement {
-    
     const tile = (
-        <button
-            type="button"
+        <div
             className={`mosaic-block__tile mosaic-block__tile--${size}`}
             data-mosaic-tile={getNextMosaicTileId(block)}
-            
+            role="button"
+            tabIndex={0}
             onClick={(event: MouseEvent) => {
+                event.preventDefault();
+                openTileImageMenu(event.currentTarget as HTMLElement);
+            }}
+            onKeyDown={(event: KeyboardEvent) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
                 event.preventDefault();
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}
         >
             <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
-        </button>
+        </div>
     ) as HTMLElement;
 
     block.appendChild(tile);
@@ -189,27 +193,39 @@ export function MosaicBlock() {
                 ensureBlockId(element);
             }}
         >
-            <button type="button" className="mosaic-block__tile mosaic-block__tile--tall" data-mosaic-tile="1" onClick={(event: MouseEvent) => {
+            <div className="mosaic-block__tile mosaic-block__tile--tall" data-mosaic-tile="1" role="button" tabIndex={0} onClick={(event: MouseEvent) => {
+                event.preventDefault();
+                openTileImageMenu(event.currentTarget as HTMLElement);
+            }} onKeyDown={(event: KeyboardEvent) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
                 event.preventDefault();
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}>
                 <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon  style="opacity: 0.4"/></span>
-            </button>
+            </div>
 
                        
-            <button type="button" className="mosaic-block__tile mosaic-block__tile--short" data-mosaic-tile="2" onClick={(event: MouseEvent) => {
+            <div className="mosaic-block__tile mosaic-block__tile--short" data-mosaic-tile="2" role="button" tabIndex={0} onClick={(event: MouseEvent) => {
+                event.preventDefault();
+                openTileImageMenu(event.currentTarget as HTMLElement);
+            }} onKeyDown={(event: KeyboardEvent) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
                 event.preventDefault();
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}>
                 <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
-            </button>
+            </div>
 
-            <button type="button" className="mosaic-block__tile mosaic-block__tile--mid" data-mosaic-tile="3" onClick={(event: MouseEvent) => {
+            <div className="mosaic-block__tile mosaic-block__tile--mid" data-mosaic-tile="3" role="button" tabIndex={0} onClick={(event: MouseEvent) => {
+                event.preventDefault();
+                openTileImageMenu(event.currentTarget as HTMLElement);
+            }} onKeyDown={(event: KeyboardEvent) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
                 event.preventDefault();
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}>
                 <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
-            </button>
+            </div>
 
             
         </figure>
