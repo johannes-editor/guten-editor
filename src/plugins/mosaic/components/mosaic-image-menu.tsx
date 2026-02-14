@@ -393,26 +393,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
             if (!tile.dataset.imageSource) return tile;
         }
 
-        return tiles[startIndex];
-    }
-
-    private getNextEmptyTile(block: HTMLElement, currentTile: HTMLElement): HTMLElement | null {
-        const tiles = Array.from(block.querySelectorAll<HTMLElement>(".mosaic-block__tile[data-mosaic-tile]"));
-        const currentIndex = tiles.indexOf(currentTile);
-
-        for (let index = currentIndex + 1; index < tiles.length; index += 1) {
-            if (!tiles[index].dataset.imageSource) {
-                return tiles[index];
-            }
-        }
-
-        for (const tile of tiles) {
-            if (!tile.dataset.imageSource) {
-                return tile;
-            }
-        }
-
-        return null;
+        return createMosaicTile(block);
     }
 
     private handleEmbedInput(event: Event): void {

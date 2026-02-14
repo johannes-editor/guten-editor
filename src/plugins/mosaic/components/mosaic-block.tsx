@@ -452,7 +452,7 @@ function getNextTileForImageInsertion(block: HTMLElement, currentTile: HTMLEleme
         if (!tile.dataset.imageSource) return tile;
     }
 
-    return tiles[startIndex];
+    return createMosaicTile(block);
 }
 
 async function insertDroppedImages(block: HTMLElement, initialTarget: HTMLElement | null, files: FileList): Promise<void> {
