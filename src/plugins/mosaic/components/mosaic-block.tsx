@@ -2,6 +2,7 @@ import { runCommand } from "@core/command";
 import { t } from "@core/i18n";
 import { ImageUpIcon } from "@components/ui/icons";
 import { ensureBlockId } from "@utils/dom";
+import { AddCircleButton } from "@components/ui/buttons/add-circle-button.tsx";
 
 const MOSAIC_COLUMN_COUNT = 3;
 const DEFAULT_TILE_RATIO = 4 / 3;
@@ -11,10 +12,16 @@ const TILE_RESERVED_DATASET_KEYS = new Set(["mosaicTile", "imageSource", "imageA
 
 const MOSAIC_BLOCK_STYLES = /*css*/`
     .mosaic-block {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        margin: var(--space-sm) 0;
+    }
+
+    .mosaic-block__grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: var(--space-sm);
-        margin: var(--space-sm) 0;
     }
 
     .mosaic-block__column {
@@ -67,6 +74,22 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
         height: auto;
         user-select: none;
         pointer-events: none;
+    }
+
+    .mosaic-block__add-tile {
+        display: flex;
+        justify-content: center;
+        opacity: 0;
+        transform: translateY(-2px);
+        transition: opacity 160ms ease, transform 160ms ease;
+        pointer-events: none;
+    }
+
+    .mosaic-block:hover .mosaic-block__add-tile,
+    .mosaic-block:focus-within .mosaic-block__add-tile {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
     }
 `;
 
@@ -148,8 +171,24 @@ function getColumnHeightScore(column: HTMLElement): number {
     return totalHeight;
 }
 
+function getGridElement(block: HTMLElement): HTMLElement {
+    let grid = block.querySelector<HTMLElement>(":scope > .mosaic-block__grid");
+    if (grid) return grid;
+
+    grid = <div className="mosaic-block__grid" data-mosaic-grid="true"></div> as HTMLElement;
+    const columns = Array.from(block.querySelectorAll<HTMLElement>(":scope > .mosaic-block__column"));
+
+    for (const column of columns) {
+        grid.appendChild(column);
+    }
+
+    block.prepend(grid);
+    return grid;
+}
+
 function getOrCreateColumns(block: HTMLElement): HTMLElement[] {
-    const existingColumns = Array.from(block.querySelectorAll<HTMLElement>(":scope > .mosaic-block__column"));
+    const grid = getGridElement(block);
+    const existingColumns = Array.from(grid.querySelectorAll<HTMLElement>(":scope > .mosaic-block__column"));
     if (existingColumns.length === MOSAIC_COLUMN_COUNT) {
         return existingColumns;
     }
@@ -158,11 +197,11 @@ function getOrCreateColumns(block: HTMLElement): HTMLElement[] {
         <div className="mosaic-block__column" data-mosaic-column="true"></div>
     ) as HTMLElement);
 
-    const tiles = Array.from(block.querySelectorAll<HTMLElement>(":scope > .mosaic-block__tile"));
-    block.innerHTML = "";
+    const tiles = Array.from(grid.querySelectorAll<HTMLElement>(".mosaic-block__tile"));
+    grid.innerHTML = "";
 
     for (const column of columns) {
-        block.appendChild(column);
+        grid.appendChild(column);
     }
 
     for (const [index, tile] of tiles.entries()) {
@@ -255,7 +294,15 @@ export function createMosaicTile(block: HTMLElement): HTMLElement {
     return tile;
 }
 
+function handleCreateTileFromAddButton(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
 
+    const block = (event.currentTarget as HTMLElement)?.closest<HTMLElement>(".mosaic-block");
+    if (!block) return;
+
+    createMosaicTile(block);
+}
 
 export function MosaicBlock() {
     ensureMosaicStyles();
@@ -269,9 +316,15 @@ export function MosaicBlock() {
                 ensureBlockId(element);
             }}
         >
-            <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("1")}</div>
-            <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("2")}</div>
-            <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("3")}</div>
+            <div className="mosaic-block__grid" data-mosaic-grid="true">
+                <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("1")}</div>
+                <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("2")}</div>
+                <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("3")}</div>
+            </div>
+
+            <div className="mosaic-block__add-tile">
+                <AddCircleButton ariaLabel={t("mosaic_add_image")} onClick={handleCreateTileFromAddButton} />
+            </div>
         </figure>
     );
 }
