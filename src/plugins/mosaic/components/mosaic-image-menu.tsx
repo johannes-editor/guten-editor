@@ -3,6 +3,7 @@ import { runCommand } from "@core/command";
 import { DefaultProps, DefaultState } from "@core/components";
 import { OverlayComponent } from "@components/editor/overlay";
 import { saveLocalImage } from "@utils/media";
+import { createMosaicTile } from "./mosaic-block.tsx";
 
 export interface MosaicImageMenuProps extends DefaultProps {
     target?: HTMLElement | null;
@@ -208,6 +209,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
                     class="mosaic-image-menu__file-input"
                     type="file"
                     accept="image/*"
+                    multiple
                     onChange={(event: Event) => this.handleFileChange(event)}
                 />
                 <button
@@ -269,22 +271,25 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
 
     private handleFileChange(event: Event): void {
         const input = event.target as HTMLInputElement | null;
-        const file = input?.files?.[0] ?? null;
-        if (!file) return;
+        const files = input?.files ? Array.from(input.files) : [];
+        if (!files.length) return;
 
-        void this.uploadFile(file);
+        void this.uploadFiles(files);
         if (input) input.value = "";
     }
 
-    private async uploadFile(file: File): Promise<void> {
+    private async uploadFiles(files: File[]): Promise<void> {
         this.setState({ isUploading: true, error: null } as Partial<MosaicImageMenuState>);
 
         try {
-            const url = await saveLocalImage(file);
-            this.insertImage({
-                url,
-                alt: file.name,
-            });
+            const uploads = await Promise.all(
+                files.map(async(file) => ({
+                    url: await saveLocalImage(file),
+                    alt: file.name,
+                })),
+            );
+
+            this.insertUploadedImages(uploads);
         } catch {
             this.setState({ error: t("image_upload_error") } as Partial<MosaicImageMenuState>);
         } finally {
@@ -340,6 +345,74 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
                 },
             });
         });
+    }
+
+    private insertUploadedImages(images: Array<{ url: string; alt?: string }>): void {
+        if (!images.length) return;
+
+        const initialTarget = this.target;
+        this.remove();
+
+        requestAnimationFrame(() => {
+            let currentTarget = initialTarget;
+
+            for (const [index, image] of images.entries()) {
+                if (!currentTarget) break;
+
+                runCommand("insertMosaicImage", {
+                    content: {
+                        target: currentTarget,
+                        sourceUrl: image.url,
+                        alt: image.alt ?? this.getTargetAlt(),
+                        dataset: this.getTargetDataset(),
+                    },
+                });
+
+                const isLastImage = index === images.length - 1;
+                if (isLastImage) continue;
+
+                currentTarget = this.getNextTargetTile(currentTarget);
+            }
+        });
+    }
+
+    private getNextTargetTile(currentTile: HTMLElement): HTMLElement | null {
+        const block = currentTile.closest<HTMLElement>(".mosaic-block");
+        if (!block) return null;
+
+        const tiles = Array.from(block.querySelectorAll<HTMLElement>(".mosaic-block__tile[data-mosaic-tile]"));
+        if (!tiles.length) return null;
+
+        const currentIndex = tiles.indexOf(currentTile);
+        if (currentIndex === -1) return tiles[0];
+
+        const startIndex = (currentIndex + 1) % tiles.length;
+
+        for (let offset = 0; offset < tiles.length; offset += 1) {
+            const tile = tiles[(startIndex + offset) % tiles.length];
+            if (!tile.dataset.imageSource) return tile;
+        }
+
+        return tiles[startIndex];
+    }
+
+    private getNextEmptyTile(block: HTMLElement, currentTile: HTMLElement): HTMLElement | null {
+        const tiles = Array.from(block.querySelectorAll<HTMLElement>(".mosaic-block__tile[data-mosaic-tile]"));
+        const currentIndex = tiles.indexOf(currentTile);
+
+        for (let index = currentIndex + 1; index < tiles.length; index += 1) {
+            if (!tiles[index].dataset.imageSource) {
+                return tiles[index];
+            }
+        }
+
+        for (const tile of tiles) {
+            if (!tile.dataset.imageSource) {
+                return tile;
+            }
+        }
+
+        return null;
     }
 
     private handleEmbedInput(event: Event): void {
