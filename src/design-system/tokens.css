@@ -11,6 +11,9 @@
 
     --button-font-family: var(--font-family);
 
+
+    --accent-primary: #005be1;
+
     --font-size-xxs: 0.625rem;
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;

@@ -1,0 +1,25 @@
+{
+    "name": "Object Deletion",
+    "author": "Guten",
+    "version": "1.0.0",
+    "entries": [
+        {
+            "path": "./extensions/object-focus-plugin.ts",
+            "class": "ObjectFocusPlugin",
+            "active": true,
+            "description": "Adds focus states for deletable objects and keyboard-driven object deletion."
+        },
+        {
+            "path": "./extensions/command-object-deletion-extension.ts",
+            "class": "CommandObjectDeletionExtension",
+            "active": true,
+            "description": "Registers a command to delete focused objects and empty parent blocks."
+        },
+        {
+            "path": "./extensions/mobile-toolbar-object-delete-extension.tsx",
+            "class": "MobileToolbarObjectDeleteExtension",
+            "active": true,
+            "description": "Adds a mobile toolbar action to delete focused objects."
+        }
+    ]
+}

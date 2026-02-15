@@ -5,6 +5,8 @@ export abstract class BlockObjectPlaceholderUI extends Component {
     icon: SVGElement;
     label: string;
 
+    private _singleClickTimer: number | null = null;
+
     static override styles = this.extendStyles(/*css */`
         
         .object-placeholder {

@@ -96,11 +96,8 @@ export class MobileToolbar extends Component<MobileToolbarProps, MobileToolbarSt
     }
 
     private handleButtonPointerDown(event: PointerEvent) {
-        // Prevent the button from stealing focus and clearing the current selection on desktop
-        if (event.pointerType === "mouse") {
-            event.preventDefault();
-            return;
-        }
+        // Keep object/selection focus while interacting with toolbar actions.
+        event.preventDefault();
 
         this.touchDragDistanceX = event.clientX;
         this.touchDragDistanceY = event.clientY;

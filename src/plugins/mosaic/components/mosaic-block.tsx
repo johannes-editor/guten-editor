@@ -117,6 +117,7 @@ function getTileWeight(tile: HTMLElement): number {
     return 1 / getTileRatio(tile);
 }
 
+
 function getColumnInsertReference(column: HTMLElement, draggedTile: HTMLElement, clientY: number): HTMLElement | null {
     const tiles = Array.from(column.querySelectorAll<HTMLElement>(":scope > .mosaic-block__tile"))
         .filter((tile) => tile !== draggedTile);
@@ -617,7 +618,7 @@ function createDefaultTile(tileId: string): HTMLElement {
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}
         >
-            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
+            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.8" /></span>
         </div>
     ) as HTMLElement;
 
