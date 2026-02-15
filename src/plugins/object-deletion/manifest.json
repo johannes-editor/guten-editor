@@ -1,13 +1,13 @@
 {
     "name": "Object Deletion",
-    "author": "Guten",
+    "author": "Alexandre Tavares",
     "version": "1.0.0",
     "entries": [
         {
             "path": "./extensions/object-focus-plugin.ts",
             "class": "ObjectFocusPlugin",
             "active": true,
-            "description": "Adds focus states for deletable objects and keyboard-driven object deletion."
+            "description": "Adds focus states for deletable objects."
         },
         {
             "path": "./extensions/command-object-deletion-extension.ts",

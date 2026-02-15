@@ -1,4 +1,5 @@
 import { focusStartOfBlock } from "@utils/dom/block";
+import { runCommand } from "@core/command";
 
 export const FOCUSABLE_OBJECT_SELECTOR = [
     "[data-image-placeholder='true']",
@@ -44,9 +45,13 @@ export function clearFocusedObject(root?: ParentNode): void {
 }
 
 export function setFocusedObject(target: HTMLElement): void {
+    setFocusedObjectState(target);
+    target.focus({ preventScroll: true });
+}
+
+export function setFocusedObjectState(target: HTMLElement): void {
     clearFocusedObject(document);
     target.classList.add("guten-focused-object");
-    target.focus({ preventScroll: true });
 }
 
 export function getFocusedObject(root?: ParentNode): HTMLElement | null {
@@ -110,4 +115,25 @@ export function removeObjectAndCleanupBlock(target: HTMLElement): boolean {
     }
 
     return true;
+}
+
+export function openEditorForObject(target: HTMLElement): boolean {
+    const rect = target.getBoundingClientRect();
+    const anchorRect = rect
+        ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
+        : undefined;
+
+    if (target.matches("[data-image-placeholder='true']") || target.matches("figure.image-block[data-image-embed='true']")) {
+        return runCommand("openImageMenu", { content: { target, anchorRect } });
+    }
+
+    if (target.matches(".mosaic-block__tile[data-mosaic-tile]")) {
+        return runCommand("openMosaicImageMenu", { content: { target, anchorRect } });
+    }
+
+    if (target.matches("[data-youtube-placeholder='true']") || target.matches(".youtube-embed[data-youtube-embed='true']")) {
+        return runCommand("openYouTubePopover", { content: { target, anchorRect } });
+    }
+
+    return false;
 }

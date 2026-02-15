@@ -57,11 +57,6 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
         outline-offset: 1px;
     }
 
-    .mosaic-block__column[data-mosaic-drop-target="true"] {
-        box-shadow: inset 0 0 0 2px var(--accent-primary);
-        border-radius: var(--radius-md);
-    }
-
     .mosaic-block__tile--tall {
         grid-row: span 28;
     }
@@ -610,6 +605,7 @@ function createDefaultTile(tileId: string): HTMLElement {
             tabIndex={0}
             onClick={(event: MouseEvent) => {
                 event.preventDefault();
+                if (event.detail !== 2) return;
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}
             onKeyDown={(event: KeyboardEvent) => {

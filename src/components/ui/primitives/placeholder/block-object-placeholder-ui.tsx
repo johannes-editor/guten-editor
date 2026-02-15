@@ -1,11 +1,11 @@
 import { Component } from "@core/components";
+import { EventTypes } from "@utils/dom";
+import { KeyboardKeys } from "@utils/keyboard";
 
 export abstract class BlockObjectPlaceholderUI extends Component {
 
     icon: SVGElement;
     label: string;
-
-    private _singleClickTimer: number | null = null;
 
     static override styles = this.extendStyles(/*css */`
         
@@ -16,13 +16,7 @@ export abstract class BlockObjectPlaceholderUI extends Component {
             background: var(--placeholder-bg);
             border-radius: var(--radius-sm);
             gap: var(--space-sm);
-
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
-                "Noto Sans", "Helvetica Neue", Arial, sans-serif,
-                "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            
             font-size: var(--font-size-sm);
-            margin: var(--space-sm) 0;
         }
 
         .object-placeholder div {
@@ -60,7 +54,20 @@ export abstract class BlockObjectPlaceholderUI extends Component {
         this.setAttribute("contenteditable", "false");
         this.classList.add("block", "object-placeholder", "unselectable", "pointer");
 
-        this.registerEvent(this, "click", () => this.onClick());
+        this.registerEvent(this, EventTypes.Click, (event) => {
+            const e = event as MouseEvent;
+            if (e.detail !== 2) return;
+
+            this.onSelect(event as MouseEvent)
+        });
+
+        this.registerEvent(this, EventTypes.KeyDown, (event) => {
+            const e = event as KeyboardEvent;
+
+            if (e.key == KeyboardKeys.Enter) {
+                this.onSelect(event as MouseEvent)
+            }
+        });
     }
 
     override render(): HTMLElement {
@@ -72,5 +79,5 @@ export abstract class BlockObjectPlaceholderUI extends Component {
         );
     }
 
-    abstract onClick(): void;
+    abstract onSelect(event: MouseEvent): void;
 }

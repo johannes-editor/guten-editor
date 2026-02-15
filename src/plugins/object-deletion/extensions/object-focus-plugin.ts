@@ -1,13 +1,8 @@
 import { Plugin } from "@core/plugin-engine";
 import { runCommand } from "@core/command";
-import {
-    clearFocusedObject,
-    decorateFocusableObjects,
-    findFocusableObjectFromNode,
-    focusBlockElement,
-    getFocusedObject,
-    setFocusedObject,
-} from "../object-deletion-utils.ts";
+import * as deletion from "../object-deletion-utils.ts";
+import { EventTypes } from "@utils/dom";
+import { KeyboardKeys } from "@utils/keyboard";
 
 const OBJECT_FOCUS_STYLE_ID = "guten-object-focus-styles";
 
@@ -19,7 +14,6 @@ const OBJECT_FOCUS_STYLES = /*css*/`
     .guten-focusable-object.guten-focused-object {
         outline: 2px solid var(--accent-primary);
         outline-offset: 2px;
-        box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent-primary) 28%, transparent);
         border-radius: var(--radius-sm);
     }
 `;
@@ -33,16 +27,21 @@ export class ObjectFocusPlugin extends Plugin {
         if (!this.contentArea) return;
 
         this.ensureStyles();
-        decorateFocusableObjects(this.contentArea);
+        deletion.decorateFocusableObjects(this.contentArea);
 
-        this.contentArea.addEventListener("click", this.handleClick, true);
-        this.contentArea.addEventListener("keydown", this.handleKeyDown, true);
+        this.contentArea.addEventListener(EventTypes.Click, this.handleClick, true);
+        this.contentArea.addEventListener(EventTypes.KeyDown, this.handleKeyDown, true);
+
+        this.contentArea.addEventListener(EventTypes.FocusIn, this.handleFocusIn, true);
+        this.contentArea.addEventListener(EventTypes.FocusOut, this.handleFocusOut, true);
+
+        globalThis.addEventListener(EventTypes.Blur, this.handleWindowBlur);
 
         this.observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 for (const addedNode of Array.from(mutation.addedNodes)) {
                     if (!(addedNode instanceof HTMLElement)) continue;
-                    decorateFocusableObjects(addedNode);
+                    deletion.decorateFocusableObjects(addedNode);
                 }
             }
         });
@@ -52,9 +51,13 @@ export class ObjectFocusPlugin extends Plugin {
 
     teardown(): void {
         if (this.contentArea) {
-            this.contentArea.removeEventListener("click", this.handleClick, true);
-            this.contentArea.removeEventListener("keydown", this.handleKeyDown, true);
+            this.contentArea.removeEventListener(EventTypes.Click, this.handleClick, true);
+            this.contentArea.removeEventListener(EventTypes.KeyDown, this.handleKeyDown, true);
+            this.contentArea.removeEventListener(EventTypes.FocusIn, this.handleFocusIn, true);
+            this.contentArea.removeEventListener(EventTypes.FocusOut, this.handleFocusOut, true);
         }
+
+        globalThis.removeEventListener(EventTypes.Blur, this.handleWindowBlur);
 
         this.observer?.disconnect();
         this.observer = null;
@@ -70,40 +73,85 @@ export class ObjectFocusPlugin extends Plugin {
     }
 
     private readonly handleClick = (event: MouseEvent) => {
-        const object = findFocusableObjectFromNode(event.target as Node | null);
+        const object = deletion.findFocusableObjectFromNode(event.target as Node | null);
         if (!object) {
-            clearFocusedObject();
+            deletion.clearFocusedObject();
             return;
         }
 
         if (event.detail >= 3) {
             event.preventDefault();
             event.stopPropagation();
-            clearFocusedObject();
+            deletion.clearFocusedObject();
 
             const block = object.closest<HTMLElement>(".block");
             if (block) {
-                focusBlockElement(block);
+                deletion.focusBlockElement(block);
             }
+            return;
+        }
+
+        if (event.detail === 1) {
+            deletion.setFocusedObject(object);
             return;
         }
 
         if (event.detail === 2) {
             event.preventDefault();
             event.stopPropagation();
-            setFocusedObject(object);
+            deletion.setFocusedObject(object);
+            deletion.openEditorForObject(object);
         }
+    };
+
+    private readonly handleFocusIn = (event: FocusEvent) => {
+        const object = deletion.findFocusableObjectFromNode(event.target as Node | null);
+        if (!object) {
+            deletion.clearFocusedObject();
+            return;
+        }
+
+        deletion.setFocusedObjectState(object);
+    };
+
+    private readonly handleFocusOut = () => {
+        const activeElement = document.activeElement;
+        if (!(activeElement instanceof HTMLElement)) {
+            deletion.clearFocusedObject();
+            return;
+        }
+
+        const activeObject = deletion.findFocusableObjectFromNode(activeElement);
+        if (!activeObject) {
+            deletion.clearFocusedObject();
+            return;
+        }
+
+        deletion.setFocusedObjectState(activeObject);
+    };
+
+    private readonly handleWindowBlur = () => {
+        deletion.clearFocusedObject();
     };
 
     private readonly handleKeyDown = (event: KeyboardEvent) => {
         if (event.defaultPrevented) return;
-        if (event.key !== "Backspace" && event.key !== "Delete") return;
+        if (event.key !== KeyboardKeys.Backspace && event.key !== KeyboardKeys.Delete) return;
 
-        const active = getFocusedObject();
+        const active = deletion.getFocusedObject();
         if (!active) return;
 
-        event.preventDefault();
-        event.stopPropagation();
-        runCommand("deleteFocusedObject", { event });
+        if (event.key === KeyboardKeys.Backspace || event.key === KeyboardKeys.Delete) {
+            event.preventDefault();
+            event.stopPropagation();
+            runCommand("deleteFocusedObject", { event });
+            return;
+        }
+
+        if (event.key === KeyboardKeys.Enter) {
+            event.preventDefault();
+            event.stopPropagation();
+            deletion.openEditorForObject(active);
+        }
     };
 }

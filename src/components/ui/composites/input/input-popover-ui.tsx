@@ -88,7 +88,7 @@ export abstract class InputPopoverUI<P extends InputPopoverUIProps, S = DefaultS
         return (
             <>
                 <input class="guten-modal__input" type={this.props.inputType} placeholder={this.props.inputPlaceholder} {...(this.props.inputProps)} ref={(input: HTMLInputElement | null) => { this._input = input }}></input>
-                <button class="block guten-modal__button" type="button" onClick={() => this.handleInsert()} ref={(button: HTMLButtonElement | null) => { this._button = button }}> {this.props.buttonText ?? t("insert")}</button>
+                <button class="guten-modal__button" type="button" onClick={() => this.handleInsert()} ref={(button: HTMLButtonElement | null) => { this._button = button }}> {this.props.buttonText ?? t("insert")}</button>
             </>
         );
     }
