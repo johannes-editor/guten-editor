@@ -12,7 +12,7 @@ const OBJECT_FOCUS_STYLES = /*css*/`
     }
 
     .guten-focusable-object.guten-focused-object {
-        outline: 2px solid var(--accent-primary);
+        outline: 2px solid var(--focus-ring-color);
         outline-offset: 2px;
         border-radius: var(--radius-sm);
     }

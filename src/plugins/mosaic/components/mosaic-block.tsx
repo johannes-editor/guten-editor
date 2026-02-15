@@ -53,7 +53,7 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
     }
 
     .mosaic-block__tile[data-mosaic-drop-target="true"] {
-        outline: 2px dashed var(--accent-primary);
+        outline: 2px dashed var(--focus-ring-color);
         outline-offset: 1px;
     }
 
