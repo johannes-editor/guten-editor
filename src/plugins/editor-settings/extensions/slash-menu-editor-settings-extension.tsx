@@ -12,6 +12,7 @@ export class SlashMenuEditorSettingsExtension extends SlashMenuExtensionPlugin {
     override label: string;
     override sort: number;
     override synonyms: string[];
+    override preserveEmptyBlock: boolean;
 
     constructor() {
         super();
@@ -20,9 +21,26 @@ export class SlashMenuEditorSettingsExtension extends SlashMenuExtensionPlugin {
         this.label = t("settings");
         this.synonyms = [t("language"), t("theme")];
         this.sort = 120;
+        this.preserveEmptyBlock = true;
     }
 
-    override onSelect(): void {
+    override onSelect(currentBlock: HTMLElement): void {
+        const selection = globalThis.getSelection();
+        const anchorNode = selection?.anchorNode ?? null;
+        const anchorElement = anchorNode instanceof HTMLElement
+            ? anchorNode
+            : anchorNode?.parentElement ?? null;
+
+        const editable = anchorElement?.closest('p,blockquote,h1,h2,h3,h4,h5,li,[contenteditable="true"]') as HTMLElement | null;
+        const target = editable && currentBlock.contains(editable) ? editable : currentBlock;
+
+        const meaningfulText = (target.textContent ?? '').replace(/[\s\u00A0\u200B]+/g, '');
+        const hasStructuredChildren = Array.from(target.children).some((child) => child.tagName !== 'BR');
+
+        if (meaningfulText.length === 0 && !hasStructuredChildren) {
+            target.replaceChildren(document.createElement('br'));
+        }
+
         const anchor = createAnchorAtSelection();
         if (!anchor) return;
         const items = getEditorSettingsItems();

@@ -31,6 +31,7 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
             shortcut: ext.shortcut,
             sort: ext.sort,
             synonyms: ext.synonyms,
+            preserveEmptyBlock: ext.preserveEmptyBlock,
             onSelect: (currentBlock: HTMLElement) => ext.onSelect(currentBlock),
         }));
 
@@ -143,6 +144,7 @@ export abstract class SlashMenuExtensionPlugin extends PluginExtension<SlashMenu
 
     readonly shortcut?: string = undefined;
     readonly synonyms?: string[] = undefined;
+    readonly preserveEmptyBlock?: boolean = false;
 
     abstract onSelect(currentBlock: HTMLElement): void;
 }

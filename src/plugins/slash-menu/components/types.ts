@@ -5,4 +5,5 @@ export interface SlashMenuItemData {
     sort: number;
     onSelect: (focusedBlock: HTMLElement) => void;
     synonyms?: string[];
+    preserveEmptyBlock?: boolean;
 }

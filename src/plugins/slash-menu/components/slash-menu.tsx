@@ -1,5 +1,5 @@
 import { t } from "@core/i18n";
-import { EventTypes } from "@utils/dom"; 
+import { EventTypes } from "@utils/dom";
 import { KeyboardKeys } from "@utils/keyboard";
 import { isMobileSheetViewport } from "@utils/platform";
 import { OverlayComponent } from "@components/editor/overlay";
@@ -318,7 +318,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             (block.childElementCount === 0 ||
                 (block.childElementCount === 1 && block.firstElementChild?.tagName === "BR"));
 
-        if (shouldRemoveBlock) {
+        if (shouldRemoveBlock && !item.preserveEmptyBlock) {
             block.remove();
         }
 
@@ -378,9 +378,9 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
                             <SlashMenuItem
                                 label={t("no_item_found")}
                                 shortcut="Esc"
-                                onSelect={() => { 
+                                onSelect={() => {
                                     this.removeSlashCommand();
-                                    this.remove(); 
+                                    this.remove();
                                 }}
                                 selected={1 === this.state.selectedIndex}
                                 index={1}
