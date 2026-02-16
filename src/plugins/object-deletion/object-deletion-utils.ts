@@ -1,5 +1,6 @@
 import { focusStartOfBlock } from "@utils/dom/block";
 import { runCommand } from "@core/command";
+import { clearSelection } from "@utils/selection";
 
 export const FOCUSABLE_OBJECT_SELECTOR = [
     "[data-image-placeholder='true']",
@@ -45,6 +46,7 @@ export function clearFocusedObject(root?: ParentNode): void {
 }
 
 export function setFocusedObject(target: HTMLElement): void {
+    clearSelection();
     setFocusedObjectState(target);
     target.focus({ preventScroll: true });
 }
