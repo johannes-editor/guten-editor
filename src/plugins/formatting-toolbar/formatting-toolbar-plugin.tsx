@@ -70,9 +70,18 @@ export class FormattingToolbarPlugin extends ExtensiblePlugin<FormattingToolbarE
 
     private handleSelection(): void {
 
+        const hasTextSelection = hasSelection();
+        const existingToolbar = FormattingToolbarPlugin.toolbarInstance;
+
+        if (existingToolbar && !existingToolbar.isSelectionLocked() && !hasTextSelection) {
+            existingToolbar.remove();
+            FormattingToolbarPlugin.toolbarInstance = null;
+            return;
+        }
+
         let ft: FormattingToolbar | null = null;
 
-        if (!FormattingToolbarPlugin.toolbarInstance && hasSelection()) {
+        if (!FormattingToolbarPlugin.toolbarInstance && hasTextSelection) {
 
             const formattingToolbar =
                 <FormattingToolbar removeInstance={this.removeInstance} ref={(el: FormattingToolbar) => ft = el}>

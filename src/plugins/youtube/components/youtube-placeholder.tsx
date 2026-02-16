@@ -18,7 +18,7 @@ export class YouTubePlaceholder extends BlockObjectPlaceholderUI {
         requestAnimationFrame(() => this.openPopover());
     }
 
-    override onClick(): void {
+    override onSelect(_event: MouseEvent): void {
         this.openPopover();
     }
 

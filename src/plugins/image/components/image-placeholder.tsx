@@ -1,6 +1,6 @@
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
-import { CardImageIcon } from "@components/ui/icons";
+import { ImageFillIcon } from "@components/ui/icons";
 import { BlockObjectPlaceholderUI } from "@components/ui/primitives/placeholder";
 import { ensureBlockId } from "@utils/dom";
 
@@ -9,7 +9,7 @@ export class ImagePlaceholder extends BlockObjectPlaceholderUI {
     private autoOpenScheduled = false;
 
     constructor() {
-        super(<CardImageIcon />, t("insert_image"));
+        super(<ImageFillIcon />, t("insert_image"));
     }
 
     override onMount(): void {
@@ -22,7 +22,7 @@ export class ImagePlaceholder extends BlockObjectPlaceholderUI {
         requestAnimationFrame(() => this.openMenu());
     }
 
-    override onClick(): void {
+    override onSelect(_event: MouseEvent): void {
         this.openMenu();
     }
 

@@ -53,13 +53,8 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
     }
 
     .mosaic-block__tile[data-mosaic-drop-target="true"] {
-        outline: 2px dashed var(--accent-primary);
+        outline: 2px dashed var(--focus-ring-color);
         outline-offset: 1px;
-    }
-
-    .mosaic-block__column[data-mosaic-drop-target="true"] {
-        box-shadow: inset 0 0 0 2px var(--accent-primary);
-        border-radius: var(--radius-md);
     }
 
     .mosaic-block__tile--tall {
@@ -116,6 +111,7 @@ const MOSAIC_BLOCK_STYLES = /*css*/`
 function getTileWeight(tile: HTMLElement): number {
     return 1 / getTileRatio(tile);
 }
+
 
 function getColumnInsertReference(column: HTMLElement, draggedTile: HTMLElement, clientY: number): HTMLElement | null {
     const tiles = Array.from(column.querySelectorAll<HTMLElement>(":scope > .mosaic-block__tile"))
@@ -609,6 +605,7 @@ function createDefaultTile(tileId: string): HTMLElement {
             tabIndex={0}
             onClick={(event: MouseEvent) => {
                 event.preventDefault();
+                if (event.detail !== 2) return;
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}
             onKeyDown={(event: KeyboardEvent) => {
@@ -617,7 +614,7 @@ function createDefaultTile(tileId: string): HTMLElement {
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}
         >
-            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.4" /></span>
+            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.8" /></span>
         </div>
     ) as HTMLElement;
 
