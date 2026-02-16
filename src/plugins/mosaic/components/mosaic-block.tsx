@@ -1,6 +1,6 @@
 import { runCommand } from "@core/command";
 import { t } from "@core/i18n";
-import { ImageUpIcon } from "@components/ui/icons";
+import { PhotoUpIcon } from "@components/ui/icons";
 import { ensureBlockId } from "@utils/dom";
 import { AddCircleButton } from "@components/ui/buttons/add-circle-button.tsx";
 import { applyImageSourceToElement, saveLocalImage } from "@utils/media";
@@ -614,7 +614,7 @@ function createDefaultTile(tileId: string): HTMLElement {
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}
         >
-            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageUpIcon style="opacity: 0.8" /></span>
+            <span className="mosaic-block__tile-content" title={t("insert_image")}><PhotoUpIcon  /></span>
         </div>
     ) as HTMLElement;
 
@@ -696,7 +696,7 @@ export function MosaicBlock() {
                 <div className="mosaic-block__column" data-mosaic-column="true">{createDefaultTile("3")}</div>
             </div>
 
-            <div className="mosaic-block__add-tile">
+            <div style="display: none;" className="mosaic-block__add-tile">
                 <AddCircleButton ariaLabel={t("mosaic_add_image")} onClick={handleCreateTileFromAddButton} />
             </div>
         </figure>

@@ -86,8 +86,9 @@ const en: TranslationSchema = {
 
     image: 'Image',
 
+    masonry_gallery: "Masonry Gallery",
     mosaic: 'Mosaic',
-    mosaic_add_image: 'Add image to mosaic',
+    mosaic_add_image: 'Add image',
 
     photo: 'Photo',
     picture: 'Picture',

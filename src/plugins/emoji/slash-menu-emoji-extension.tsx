@@ -6,12 +6,12 @@ import { getCurrentSelectionRange } from "@utils/selection";
 import { focusOnElement } from "@utils/dom";
 import { en } from "./i18n/en.ts";
 import { pt } from "./i18n/pt.ts";
-import { EmojiIcon } from "@components/ui/icons";
+import { HappyAltIcon } from "@components/ui/icons";
 import { EmojiPlaceholder } from "./components/emoji-placeholder.tsx";
 
 export class SlashMenuEmojiExtension extends SlashMenuExtensionPlugin {
 
-    icon: SVGElement = <EmojiIcon />;
+    icon: SVGElement = <HappyAltIcon />;
     label: string = "";
     sort: number = 99;
 

@@ -1,5 +1,5 @@
 import { t } from "@core/i18n";
-import { ImagePlusIcon } from "@components/ui/icons";
+import { LayoutPlusIcon } from "@components/ui/icons";
 import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "@plugins/block-controls";
 import { createMosaicTile } from "../components/mosaic-block.tsx";
 
@@ -10,7 +10,7 @@ export class BlockOptionsMosaicExtension extends BlockOptionsExtensionPlugin {
         return [
             {
                 id: "mosaic-add-image",
-                icon: <ImagePlusIcon />,
+                icon: <LayoutPlusIcon />,
                 label: t("mosaic_add_image"),
                 sort: 55,
                 onSelect: (ctx) => {

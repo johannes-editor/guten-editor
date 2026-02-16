@@ -18,7 +18,7 @@ const pt: TranslationSchema = {
     separator: 'Separador',
     divider: 'Divisor',
     line: 'Linha',
-    untitled: 'Título',
+    untitled: 'Sem título',
     start_typing: 'Digite algo ou pressione "/" para escolher um bloco',
     paragraph: 'Parágrafo',
     text: 'texto',
@@ -85,8 +85,9 @@ const pt: TranslationSchema = {
 
     image: 'Imagem',
 
+    masonry_gallery: "Galeria em mosaico",
     mosaic: 'Mosaico',
-    mosaic_add_image: 'Adicionar imagem ao mosaico',
+    mosaic_add_image: 'Adicionar imagem',
 
     photo: 'Foto',
     picture: 'Figura',

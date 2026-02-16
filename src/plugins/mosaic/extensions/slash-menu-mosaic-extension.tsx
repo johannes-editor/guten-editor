@@ -1,6 +1,6 @@
 import { t } from "@core/i18n";
 import { focusOnElement } from "@utils/dom";
-import { ColumnsGapIcon } from "@components/ui/icons";
+import { GridColumnLeftFilledIcon } from "@components/ui/icons";
 import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { MosaicBlock } from "../components/mosaic-block.tsx";
 
@@ -13,10 +13,10 @@ export class SlashMenuMosaicExtension extends SlashMenuExtensionPlugin {
 
     constructor() {
         super();
-        this.icon = <ColumnsGapIcon />;
-        this.label = t("mosaic");
+        this.icon = <GridColumnLeftFilledIcon />;
+        this.label = t("masonry_gallery");
         this.sort = 98;
-        this.synonyms = ["pinterest", "pin", "grid"];
+        this.synonyms = ["pinterest", "pin", "grid", t("mosaic")];
     }
 
     override onSelect(focusedBlock: HTMLElement): void {

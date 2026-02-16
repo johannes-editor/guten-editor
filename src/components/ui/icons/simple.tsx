@@ -167,11 +167,12 @@ export const QuotationIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.58341 17.3211C3.55316 16.2274 3 15 3 13.0103C3 9.51086 5.45651 6.37366 9.03059 4.82318L9.92328 6.20079C6.58804 8.00539 5.93618 10.346 5.67564 11.822C6.21263 11.5443 6.91558 11.4466 7.60471 11.5105C9.40908 11.6778 10.8312 13.159 10.8312 15C10.8312 16.933 9.26416 18.5 7.33116 18.5C6.2581 18.5 5.23196 18.0095 4.58341 17.3211ZM14.5834 17.3211C13.5532 16.2274 13 15 13 13.0103C13 9.51086 15.4565 6.37366 19.0306 4.82318L19.9233 6.20079C16.588 8.00539 15.9362 10.346 15.6756 11.822C16.2126 11.5443 16.9156 11.4466 17.6047 11.5105C19.4091 11.6778 20.8312 13.159 20.8312 15C20.8312 16.933 19.2642 18.5 17.3312 18.5C16.2581 18.5 15.232 18.0095 14.5834 17.3211Z"></path></svg>
 );
 
-export const EmojiIcon = () => (
-
-
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM80,108a12,12,0,1,1,12,12A12,12,0,0,1,80,108Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,176,108Zm-1.07,48c-10.29,17.79-27.4,28-46.93,28s-36.63-10.2-46.92-28a8,8,0,1,1,13.84-8c7.47,12.91,19.21,20,33.08,20s25.61-7.1,33.07-20a8,8,0,0,1,13.86,8Z"></path></svg>
-
+export const HappyAltIcon = ({ size = 16, ...props }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size}
+        fill="currentColor" viewBox="0 0 24 24" {...props}>
+        {/* Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/license/free */}
+        <path d="M8.5 8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 1 0 0-3m6.99 2.99c.82 0 1.49-.67 1.49-1.49s-.67-1.49-1.49-1.49S14 8.68 14 9.5s.67 1.49 1.49 1.49M12 18c5 0 6-5 6-5H6s1 5 6 5"></path><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"></path>
+    </svg>
 );
 
 export const CardTextIcon = () => (
@@ -342,9 +343,11 @@ export const ColumnIcon = ({ size = 16, ...props }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="currentColor" viewBox="0 0 256 256"><path d="M104,32H64A16,16,0,0,0,48,48V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,104,32Zm0,176H64V48h40ZM192,32H152a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,192,32Zm0,176H152V48h40Z" {...props}></path></svg>
 );
 
-export const ColumnsGapIcon = ({ size = 16, ...props }: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="currentColor" class="bi bi-columns-gap" viewBox="0 0 16 16" {...props}>
-        <path d="M6 1v3H1V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1zm14 12v3h-5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zM6 8v7H1V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm14-6v7h-5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1z" />
+export const GridColumnLeftFilledIcon = ({ size = 16, ...props }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size}
+        fill="currentColor" viewBox="0 0 24 24" {...props}>
+        {/* Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/license/free */}
+        <rect width="8" height="18" x="3" y="3" rx="1.5" ry="1.5"></rect><rect width="8" height="8" x="13" y="3" rx="1.5" ry="1.5"></rect><rect width="8" height="8" x="13" y="13" rx="1.5" ry="1.5"></rect>
     </svg>
 );
 
@@ -354,10 +357,17 @@ export const ArrowUpIcon2 = ({ size = 16, ...props }: IconProps) => (
     </svg>
 );
 
-export const ImageUpIcon = ({ size = 16, ...props }: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-up-icon lucide-image-up" {...props}><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21" /><path d="m14 19.5 3-3 3 3" /><path d="M17 22v-5.5" /><circle cx="9" cy="9" r="2" /></svg>
+export const LayoutPlusIcon = ({ size = 16, ...props }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size}
+        fill="currentColor" viewBox="0 0 24 24" {...props}>
+        {/* Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/license/free */}
+        <rect width="8" height="8" x="13" y="3" rx="1.5" ry="1.5"></rect><rect width="8" height="18" x="3" y="3" rx="1.5" ry="1.5"></rect><path d="M16 21h2v-3h3v-2h-3v-3h-2v3h-3v2h3z"></path>
+    </svg>
 );
 
-export const ImagePlusIcon = ({ size = 16, ...props }: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-plus-icon lucide-image-plus" {...props}><path d="M16 5h6" /><path d="M19 2v6" /><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /><circle cx="9" cy="9" r="2" /></svg>
+export const PhotoUpIcon = ({ size = 16, ...props }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo-up" {...props}>
+        {/* Tabler v3.36.1 https://tabler.io/icons | License  https://tabler.io/license */}
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 8h.01" /><path d="M12.5 21h-6.5a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v6.5" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l3.5 3.5" /><path d="M14 14l1 -1c.679 -.653 1.473 -.829 2.214 -.526" /><path d="M19 22v-6" /><path d="M22 19l-3 -3l-3 3" />
+    </svg>
 );
