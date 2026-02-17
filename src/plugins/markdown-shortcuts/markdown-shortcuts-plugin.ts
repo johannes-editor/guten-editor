@@ -1,6 +1,6 @@
 
 
-import { findCodeAncestor} from "@utils/dom";
+import { EventTypes, findCodeAncestor} from "@utils/dom";
 import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine";
 import { KeyboardKeys } from "@utils/keyboard";
 import { findClosestBlockBySelection } from "@utils/selection";
@@ -29,7 +29,8 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
             return;
         }
 
-        this.keyTarget.addEventListener("keydown", this.handleKeyDown, true);
+        this.keyTarget.addEventListener(EventTypes.KeyDown, this.handleKeyDown, true);
+        this.keyTarget.addEventListener(EventTypes.BeforeInput, this.handleBeforeInput, true);
     }
 
     override attachExtensions(extensions: MarkdownShortcutExtensionPlugin[]): void {
@@ -57,13 +58,37 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
         this.applyMatch(context, match);
     };
 
+    private readonly handleBeforeInput = (event: InputEvent) => {
+        if (event.defaultPrevented || event.isComposing) return;
+
+        const trigger = this.resolveInputTrigger(event);
+        if (!trigger) return;
+
+        const context = this.buildContext(trigger, event);
+        if (!context) return;
+
+        const match = this.findMatch(context);
+        if (!match) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.applyMatch(context, match);
+    };
+
     private resolveTrigger(event: KeyboardEvent): MarkdownShortcutTrigger | null {
         if (event.key === KeyboardKeys.Space) return "space";
         if (event.key === KeyboardKeys.Enter) return "enter";
         return null;
     }
 
-    private buildContext(trigger: MarkdownShortcutTrigger, event: KeyboardEvent): Omit<MarkdownShortcutContext, "match"> | null {
+    private resolveInputTrigger(event: InputEvent): MarkdownShortcutTrigger | null {
+        if (event.inputType === "insertText" && event.data === " ") return "space";
+        if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") return "enter";
+        return null;
+    }
+
+    private buildContext(trigger: MarkdownShortcutTrigger, event: KeyboardEvent | InputEvent): Omit<MarkdownShortcutContext, "match"> | null {
         const contentArea = this.getContentArea();
         const selectionState = globalThis.getSelection();
 

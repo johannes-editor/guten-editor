@@ -18,7 +18,7 @@ export type MarkdownShortcutContext = {
     textBeforeCaret: string;
     afterText: string;
     match: MarkdownShortcutMatch;
-    event: KeyboardEvent;
+    event: KeyboardEvent | InputEvent;
     selection: Selection;
 };
 

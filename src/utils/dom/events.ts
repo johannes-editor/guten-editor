@@ -17,6 +17,7 @@ export class EventTypes {
     static readonly Blur = 'blur';
     static readonly Change = 'change';
     static readonly Input = 'input';
+    static readonly BeforeInput = 'beforeinput';
     static readonly Submit = 'submit';
     static readonly Scroll = 'scroll';
     static readonly Resize = 'resize';

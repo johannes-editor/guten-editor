@@ -21,11 +21,11 @@ import { waitFrames } from "@utils/timing/index.ts";
 export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> {
 
     private contentArea: HTMLElement | null = null;
+    private extensionItems: SlashMenuItemData[] = [];
 
     override attachExtensions(extensions: SlashMenuExtensionPlugin[]): void {
 
-        // extensions.map( e => e.setup(_root, extensions));
-        const items: SlashMenuItemData[] = extensions.map((ext) => ({
+        this.extensionItems = extensions.map((ext) => ({
             icon: ext.icon,
             label: ext.label,
             shortcut: ext.shortcut,
@@ -34,8 +34,6 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
             preserveEmptyBlock: ext.preserveEmptyBlock,
             onSelect: (currentBlock: HTMLElement) => ext.onSelect(currentBlock),
         }));
-
-        document.addEventListener(EventTypes.KeyDown, (event) => this.handleKey(event, items));
     }
 
     /**
@@ -50,53 +48,152 @@ export class SlashMenuPlugin extends ExtensiblePlugin<SlashMenuExtensionPlugin> 
         this.contentArea = root.querySelector<HTMLElement>("#contentArea") ??
             root.querySelector<HTMLElement>('[contenteditable="true"]');
 
+        globalThis.addEventListener(EventTypes.KeyDown, this.handleKeyDown, true);
+        globalThis.addEventListener(EventTypes.BeforeInput, this.handleBeforeInput, true);
+        globalThis.addEventListener(EventTypes.Input, this.handleInput as EventListener, true);
+
         registerTranslation("en", en);
         registerTranslation("pt", pt);
     }
 
-    private readonly handleKey = async (event: KeyboardEvent, extensionItems: SlashMenuItemData[]) => {
-        if (event.key === KeyboardKeys.Slash && !this.mounted() && event.shiftKey === false && event.ctrlKey === false && event.altKey === false && event.metaKey === false) {
-            const selection = globalThis.getSelection();
-            if (!selection || selection.rangeCount === 0) return;
+    private readonly handleKeyDown = (event: KeyboardEvent) => {
+        void this.handleSlashTrigger(event, "keyboard");
+    };
 
-            const contentArea = this.getContentArea();
-            if (contentArea) {
-                const { startContainer } = selection.getRangeAt(0);
-                if (!contentArea.contains(startContainer)) return;
-            }
+    private readonly handleBeforeInput = (event: InputEvent) => {
+        if (event.defaultPrevented) return;
 
+        const insertType = event.inputType === "insertText" || event.inputType === "insertCompositionText";
+        const isSlashData = event.data === KeyboardKeys.Slash;
+        const unknownData = event.data === null;
+
+        if (!insertType || (!isSlashData && !unknownData)) return;
+
+        void this.handleSlashTrigger(event, EventTypes.BeforeInput);
+    };
+
+    private readonly handleInput = (event: InputEvent) => {
+        if (event.defaultPrevented) return;
+
+        const insertType = event.inputType === "insertText" || event.inputType === "insertCompositionText";
+        const slashByData = event.data === KeyboardKeys.Slash;
+        const slashByCaret = this.hasSlashImmediatelyBeforeCaret();
+
+        if (!insertType || (!slashByData && !slashByCaret)) return;
+
+        void this.handleSlashTrigger(event, "input");
+    };
+
+    private readonly handleSlashTrigger = async (
+        event: KeyboardEvent | InputEvent,
+        source: "keyboard" | "beforeinput" | "input",
+    ) => {
+        const triggeredByKeyboard = source === "keyboard" &&
+            event instanceof KeyboardEvent &&
+            event.key === KeyboardKeys.Slash &&
+            event.shiftKey === false &&
+            event.ctrlKey === false &&
+            event.altKey === false &&
+            event.metaKey === false;
+
+        const triggeredByBeforeInput =
+            source === "beforeinput" &&
+            event instanceof InputEvent &&
+            (event.inputType === "insertText" || event.inputType === "insertCompositionText");
+
+        const triggeredByInput =
+            source === "input" &&
+            event instanceof InputEvent &&
+            (event.inputType === "insertText" || event.inputType === "insertCompositionText");
+
+        if (!triggeredByKeyboard && !triggeredByBeforeInput && !triggeredByInput) return;
+        if (this.mounted()) return;
+
+        const selection = globalThis.getSelection();
+        if (!selection || selection.rangeCount === 0 || !selection.isCollapsed) return;
+
+        const contentArea = this.getContentArea();
+        if (contentArea) {
+            const { startContainer } = selection.getRangeAt(0);
+            if (!contentArea.contains(startContainer)) return;
+        }
+
+        if (!triggeredByInput) {
             event.preventDefault();
             event.stopImmediatePropagation();
 
             await waitFrames(2);
+        }
 
-            const refreshedSelection = globalThis.getSelection();
-            if (refreshedSelection && refreshedSelection.rangeCount > 0) {
-                const range = refreshedSelection.getRangeAt(0);
+        const refreshedSelection = globalThis.getSelection();
+        if (refreshedSelection && refreshedSelection.rangeCount > 0) {
+            const range = refreshedSelection.getRangeAt(0);
 
-                this.normalizeCaretInEmptyBlock(range, refreshedSelection);
+            this.normalizeCaretInEmptyBlock(range, refreshedSelection);
 
-                const slashNode = document.createTextNode("/");
-                range.insertNode(slashNode);
+            const slashNode = triggeredByInput
+                ? this.findSlashAnchorNode(range)
+                : this.insertSlashAndGetAnchorNode(range, refreshedSelection);
+            if (!slashNode) return;
 
-                range.setStartAfter(slashNode);
-                range.setEndAfter(slashNode);
-                refreshedSelection.removeAllRanges();
-                refreshedSelection.addRange(range);
+            await waitFrames(2);
 
-                await waitFrames(2);
+            const slashMenuItems = defaultSlashMenuItems();
+            slashMenuItems.push(...this.extensionItems);
 
-                const slashMenuItems = defaultSlashMenuItems();
-                slashMenuItems.push(...extensionItems);
+            appendElementOnOverlayArea(
+                <SlashMenuOverlay
+                    items={slashMenuItems}
+                    anchorNode={slashNode}
+                />
+            );
+        }
+    }
 
-                appendElementOnOverlayArea(
-                    <SlashMenuOverlay
-                        items={slashMenuItems}
-                        anchorNode={slashNode}
-                    />
-                );
+    private insertSlashAndGetAnchorNode(range: Range, selection: Selection): Text {
+        const slashNode = document.createTextNode("/");
+        range.insertNode(slashNode);
+
+        range.setStartAfter(slashNode);
+        range.setEndAfter(slashNode);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        return slashNode;
+    }
+
+    private hasSlashImmediatelyBeforeCaret(): boolean {
+        const selection = globalThis.getSelection();
+        if (!selection || selection.rangeCount === 0 || !selection.isCollapsed) return false;
+
+        const contentArea = this.getContentArea();
+        if (contentArea) {
+            const { startContainer } = selection.getRangeAt(0);
+            if (!contentArea.contains(startContainer)) return false;
+        }
+
+        return this.findSlashAnchorNode(selection.getRangeAt(0)) !== null;
+    }
+
+    private findSlashAnchorNode(range: Range): Node | null {
+        const startContainer = range.startContainer;
+        const startOffset = range.startOffset;
+
+        if (startContainer.nodeType === Node.TEXT_NODE) {
+            const textNode = startContainer as Text;
+            if (startOffset > 0 && textNode.data[startOffset - 1] === "/") return textNode;
+        }
+
+        if (startContainer.nodeType === Node.ELEMENT_NODE) {
+            const element = startContainer as Element;
+            const previous = element.childNodes[startOffset - 1] ?? null;
+            if (previous?.nodeType === Node.TEXT_NODE) {
+                const textNode = previous as Text;
+                if (textNode.data.endsWith("/")) return textNode;
             }
         }
+
+        return null;
     }
 
     private normalizeCaretInEmptyBlock(range: Range, selection: Selection): void {
