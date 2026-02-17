@@ -1,8 +1,8 @@
 import { t } from "@core/i18n";
-import { focusOnElement } from "@utils/dom";
 import { GridColumnLeftFilledIcon } from "@components/ui/icons";
 import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { MosaicBlock } from "../components/mosaic-block.tsx";
+import { clearSelection } from "@utils/selection";
 
 export class SlashMenuMosaicExtension extends SlashMenuExtensionPlugin {
 
@@ -16,12 +16,16 @@ export class SlashMenuMosaicExtension extends SlashMenuExtensionPlugin {
         this.icon = <GridColumnLeftFilledIcon />;
         this.label = t("masonry_gallery");
         this.sort = 98;
-        this.synonyms = ["pinterest", "pin", "grid", t("mosaic")];
+        this.synonyms = ["pinterest", "pin", "grid", t("mosaic"), t("photo"), t("picture"), t("img")];
     }
 
     override onSelect(focusedBlock: HTMLElement): void {
         const element = <MosaicBlock />;
         focusedBlock.after(element);
-        focusOnElement(element);
+        
+        requestAnimationFrame(() => {
+            clearSelection();
+            (document.activeElement as HTMLElement | null)?.blur?.();
+        });
     }
 }
