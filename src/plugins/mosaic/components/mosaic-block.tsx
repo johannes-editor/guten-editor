@@ -614,7 +614,7 @@ function createDefaultTile(tileId: string): HTMLElement {
                 openTileImageMenu(event.currentTarget as HTMLElement);
             }}
         >
-            <span className="mosaic-block__tile-content" title={t("insert_image")}><PhotoUpIcon  /></span>
+            <span className="mosaic-block__tile-content" title={t("insert_image")}><ImageAltIcon  /></span>
         </div>
     ) as HTMLElement;
 
