@@ -1,6 +1,6 @@
 import { runCommand } from "@core/command";
 import { t } from "@core/i18n";
-import { PhotoUpIcon } from "@components/ui/icons";
+import { ImageAltIcon } from "@components/ui/icons";
 import { ensureBlockId } from "@utils/dom";
 import { AddCircleButton } from "@components/ui/buttons/add-circle-button.tsx";
 import { applyImageSourceToElement, saveLocalImage } from "@utils/media";
