@@ -12,8 +12,11 @@ export class DefaultMarkdownShortcutsExtension extends MarkdownShortcutExtension
             this.createHeadingShortcut("#####", "insertHeading5", 50),
             this.createSimpleShortcut(">", "insertBlockquote", 60),
             this.createListShortcut("-", "insertBulletedList", 70),
+            this.createListShortcut("*", "insertBulletedList", 71),
+            this.createListShortcut("+", "insertBulletedList", 72),
             this.createListShortcut("1.", "insertNumberedList", 80),
             this.createSeparatorShortcut("---", 90),
+            this.createSeparatorShortcut("***", 91),
         ];
     }
 
