@@ -1,5 +1,6 @@
 import { DefaultProps } from "@core/components";
 import { runCommand } from "@core/command";
+import { generateBlockId } from "@utils/dom";
 
 export function TableBlock({ children, className = "", ...props }: DefaultProps): HTMLTableElement {
     const blockClass = ["block", "table-block", className].filter(Boolean).join(" ");
@@ -21,6 +22,7 @@ export function TableBlock({ children, className = "", ...props }: DefaultProps)
     return (
         <div
             className={blockClass}
+            data-block-id={generateBlockId()}
             contentEditable="false"
             {...props}
         >
