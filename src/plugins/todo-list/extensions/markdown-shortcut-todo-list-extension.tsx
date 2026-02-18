@@ -1,6 +1,6 @@
 import { focusOnElement } from "@utils/dom";
 import { MarkdownShortcutContext, MarkdownShortcutRule, MarkdownShortcutExtensionPlugin } from "@plugins/markdown-shortcuts";
-import { createTodoList } from "../utils.tsx";
+import { TodoListBlock } from "../components/todo-list.tsx";
 
 export class MarkdownShortcutTodoListExtension extends MarkdownShortcutExtensionPlugin {
 
@@ -16,8 +16,7 @@ export class MarkdownShortcutTodoListExtension extends MarkdownShortcutExtension
     }
 
     private insertTodoList(context: MarkdownShortcutContext) {
-        const doc = context.block.ownerDocument ?? document;
-        const list = createTodoList(doc);
+        const list = <TodoListBlock /> ;
         context.block.after(list);
 
         const span = list.querySelector<HTMLSpanElement>("span[contenteditable]");

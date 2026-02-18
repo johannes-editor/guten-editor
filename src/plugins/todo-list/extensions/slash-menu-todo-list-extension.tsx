@@ -2,7 +2,7 @@ import { t } from "@core/i18n";
 import { MaterialChecklist } from "@components/ui/icons";
 import { focusOnElement } from "@utils/dom";
 import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
-import { createTodoList } from "../utils.tsx";
+import { TodoListBlock } from "../components/todo-list.tsx";
 
 export class SlashMenuTodoListExtension extends SlashMenuExtensionPlugin {
 
@@ -22,8 +22,7 @@ export class SlashMenuTodoListExtension extends SlashMenuExtensionPlugin {
     }
 
     onSelect(focusedBlock: HTMLElement): void {
-        const doc = focusedBlock.ownerDocument ?? document;
-        const element = createTodoList(doc);
+        const element = <TodoListBlock />;
         focusedBlock.after(element);
 
         const span = element.querySelector<HTMLSpanElement>("span[contenteditable]");

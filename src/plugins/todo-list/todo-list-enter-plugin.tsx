@@ -2,7 +2,8 @@ import { Plugin } from "@core/plugin-engine";
 import { ParagraphBlock } from "@components/blocks";
 import { focusOnElement } from "@utils/dom";
 import { ClassName } from "@utils/dom/class-name.ts";
-import { createTodoItem, createTodoList } from "../utils.tsx";
+import { TodoListItem } from "./components/todo-list-item.tsx";
+import { TodoListBlock } from "./components/todo-list.tsx";
 
 export class TodoListEnterPlugin extends Plugin {
 
@@ -90,7 +91,7 @@ export class TodoListEnterPlugin extends Plugin {
             span.classList.remove(ClassName.Empty);
         }
 
-        const newItem = createTodoItem(doc);
+        const newItem = <TodoListItem />;
         const newSpan = newItem.querySelector<HTMLSpanElement>("span[contenteditable]");
 
         if (newSpan) {
@@ -131,7 +132,7 @@ export class TodoListEnterPlugin extends Plugin {
         list.insertAdjacentElement("afterend", paragraph);
 
         if (followingItems.length > 0) {
-            const newList = createTodoList(doc, followingItems);
+            const newList = <TodoListBlock />;
             paragraph.insertAdjacentElement("afterend", newList);
             this.dispatchInput(newList);
         }

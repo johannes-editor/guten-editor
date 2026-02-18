@@ -1,4 +1,4 @@
-import { TranslationSchema } from "../../index.ts";
+import { TranslationSchema } from "@core/i18n";
 
 export const pt: TranslationSchema = {
     todo_list: "Lista de tarefas",
