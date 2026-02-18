@@ -9,7 +9,7 @@
             "active": true
         },
         {
-            "path": "./extensions/todo-list-enter-plugin.tsx",
+            "path": "./todo-list-enter-plugin.tsx",
             "class": "TodoListEnterPlugin",
             "active": true
         },
