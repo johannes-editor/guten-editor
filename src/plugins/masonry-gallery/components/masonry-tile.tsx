@@ -85,7 +85,7 @@ export function MasonryTile(): HTMLDivElement {
 function openTileImageMenu(tile: HTMLElement): void {
     const rect = tile.getBoundingClientRect();
 
-    runCommand("openMosaicImageMenu", {
+    runCommand("openMasonryImageMenu", {
         content: {
             target: tile,
             anchorRect: rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height } : undefined,

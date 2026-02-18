@@ -1,23 +1,23 @@
 {
-    "name": "Mosaic",
+    "name": "Masonry Gallery",
     "author": "Alexandre Tavares",
     "version": "1.0.0",
     "entries": [
         {
-            "path": "./extensions/slash-menu-mosaic-extension.tsx",
-            "class": "SlashMenuMosaicExtension",
+            "path": "./extensions/slash-menu-masonry-extension.tsx",
+            "class": "SlashMenuMasonryExtension",
             "active": true,
-            "description": "Adds the Mosaic block to the slash menu."
+            "description": "Adds the masonry gallery block to the slash menu."
         },
         {
-            "path": "./extensions/command-mosaic-extension.ts",
-            "class": "CommandMosaicExtension",
+            "path": "./extensions/command-masonry-extension.ts",
+            "class": "CommandMasonryExtension",
             "active": true,
-            "description": "Registers Mosaic image insertion command."
+            "description": "Registers masonry image insertion command."
         },
         {
-            "path": "./extensions/block-options-mosaic-extension.tsx",
-            "class": "BlockOptionsMosaicExtension",
+            "path": "./extensions/block-options-masonry-extension.tsx",
+            "class": "BlockOptionsMasonryExtension",
             "active": true,
             "description": "Adds Mosaic-specific actions to block options menu."
         }

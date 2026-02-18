@@ -1,16 +1,16 @@
 import { Command } from "@core/command";
 import { appendElementOnOverlayArea } from "@components/editor";
-import { MosaicImageMenu } from "../components/mosaic-image-menu.tsx";
+import { MasonryImageMenu } from "../components/masonry-image-menu.tsx";
 
-export type OpenMosaicImageMenuPayload = {
+export type OpenMasonryImageMenuContext = {
     target?: HTMLElement | null;
     anchorRect?: DOMRectInit;
     initialUrl?: string;
     initialTab?: "upload" | "embed";
 };
 
-export const OpenMosaicImageMenu: Command<OpenMosaicImageMenuPayload> = {
-    id: "openMosaicImageMenu",
+export const OpenMasonryImageMenu: Command<OpenMasonryImageMenuContext> = {
+    id: "openMasonryImageMenu",
     execute(context): boolean {
         const { target, anchorRect, initialUrl, initialTab } = context?.content ?? {};
 
@@ -20,7 +20,7 @@ export const OpenMosaicImageMenu: Command<OpenMosaicImageMenuPayload> = {
             : undefined;
 
         appendElementOnOverlayArea(
-            <MosaicImageMenu
+            <MasonryImageMenu
                 target={target ?? null}
                 anchorRect={anchor}
                 initialUrl={initialUrl ?? target?.dataset?.imageSource ?? undefined}

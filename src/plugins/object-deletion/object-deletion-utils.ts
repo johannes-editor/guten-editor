@@ -119,6 +119,7 @@ export function removeObjectAndCleanupBlock(target: HTMLElement): boolean {
     return true;
 }
 
+//TODO: Look
 export function openEditorForObject(target: HTMLElement): boolean {
     const rect = target.getBoundingClientRect();
     const anchorRect = rect
@@ -130,7 +131,7 @@ export function openEditorForObject(target: HTMLElement): boolean {
     }
 
     if (target.matches(".masonry-gallery__tile[data-mosaic-tile]")) {
-        return runCommand("openMosaicImageMenu", { content: { target, anchorRect } });
+        return runCommand("openMasonryImageMenu", { content: { target, anchorRect } });
     }
 
     if (target.matches("[data-youtube-placeholder='true']") || target.matches(".youtube-embed[data-youtube-embed='true']")) {

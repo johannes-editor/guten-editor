@@ -5,23 +5,23 @@ import { OverlayComponent } from "@components/editor/overlay";
 import { saveLocalImage } from "@utils/media";
 import { createMosaicTile } from "./masonry-gallery.tsx";
 
-export interface MosaicImageMenuProps extends DefaultProps {
+export interface MasonryImageMenuProps extends DefaultProps {
     target?: HTMLElement | null;
     anchorRect?: DOMRectInit;
     initialUrl?: string;
     initialTab?: "upload" | "embed";
 }
 
-interface MosaicImageMenuState extends DefaultState {
+interface MasonryImageMenuState extends DefaultState {
     activeTab: "upload" | "embed";
     isUploading: boolean;
     error: string | null;
     embedUrl: string;
 }
 
-export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, MosaicImageMenuState> {
+export class MasonryImageMenu extends OverlayComponent<MasonryImageMenuProps, MasonryImageMenuState> {
 
-    override state: MosaicImageMenuState = {
+    override state: MasonryImageMenuState = {
         activeTab: "upload",
         isUploading: false,
         error: null,
@@ -260,7 +260,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
         event?.preventDefault();
         event?.stopPropagation();
         if (this.state.activeTab === tab) return;
-        this.setState({ activeTab: tab, error: null } as Partial<MosaicImageMenuState>);
+        this.setState({ activeTab: tab, error: null } as Partial<MasonryImageMenuState>);
     }
 
     private openFilePicker(): void {
@@ -279,7 +279,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
     }
 
     private async uploadFiles(files: File[]): Promise<void> {
-        this.setState({ isUploading: true, error: null } as Partial<MosaicImageMenuState>);
+        this.setState({ isUploading: true, error: null } as Partial<MasonryImageMenuState>);
 
         try {
             const uploads = await Promise.all(
@@ -291,9 +291,9 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
 
             this.insertUploadedImages(uploads);
         } catch {
-            this.setState({ error: t("image_upload_error") } as Partial<MosaicImageMenuState>);
+            this.setState({ error: t("image_upload_error") } as Partial<MasonryImageMenuState>);
         } finally {
-            this.setState({ isUploading: false } as Partial<MosaicImageMenuState>);
+            this.setState({ isUploading: false } as Partial<MasonryImageMenuState>);
         }
     }
 
@@ -336,7 +336,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
         this.remove();
 
         requestAnimationFrame(() => {
-            runCommand("insertMosaicImage", {
+            runCommand("insertMasonryImage", {
                 content: {
                     target: target ?? undefined,
                     sourceUrl: result.url,
@@ -359,7 +359,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
             for (const [index, image] of images.entries()) {
                 if (!currentTarget) break;
 
-                runCommand("insertMosaicImage", {
+                runCommand("insertMasonryImage", {
                     content: {
                         target: currentTarget,
                         sourceUrl: image.url,
@@ -400,7 +400,7 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
         const input = event.target as HTMLInputElement | null;
         const value = input?.value ?? "";
         this.urlInput?.setCustomValidity("");
-        this.setState({ embedUrl: value, error: null } as Partial<MosaicImageMenuState>);
+        this.setState({ embedUrl: value, error: null } as Partial<MasonryImageMenuState>);
     }
 
     private getEmbedUrl(): string {

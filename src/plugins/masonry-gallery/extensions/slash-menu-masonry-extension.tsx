@@ -4,7 +4,7 @@ import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { MasonryGalleryBlock } from "../components/masonry-gallery.tsx";
 import { clearSelection } from "@utils/selection";
 
-export class SlashMenuMosaicExtension extends SlashMenuExtensionPlugin {
+export class SlashMenuMasonryExtension extends SlashMenuExtensionPlugin {
 
     icon: SVGElement;
     label: string;
