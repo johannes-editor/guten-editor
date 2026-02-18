@@ -1,5 +1,5 @@
 import { ParagraphBlock } from "../../components/blocks/paragraph.tsx";
-import { focusOnElementAtStart } from "@utils/dom";
+import { ensureBlockId, focusOnElementAtStart, generateBlockId } from "@utils/dom";
 
 /**
  * Observes the insertion of new blocks directly into the contentEditable DOM (e.g., when pressing Enter).
@@ -26,10 +26,23 @@ export class NewContentChildrenObserver {
                     for (const node of Array.from(mutation.addedNodes)) {
                         if (!(node instanceof HTMLElement)) continue;
 
-                        if (
-                            node.classList.contains("block") ||
-                            node.classList.contains("drag-placeholder")
-                        ) continue;
+                        if (node.classList.contains("drag-placeholder")) continue;
+
+                        if (node.classList.contains("block")) {
+                            const blockId = node.dataset.blockId;
+                            const hasDuplicatedId =
+                                !!blockId &&
+                                Array.from(this.target.querySelectorAll<HTMLElement>("[data-block-id]"))
+                                    .filter((element) => element.dataset.blockId === blockId).length > 1;
+
+                            if (hasDuplicatedId) {
+                                node.dataset.blockId = generateBlockId();
+                            } else {
+                                ensureBlockId(node);
+                            }
+
+                            continue;
+                        }
 
                         try {
 
