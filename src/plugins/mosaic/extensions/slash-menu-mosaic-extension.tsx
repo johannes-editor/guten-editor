@@ -1,7 +1,7 @@
 import { t } from "@core/i18n";
 import { GridColumnLeftFilledIcon } from "@components/ui/icons";
 import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
-import { MosaicBlock } from "../components/mosaic-block.tsx";
+import { MasonryGalleryBlock } from "../components/masonry-gallery.tsx";
 import { clearSelection } from "@utils/selection";
 
 export class SlashMenuMosaicExtension extends SlashMenuExtensionPlugin {
@@ -20,7 +20,7 @@ export class SlashMenuMosaicExtension extends SlashMenuExtensionPlugin {
     }
 
     override onSelect(focusedBlock: HTMLElement): void {
-        const element = <MosaicBlock />;
+        const element = <MasonryGalleryBlock />;
         focusedBlock.after(element);
         
         requestAnimationFrame(() => {

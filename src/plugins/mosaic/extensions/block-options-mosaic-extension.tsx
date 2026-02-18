@@ -1,11 +1,11 @@
 import { t } from "@core/i18n";
 import { LayoutPlusIcon } from "@components/ui/icons";
 import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "@plugins/block-controls";
-import { createMosaicTile } from "../components/mosaic-block.tsx";
+import { createMosaicTile } from "../components/masonry-gallery.tsx";
 
 export class BlockOptionsMosaicExtension extends BlockOptionsExtensionPlugin {
     override items(block: HTMLElement): BlockOptionsItem[] {
-        if (!block.classList.contains("mosaic-block")) return [];
+        if (!block.classList.contains("masonry-gallery")) return [];
 
         return [
             {

@@ -5,7 +5,7 @@ import { clearSelection } from "@utils/selection";
 export const FOCUSABLE_OBJECT_SELECTOR = [
     "[data-image-placeholder='true']",
     "figure.image-block[data-image-embed='true']",
-    ".mosaic-block__tile[data-mosaic-tile]",
+    ".masonry-gallery__tile[data-mosaic-tile]",
     "[data-youtube-placeholder='true']",
     ".youtube-embed[data-youtube-embed='true']",
 ].join(",");
@@ -29,8 +29,8 @@ export function decorateFocusableObjects(root: ParentNode): void {
         if (element.tabIndex < 0) element.tabIndex = 0;
     }
 
-    const ignored = new Set<HTMLElement>(Array.from(root.querySelectorAll<HTMLElement>(".mosaic-block__add-tile")));
-    if (root instanceof HTMLElement && root.matches(".mosaic-block__add-tile")) {
+    const ignored = new Set<HTMLElement>(Array.from(root.querySelectorAll<HTMLElement>(".masonry-gallery__add-tile")));
+    if (root instanceof HTMLElement && root.matches(".masonry-gallery__add-tile")) {
         ignored.add(root);
     }
 
@@ -129,7 +129,7 @@ export function openEditorForObject(target: HTMLElement): boolean {
         return runCommand("openImageMenu", { content: { target, anchorRect } });
     }
 
-    if (target.matches(".mosaic-block__tile[data-mosaic-tile]")) {
+    if (target.matches(".masonry-gallery__tile[data-mosaic-tile]")) {
         return runCommand("openMosaicImageMenu", { content: { target, anchorRect } });
     }
 

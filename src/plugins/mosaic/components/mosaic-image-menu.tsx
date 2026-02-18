@@ -3,7 +3,7 @@ import { runCommand } from "@core/command";
 import { DefaultProps, DefaultState } from "@core/components";
 import { OverlayComponent } from "@components/editor/overlay";
 import { saveLocalImage } from "@utils/media";
-import { createMosaicTile } from "./mosaic-block.tsx";
+import { createMosaicTile } from "./masonry-gallery.tsx";
 
 export interface MosaicImageMenuProps extends DefaultProps {
     target?: HTMLElement | null;
@@ -377,10 +377,10 @@ export class MosaicImageMenu extends OverlayComponent<MosaicImageMenuProps, Mosa
     }
 
     private getNextTargetTile(currentTile: HTMLElement): HTMLElement | null {
-        const block = currentTile.closest<HTMLElement>(".mosaic-block");
+        const block = currentTile.closest<HTMLElement>(".masonry-gallery");
         if (!block) return null;
 
-        const tiles = Array.from(block.querySelectorAll<HTMLElement>(".mosaic-block__tile[data-mosaic-tile]"));
+        const tiles = Array.from(block.querySelectorAll<HTMLElement>(".masonry-gallery__tile[data-mosaic-tile]"));
         if (!tiles.length) return null;
 
         const currentIndex = tiles.indexOf(currentTile);

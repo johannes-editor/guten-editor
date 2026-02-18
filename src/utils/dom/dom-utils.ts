@@ -168,3 +168,13 @@ function hasCollapsedEditableCaret(range: Range, root: HTMLElement): boolean {
 
     return false;
 }
+
+export function injectStyleOnce(styleId: string, cssText: string): void {
+    if (typeof document === "undefined") return;
+    if (document.getElementById(styleId)) return;
+
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = cssText;
+    document.head.appendChild(style);
+}

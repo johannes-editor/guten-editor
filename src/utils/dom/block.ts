@@ -4,6 +4,22 @@ import { selection } from "../index.ts";
 
 const BLOCK_ID_PREFIX = "block-";
 
+export function generateShortId(length: number = 8): string {
+    if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+        const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
+        const bytes = new Uint8Array(length);
+        crypto.getRandomValues(bytes);
+
+        let out = "";
+        for (let i = 0; i < length; i++) {
+            out += alphabet[bytes[i] % alphabet.length];
+        }
+        return out; // ex: "k3p9x1a0"
+    }
+
+    return Math.random().toString(36).slice(2, 2 + length);
+}
+
 export function generateBlockId(): string {
     if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
         return `${BLOCK_ID_PREFIX}${crypto.randomUUID()}`;

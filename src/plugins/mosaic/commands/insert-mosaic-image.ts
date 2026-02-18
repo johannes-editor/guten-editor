@@ -1,5 +1,5 @@
 import { Command } from "@core/command";
-import { applyMosaicTileImage } from "../components/mosaic-block.tsx";
+import { applyMosaicTileImage } from "../components/masonry-gallery.tsx";
 
 export type InsertMosaicImagePayload = {
     target?: HTMLElement | null;
