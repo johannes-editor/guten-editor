@@ -1,6 +1,7 @@
 import { runCommand } from "@core/command";
 import { RowIcon, ColumnIcon } from "@components/ui/icons";
 import { BlockOptionsExtensionPlugin, BlockOptionsItem } from "../../block-controls/index.ts";
+import { findRowIndexFromSelection } from "../commands/table-command-utils.ts";
 
 export class BlockOptionsTableExtension extends BlockOptionsExtensionPlugin {
 
@@ -18,7 +19,8 @@ export class BlockOptionsTableExtension extends BlockOptionsExtensionPlugin {
                 sort: 60,
                 rightIndicator: "chevron",
                 onSelect: (ctx) => {
-                    runCommand("openTableRowOptions", { content: { table, anchor: ctx.trigger } });
+                    const rowIndex = findRowIndexFromSelection(table) ?? 0;
+                    runCommand("openTableRowOptions", { content: { table, anchor: ctx.trigger, rowIndex } });
                 }
             },
             {

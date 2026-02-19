@@ -1,6 +1,29 @@
 import { focusOnElement } from "@utils/dom";
 import type { CommandContext } from "@core/command";
 
+export function findRowIndexFromSelection(
+    table: HTMLTableElement,
+    selection?: Selection | null,
+): number | null {
+    const sel = selection ?? globalThis.getSelection?.() ?? null;
+    if (!sel) return null;
+
+    const cell = findClosestCell(sel.anchorNode) ?? findClosestCell(sel.focusNode);
+    if (!cell || cell.closest("table") !== table) return null;
+
+    const row = cell.closest<HTMLTableRowElement>("tr");
+    if (!row) return null;
+
+    const rows = Array.from(table.querySelectorAll<HTMLTableRowElement>("tr"));
+    const rowIndex = rows.indexOf(row);
+    return rowIndex >= 0 ? rowIndex : null;
+}
+
+function extractRowIndexFromContent(context?: CommandContext): number | null {
+    const rowIndex = (context?.content as { rowIndex?: unknown } | undefined)?.rowIndex;
+    return typeof rowIndex === "number" && Number.isInteger(rowIndex) ? rowIndex : null;
+}
+
 function findClosestTable(node: Node | null | undefined): HTMLTableElement | null {
     let current: Node | null | undefined = node;
 
@@ -104,6 +127,32 @@ function extractTableFromContent(context?: CommandContext): HTMLTableElement | n
     return null;
 }
 
+export function addRowRelativeToTable(
+    table: HTMLTableElement,
+    context: CommandContext | undefined,
+    position: "above" | "below",
+): boolean {
+    const allRows = Array.from(table.querySelectorAll<HTMLTableRowElement>("tr"));
+    const targetRow = resolveTargetRow(table, context, allRows);
+    const referenceRow = targetRow ?? allRows[allRows.length - 1];
+    const columnCount = referenceRow?.cells.length ?? 0;
+    if (!columnCount || !referenceRow) return false;
+
+    const newRow = document.createElement("tr");
+    for (let index = 0; index < columnCount; index++) {
+        const templateCell = referenceRow.cells[index] ?? referenceRow.cells[referenceRow.cells.length - 1];
+        newRow.append(createCellLike(templateCell));
+    }
+
+    if (position === "above") {
+        referenceRow.before(newRow);
+    } else {
+        referenceRow.after(newRow);
+    }
+
+    return true;
+}
+
 export function addRowToTable(table: HTMLTableElement): boolean {
     const tbody = table.tBodies[0] ?? table.createTBody();
     const referenceRow = tbody.rows[tbody.rows.length - 1] ?? table.querySelector("tr");
@@ -117,10 +166,6 @@ export function addRowToTable(table: HTMLTableElement): boolean {
     }
 
     tbody.append(newRow);
-    const firstCell = newRow.cells[0];
-    if (firstCell) {
-        focusOnElement(firstCell as HTMLElement);
-    }
 
     return true;
 }
@@ -129,16 +174,10 @@ export function addColumnToTable(table: HTMLTableElement): boolean {
     const rows = Array.from(table.querySelectorAll<HTMLTableRowElement>("tr"));
     if (!rows.length) return false;
 
-    const newColumnIndex = rows[0].cells.length;
 
     for (const row of rows) {
         const templateCell = row.cells[row.cells.length - 1] ?? row.cells[0];
         row.append(createCellLike(templateCell));
-    }
-
-    const firstNewCell = rows[0].cells[newColumnIndex];
-    if (firstNewCell) {
-        focusOnElement(firstNewCell as HTMLElement);
     }
 
     return true;
@@ -148,26 +187,15 @@ export function deleteRowFromTable(
     table: HTMLTableElement,
     context?: CommandContext,
 ): boolean {
-    const targetCell = resolveCellFromContext(context, table);
-    const targetRow = targetCell?.closest<HTMLTableRowElement>("tr");
-    if (!targetRow) return false;
-
     const allRows = Array.from(table.querySelectorAll<HTMLTableRowElement>("tr"));
+    const targetRow = resolveTargetRow(table, context, allRows);
+    if (!targetRow) return false;
     if (allRows.length <= 1) return false;
 
     const rowIndex = allRows.indexOf(targetRow);
     if (rowIndex === -1) return false;
 
-    const focusRow = allRows[rowIndex + 1] ?? allRows[rowIndex - 1];
-
     targetRow.remove();
-
-    const focusCell = focusRow?.cells[Math.min(targetCell?.cellIndex ?? 0, Math.max(0, focusRow.cells.length - 1))]
-        ?? focusRow?.cells[0];
-
-    if (focusCell) {
-        focusOnElement(focusCell as HTMLElement);
-    }
 
     return true;
 }
@@ -199,6 +227,45 @@ export function deleteColumnFromTable(
     }
 
     return true;
+}
+
+export function moveRowOnTable(
+    table: HTMLTableElement,
+    context: CommandContext | undefined,
+    direction: "up" | "down",
+): boolean {
+    const allRows = Array.from(table.querySelectorAll<HTMLTableRowElement>("tr"));
+    const targetRow = resolveTargetRow(table, context, allRows);
+    if (!targetRow) return false;
+
+    if (direction === "up") {
+        const previousRow = targetRow.previousElementSibling;
+        if (!(previousRow instanceof HTMLTableRowElement)) return false;
+        previousRow.before(targetRow);
+    } else {
+        const nextRow = targetRow.nextElementSibling;
+        if (!(nextRow instanceof HTMLTableRowElement)) return false;
+        nextRow.after(targetRow);
+    }
+
+    return true;
+}
+
+function resolveTargetRow(
+    table: HTMLTableElement,
+    context: CommandContext | undefined,
+    allRows: HTMLTableRowElement[],
+): HTMLTableRowElement | null {
+    const targetCell = resolveCellFromContext(context, table);
+    const targetRow = targetCell?.closest<HTMLTableRowElement>("tr");
+    if (targetRow) return targetRow;
+
+    const rowIndex = extractRowIndexFromContent(context);
+    if (rowIndex !== null) {
+        return allRows[rowIndex] ?? null;
+    }
+
+    return allRows[0] ?? null;
 }
 
 function createCellLike(template?: HTMLTableCellElement): HTMLTableCellElement {

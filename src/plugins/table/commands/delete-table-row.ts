@@ -4,7 +4,6 @@ import { deleteRowFromTable, resolveTableFromContext } from "./table-command-uti
 export const DeleteTableRowCommand: Command = {
     id: "table.deleteRow",
     execute: (context) => {
-        console.log("DeleteTableRowCommand executed");
         const table = resolveTableFromContext(context);
         if (!table) return false;
 
