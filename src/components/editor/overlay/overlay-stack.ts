@@ -1,5 +1,6 @@
 import { dom, keyboard } from "@utils/index.ts";
 import { OverlayComponent } from "./overlay-component.tsx";
+import { EventTypes } from "@utils/dom";
 
 /**
  * Manages a stack of overlays (e.g. modals, dialogs) and provides functionality
@@ -76,6 +77,16 @@ export class OverlayStack {
     }
 
     /**
+    * Removes all overlays from the stack in LIFO order.
+    */
+    public clear() {
+        while (this.stack.length > 0) {
+            const element = this.stack.pop();
+            element?.remove();
+        }
+    }
+
+    /**
      * Removes a specific overlay element from the stack and removes it from the DOM.
      * @param element The overlay element to remove.
      */
@@ -105,7 +116,30 @@ export class OverlayStack {
         const top = this.peek();
         if (!top) return;
 
-        const clickedInside = top.contains(event.target as Node);
+        const target = event.target as Node | null;
+        if (!target) return;
+
+        const clickedInsideAnyOverlay = this.stack.some((overlay) => overlay.contains(target));
+        if (clickedInsideAnyOverlay) return;
+
+        const clickedInsideEditor = target instanceof Element
+            ? Boolean(target.closest("#editorContent"))
+            : false;
+
+        if (clickedInsideEditor) {
+
+            const selection = globalThis.getSelection?.();
+            const hasExpandedSelection = Boolean(selection && selection.rangeCount > 0 && !selection.isCollapsed);
+            if (event.detail > 1 || hasExpandedSelection) {
+                return;
+            }
+            
+            document.dispatchEvent(new CustomEvent(EventTypes.GutenOverlayGroupClose));
+            this.clear();
+            return;
+        }
+
+        const clickedInside = top.contains(target);
         if (!clickedInside && (top as OverlayComponent).canCloseOnClickOutside) {
             this.remove(top);
         }

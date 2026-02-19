@@ -30,4 +30,6 @@ export class EventTypes {
     static readonly MouseEnter = 'mouseenter';
     static readonly MouseLeave = 'mouseleave';
     static readonly SelectionChange = 'selectionchange';
+
+    static readonly GutenOverlayGroupClose = "overlay:group-close";
 }

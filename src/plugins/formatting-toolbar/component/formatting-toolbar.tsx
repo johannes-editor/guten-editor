@@ -33,8 +33,9 @@ export class FormattingToolbar extends ToolbarUI<FormattingToolbarProps> {
 
         });
 
-        this.registerEvent(document, EventTypes.SelectionChange, () => this.handleSelectionChange());
+        this.registerEvent(globalThis, EventTypes.SelectionChange, () => this.handleSelectionChange());
         this.registerEvent(globalThis, EventTypes.Scroll, () => this.positionToolbarNearSelection());
+        this.registerEvent(globalThis, EventTypes.GutenOverlayGroupClose, () => this.releaseSelectionLockWithoutRestore(), true);
     }
 
     override onUnmount(): void {
@@ -46,25 +47,6 @@ export class FormattingToolbar extends ToolbarUI<FormattingToolbarProps> {
 
         this.remove();
     }
-
-    // positionToolbarNearSelection(): void {
-    //     const selection = globalThis.getSelection();
-    //     if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
-    //         return;
-    //     }
-
-    //     const range = selection.getRangeAt(0);
-    //     const rects = range.getClientRects();
-    //     if (rects.length === 0) return;
-
-    //     const isBackward = this.isSelectionBackward(selection);
-
-    //     const rect = isBackward
-    //         ? rects[0]
-    //         : rects[rects.length - 1];
-
-    //     this.setPosition(rect);
-    // }
 
     positionToolbarNearSelection(): void {
         const selection = globalThis.getSelection();
@@ -166,6 +148,12 @@ export class FormattingToolbar extends ToolbarUI<FormattingToolbarProps> {
         sel.removeAllRanges();
         sel.addRange(this.selectionRange);
 
+        this.locked = false;
+    }
+
+    public releaseSelectionLockWithoutRestore(): void {
+        if (!this.locked) return;
+        CSS.highlights.delete("persist");
         this.locked = false;
     }
 

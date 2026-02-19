@@ -3,6 +3,7 @@ import { cleanupCaretAnchor } from "@utils/selection";
 import { NavigationMenu } from "@components/ui/composites/navigation-menu";
 import { MenuItemUI } from "@components/ui/composites/menu";
 import type { EditorSettingsItemData } from "../types.ts";
+import { EventTypes } from "@utils/dom";
 
 interface EditorSettingsMenuItemProps extends DefaultProps {
     item: EditorSettingsItemData;
@@ -32,25 +33,20 @@ export interface EditorSettingsMenuProps extends DefaultProps {
 export class EditorSettingsMenu extends NavigationMenu<EditorSettingsMenuProps> {
     protected override positionMode: "none" | "relative" | "anchor" = "anchor";
 
-    private restoreSelectionToAnchor() {
-        const anchor = this.props.anchor;
-        if (!anchor || !anchor.isConnected) return;
+    private shouldRestoreAnchorSelection = true;
 
-        const block = anchor.closest(".block") as HTMLElement | null;
-        block?.focus();
-
-        const range = document.createRange();
-        range.setStartAfter(anchor);
-        range.collapse(true);
-
-        const selection = globalThis.getSelection();
-        selection?.removeAllRanges();
-        selection?.addRange(range);
+    override connectedCallback(): void {
+        this.registerEvent(document, EventTypes.GutenOverlayGroupClose, () => {
+            this.shouldRestoreAnchorSelection = false;
+        });
+        super.connectedCallback();
     }
 
     override onUnmount(): void {
         super.onUnmount();
-        cleanupCaretAnchor(this.props.anchor ?? null);
+        cleanupCaretAnchor(this.props.anchor ?? null, {
+            restoreSelection: this.shouldRestoreAnchorSelection,
+        });
     }
 
     private handleSelectItem = (item: EditorSettingsItemData, anchor: HTMLElement) => {

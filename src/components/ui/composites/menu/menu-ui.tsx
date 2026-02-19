@@ -19,6 +19,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     private _didInitialPosition = false;
     private _lastSelectedAnchor: HTMLElement | null = null;
     private _hoverByMouseEnabled = true;
+    private _shouldRestoreFocusOnUnmount = true;
 
     /** Whether the menu should start with the first item selected (index 0). */
     protected autoFocusFirst = true;
@@ -91,6 +92,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         this.registerEvent(this, EventTypes.FocusIn, this.onFocusIn as EventListener);
         this.registerEvent(this, EventTypes.Mouseover, this.onMouseOver as EventListener);
         this.registerEvent(this, EventTypes.MouseMove, this.onMouseMove as EventListener);
+        this.registerEvent(document, EventTypes.GutenOverlayGroupClose, this.onOverlayGroupClose as EventListener, true);
 
         if (this.autoFocusFirst !== false) {
             this.setState({ selectedIndex: 0 } as Partial<S>);
@@ -112,7 +114,9 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     override onUnmount(): void {
         super.onUnmount?.();
         this.removeChildren();
-        this.restoreFocusToAnchor();
+        if (this._shouldRestoreFocusOnUnmount) {
+            this.restoreFocusToAnchor();
+        }
     }
 
     override onMount(): void {
@@ -132,6 +136,10 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
             this.remove();
         }
     }
+
+    private readonly onOverlayGroupClose = () => {
+        this._shouldRestoreFocusOnUnmount = false;
+    };
 
     private onMouseMove = (_e: MouseEvent) => {
         this._hoverByMouseEnabled = true;

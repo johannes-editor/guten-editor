@@ -130,11 +130,16 @@ export function createAnchorAtSelection(): HTMLElement | null {
 export function restoreSelectionToAnchor(anchor: HTMLElement | null): void {
     if (!anchor || !anchor.isConnected) return;
 
+    const parent = anchor.parentNode;
+    if (!parent) return;
+
+    const caretIndex = Array.prototype.indexOf.call(parent.childNodes, anchor);
+
     const block = anchor.closest(".block") as HTMLElement | null;
     block?.focus();
 
     const range = document.createRange();
-    range.setStartAfter(anchor);
+    range.setStart(parent, Math.max(0, caretIndex));
     range.collapse(true);
 
     const selection = globalThis.getSelection();
@@ -142,8 +147,16 @@ export function restoreSelectionToAnchor(anchor: HTMLElement | null): void {
     selection?.addRange(range);
 }
 
-export function cleanupCaretAnchor(anchor: HTMLElement | null): void {
+export function cleanupCaretAnchor(
+    anchor: HTMLElement | null,
+    options?: { restoreSelection?: boolean }
+): void {
     if (!anchor?.dataset?.[CARET_ANCHOR_DATASET_KEY]) return;
-    restoreSelectionToAnchor(anchor);
+
+    const shouldRestoreSelection = options?.restoreSelection ?? true;
+    if (shouldRestoreSelection) {
+        restoreSelectionToAnchor(anchor);
+    }
+
     anchor.remove();
 }
