@@ -9,6 +9,12 @@
             "active": true
         },
         {
+            "path": "./extensions/block-options-table-extension.tsx",
+            "class": "BlockOptionsTableExtension",
+            "active": true,
+            "description": "Adds row and column submenus to table block options."
+        },
+        {
             "path": "./extensions/table-navigation-plugin.ts",
             "class": "TableNavigationPlugin",
             "active": true

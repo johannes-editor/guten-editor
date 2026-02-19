@@ -4,6 +4,8 @@ import { AddTableColumnCommand } from "../commands/add-table-column.ts";
 import { AddTableRowCommand } from "../commands/add-table-row.ts";
 import { DeleteTableColumnCommand } from "../commands/delete-table-column.ts";
 import { DeleteTableRowCommand } from "../commands/delete-table-row.ts";
+import { OpenTableRowOptionsCommand } from "../commands/open-table-row-options.tsx";
+import { OpenTableColumnOptionsCommand } from "../commands/open-table-column-options.tsx";
 
 export class TableCommandExtension extends CommandExtensionPlugin {
 
@@ -13,6 +15,8 @@ export class TableCommandExtension extends CommandExtensionPlugin {
             AddTableColumnCommand,
             DeleteTableRowCommand,
             DeleteTableColumnCommand,
+            OpenTableRowOptionsCommand,
+            OpenTableColumnOptionsCommand,
         ];
     }
 }
