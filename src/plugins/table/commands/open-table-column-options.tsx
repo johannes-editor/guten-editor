@@ -11,6 +11,8 @@ export const OpenTableColumnOptionsCommand: Command = {
         const anchor = context.content?.anchor;
         const columnIndex = context.content?.columnIndex ?? (table ? findColumnIndexFromSelection(table, context.selection) : null) ?? 0;
 
+        const targetCell = table?.querySelectorAll<HTMLTableRowElement>("tr")[0]?.cells[columnIndex] ?? null;
+
         if (!table || !anchor) return false;
 
         appendElementOnOverlayArea(
@@ -18,6 +20,7 @@ export const OpenTableColumnOptionsCommand: Command = {
                 table={table}
                 anchor={anchor}
                 columnIndex={columnIndex}
+                targetCell={targetCell}
             />
         );
 

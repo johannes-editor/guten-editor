@@ -32,6 +32,16 @@ export function findColumnIndexFromSelection(
     return cell.cellIndex >= 0 ? cell.cellIndex : null;
 }
 
+function extractRowFromContent(context?: CommandContext): HTMLTableRowElement | null {
+    const targetRow = (context?.content as { targetRow?: unknown } | undefined)?.targetRow;
+    return targetRow instanceof HTMLTableRowElement ? targetRow : null;
+}
+
+function extractCellFromContent(context?: CommandContext): HTMLTableCellElement | null {
+    const targetCell = (context?.content as { targetCell?: unknown } | undefined)?.targetCell;
+    return targetCell instanceof HTMLTableCellElement ? targetCell : null;
+}
+
 function extractRowIndexFromContent(context?: CommandContext): number | null {
     const rowIndex = (context?.content as { rowIndex?: unknown } | undefined)?.rowIndex;
     return typeof rowIndex === "number" && Number.isInteger(rowIndex) ? rowIndex : null;
@@ -117,6 +127,9 @@ function resolveCellFromContext(
     const content = context?.content;
     if (content instanceof HTMLTableCellElement) return content;
 
+    const targetCell = extractCellFromContent(context);
+    if (targetCell && (!table || targetCell.closest("table") === table)) return targetCell;
+
     const candidates: Array<Node | null | undefined> = [
         context?.event?.target as Node | null,
         context?.target as Node | null,
@@ -132,6 +145,8 @@ function resolveCellFromContext(
 
     return null;
 }
+
+
 
 function extractTableFromContent(context?: CommandContext): HTMLTableElement | null {
     const content = context?.content;
@@ -338,6 +353,9 @@ function resolveTargetRow(
     context: CommandContext | undefined,
     allRows: HTMLTableRowElement[],
 ): HTMLTableRowElement | null {
+    const targetRowFromContent = extractRowFromContent(context);
+    if (targetRowFromContent?.closest("table") === table) return targetRowFromContent;
+
     const targetCell = resolveCellFromContext(context, table);
     const targetRow = targetCell?.closest<HTMLTableRowElement>("tr");
     if (targetRow) return targetRow;

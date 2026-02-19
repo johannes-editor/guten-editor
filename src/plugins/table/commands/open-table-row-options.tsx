@@ -13,6 +13,8 @@ export const OpenTableRowOptionsCommand: Command = {
             ?? (table ? findRowIndexFromSelection(table, context.selection) : null)
             ?? 0;
 
+        const targetRow = table?.querySelectorAll<HTMLTableRowElement>("tr")[rowIndex] ?? null;
+
         if (!table || !anchor) return false;
 
         appendElementOnOverlayArea(
@@ -20,6 +22,7 @@ export const OpenTableRowOptionsCommand: Command = {
                 table={table}
                 anchor={anchor}
                 rowIndex={rowIndex}
+                targetRow={targetRow}
             />
         );
 
