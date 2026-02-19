@@ -2,7 +2,7 @@ import { DefaultProps } from "@core/components";
 import { OverlayCtor } from "@components/editor/overlay";
 import { runCommand } from "@core/command";
 import { MenuItemUI, MenuUI } from "@components/ui/composites/menu";
-import { RowPlusBottomIcon, ArrowUpIcon, DeleteRow, AddColumnRight, ArrowDownIcon, RowPlusTopIcon } from "@components/ui/icons";
+import { RowPlusBottomIcon, ArrowUpIcon, DeleteRow, ArrowDownIcon, RowPlusTopIcon } from "@components/ui/icons";
 import { BlockOptionsMenu } from "../../block-controls/index.ts";
 
 interface TableRowOptionsItemProps extends DefaultProps {

@@ -10,6 +10,10 @@ import { AddTableRowAboveCommand } from "../commands/add-table-row-above.ts";
 import { AddTableRowBelowCommand } from "../commands/add-table-row-below.ts";
 import { MoveTableRowUpCommand } from "../commands/move-table-row-up.ts";
 import { MoveTableRowDownCommand } from "../commands/move-table-row-down.ts";
+import { AddTableColumnLeftCommand } from "../commands/add-table-column-left.ts";
+import { AddTableColumnRightCommand } from "../commands/add-table-column-right.ts";
+import { MoveTableColumnLeftCommand } from "../commands/move-table-column-left.ts";
+import { MoveTableColumnRightCommand } from "../commands/move-table-column-right.ts";
 
 export class TableCommandExtension extends CommandExtensionPlugin {
 
@@ -19,10 +23,14 @@ export class TableCommandExtension extends CommandExtensionPlugin {
             AddTableRowAboveCommand,
             AddTableRowBelowCommand,
             AddTableColumnCommand,
+            AddTableColumnLeftCommand,
+            AddTableColumnRightCommand,
             DeleteTableRowCommand,
             DeleteTableColumnCommand,
             MoveTableRowUpCommand,
             MoveTableRowDownCommand,
+            MoveTableColumnLeftCommand,
+            MoveTableColumnRightCommand,
             OpenTableRowOptionsCommand,
             OpenTableColumnOptionsCommand,
         ];

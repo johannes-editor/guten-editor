@@ -1,6 +1,6 @@
 import { t } from "@core/i18n";
 import { runCommand } from "@core/command";
-import { RowPlusBottomIcon, AddColumnRight, DeleteRow, DeleteColumn } from "@components/ui/icons";
+import { RowPlusBottomIcon, DeleteRow, DeleteColumn, ColumnPlusRightIcon } from "@components/ui/icons";
 import { MobileToolbarButtonExtensionPlugin, MobileToolbarExtensionContext } from "@plugins/mobile-toolbar";
 import { findTableFromSelection } from "../commands/table-command-utils.ts";
 
@@ -22,7 +22,7 @@ export class TableMobileToolbarExtension extends MobileToolbarButtonExtensionPlu
             },
             {
                 id: "table-add-column",
-                icon: () => <AddColumnRight />,
+                icon: () => <ColumnPlusRightIcon />,
                 label: t("add_column"),
                 sort: 120,
                 onClick: () => runCommand("table.addColumn", { content: selectionTable }),

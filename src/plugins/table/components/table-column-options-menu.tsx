@@ -2,28 +2,33 @@ import { DefaultProps } from "@core/components";
 import { OverlayCtor } from "@components/editor/overlay";
 import { runCommand } from "@core/command";
 import { MenuItemUI, MenuUI } from "@components/ui/composites/menu";
-import { AddColumnRight } from "@components/ui/icons";
+import { DeleteColumn, ArrowLeftIcon, ArrowRightIcon, ColumnPlusRightIcon, ColumnPlusLeftIcon } from "@components/ui/icons";
 import { BlockOptionsMenu } from "../../block-controls/index.ts";
 
 interface TableColumnOptionsItemProps extends DefaultProps {
     table: HTMLTableElement;
+    columnIndex: number;
+    icon: Element;
+    label: string;
+    command: string;
 }
 
 class TableColumnOptionsItem extends MenuItemUI<TableColumnOptionsItemProps> {
     override connectedCallback(): void {
-        this.icon = <AddColumnRight />;
-        this.label = "Insert column";
+        this.icon = this.props.icon;
+        this.label = this.props.label;
         super.connectedCallback();
     }
 
     override onSelect(): void {
-        runCommand("table.addColumn", { content: this.props.table });
+        runCommand(this.props.command, { content: { table: this.props.table, columnIndex: this.props.columnIndex } });
     }
 }
 
 interface TableColumnOptionsMenuProps extends DefaultProps {
     table: HTMLTableElement;
     anchor: HTMLElement;
+    columnIndex: number;
 }
 
 export class TableColumnOptionsMenu extends MenuUI<TableColumnOptionsMenuProps> {
@@ -35,7 +40,20 @@ export class TableColumnOptionsMenu extends MenuUI<TableColumnOptionsMenuProps> 
             <div class="guten-menu">
                 <ul>
                     <li>
-                        <TableColumnOptionsItem table={this.props.table} />
+                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} icon={<ColumnPlusRightIcon />} label="Add column right" command="table.addColumnRight" />
+                    </li>
+                    <li>
+                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} icon={<ColumnPlusLeftIcon />} label="Add column left" command="table.addColumnLeft" />
+                    </li>
+                    
+                    <li>
+                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} icon={<DeleteColumn />} label="Delete column" command="table.deleteColumn" />
+                    </li>
+                    <li>
+                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} icon={<ArrowLeftIcon />} label="Move column left" command="table.moveColumnLeft" />
+                    </li>
+                    <li>
+                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} icon={<ArrowRightIcon />} label="Move column right" command="table.moveColumnRight" />
                     </li>
                 </ul>
             </div>
