@@ -100,10 +100,13 @@ export function findClosestBlockBySelection(sel: Selection | null = null): HTMLE
 }
 
 const CARET_ANCHOR_DATASET_KEY = "gutenCaretAnchor";
+const CARET_ANCHOR_RANGES = new WeakMap<HTMLElement, Range>();
 
 export function createAnchorAtSelection(): HTMLElement | null {
     const selectionRange = getCurrentSelectionRange();
     if (!selectionRange) return null;
+
+    const originalRange = selectionRange.cloneRange();
 
     const anchor = document.createElement("span");
     anchor.dataset[CARET_ANCHOR_DATASET_KEY] = "true";
@@ -124,27 +127,52 @@ export function createAnchorAtSelection(): HTMLElement | null {
     selection?.removeAllRanges();
     selection?.addRange(selectionRange);
 
+    CARET_ANCHOR_RANGES.set(anchor, originalRange);
+
     return anchor;
 }
 
 export function restoreSelectionToAnchor(anchor: HTMLElement | null): void {
     if (!anchor || !anchor.isConnected) return;
 
-    const parent = anchor.parentNode;
-    if (!parent) return;
-
-    const caretIndex = Array.prototype.indexOf.call(parent.childNodes, anchor);
-
     const block = anchor.closest(".block") as HTMLElement | null;
-    block?.focus();
+    const editable = block?.querySelector<HTMLElement>('[contenteditable="true"]') ?? block;
+    if (editable) {
+        try {
+            (editable as any).focus({ preventScroll: true });
+        } catch {
+            editable.focus();
+        }
+    }
 
-    const range = document.createRange();
-    range.setStart(parent, Math.max(0, caretIndex));
-    range.collapse(true);
+    const savedRange = CARET_ANCHOR_RANGES.get(anchor);
+    const canUseSavedRange = Boolean(
+        savedRange
+        && savedRange.startContainer.isConnected
+        && savedRange.endContainer.isConnected
+    );
 
-    const selection = globalThis.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
+    const targetRange = canUseSavedRange ? savedRange!.cloneRange() : document.createRange();
+    if (!canUseSavedRange) {
+        targetRange.setStartBefore(anchor);
+        targetRange.collapse(true);
+    }
+
+    const applySelection = () => {
+        const selection = globalThis.getSelection();
+        if (!selection) return;
+        selection.removeAllRanges();
+        selection.addRange(targetRange);
+    };
+
+    applySelection();
+
+    requestAnimationFrame(() => {
+        applySelection();
+        requestAnimationFrame(() => {
+            applySelection();
+        });
+    });
 }
 
 export function cleanupCaretAnchor(

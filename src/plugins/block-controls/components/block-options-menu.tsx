@@ -16,10 +16,11 @@ export class BlockOptionsMenu extends MenuUI<BlockOptionsProps> {
     private shouldRestoreAnchorSelection = true;
 
     override onUnmount(): void {
-        super.onUnmount();
         cleanupCaretAnchor(this.props.anchor ?? null, {
             restoreSelection: this.shouldRestoreAnchorSelection,
         });
+        
+        super.onUnmount();
     }
 
     override connectedCallback(): void {

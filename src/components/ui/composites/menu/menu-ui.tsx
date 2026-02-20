@@ -180,6 +180,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     protected restoreFocusToAnchor() {
         const target = this.props.anchor;
         if (!target || !document.contains(target)) return;
+        if ((target as HTMLElement).dataset?.gutenCaretAnchor) return;
         try { (target as any).focus({ preventScroll: true }); }
         catch { target.focus(); }
     }

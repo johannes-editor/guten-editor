@@ -43,10 +43,10 @@ export class EditorSettingsMenu extends NavigationMenu<EditorSettingsMenuProps> 
     }
 
     override onUnmount(): void {
-        super.onUnmount();
         cleanupCaretAnchor(this.props.anchor ?? null, {
             restoreSelection: this.shouldRestoreAnchorSelection,
         });
+        super.onUnmount();
     }
 
     private handleSelectItem = (item: EditorSettingsItemData, anchor: HTMLElement) => {
