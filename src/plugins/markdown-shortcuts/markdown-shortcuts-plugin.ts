@@ -31,7 +31,18 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
 
         this.keyTarget.addEventListener(EventTypes.KeyDown, this.handleKeyDown, true);
         this.keyTarget.addEventListener(EventTypes.BeforeInput, this.handleBeforeInput, true);
+        this.keyTarget.addEventListener(EventTypes.Input, this.handleInput as EventListener, true);
     }
+
+    private readonly handleInput = (event: InputEvent) => {
+        if (event.defaultPrevented || event.isComposing) return;
+        if (event.inputType !== "insertText") return;
+
+        const insertedText = event.data ?? "";
+        if (!/[`*_~]/.test(insertedText)) return;
+
+        this.tryApplyInlineShortcutAtCaret();
+    };
 
     override attachExtensions(extensions: MarkdownShortcutExtensionPlugin[]): void {
         this.shortcuts = extensions.flatMap((ext) => ext.shortcuts());
