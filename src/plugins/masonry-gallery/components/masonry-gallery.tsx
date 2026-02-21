@@ -431,7 +431,20 @@ function renderTileImage(tile: HTMLElement, src: string, alt?: string): void {
 }
 
 function getTileRatio(tile: HTMLElement): number {
-    const value = Number.parseFloat(tile.dataset.mosaicTileRatio ?? "");
+    const rawRatio = (tile.dataset.mosaicTileRatio ?? "").trim();
+    const fractionMatch = rawRatio.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/);
+
+    if (fractionMatch) {
+        const numerator = Number.parseFloat(fractionMatch[1]);
+        const denominator = Number.parseFloat(fractionMatch[2]);
+        const fractionRatio = numerator / denominator;
+
+        if (Number.isFinite(fractionRatio) && fractionRatio > 0) {
+            return fractionRatio;
+        }
+    }
+
+    const value = Number.parseFloat(rawRatio);
     if (!Number.isFinite(value) || value <= 0) return DEFAULT_TILE_RATIO;
     return value;
 }
