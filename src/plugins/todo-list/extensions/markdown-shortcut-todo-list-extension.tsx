@@ -10,14 +10,23 @@ export class MarkdownShortcutTodoListExtension extends MarkdownShortcutExtension
                 pattern: "[]",
                 trigger: "space",
                 sort: 75,
-                onMatch: (context) => this.insertTodoList(context),
+                onMatch: (context) => this.insertTodoList(context, false),
+            },
+            {
+                pattern: /^\[[xX]\]$/,
+                trigger: "space",
+                sort: 76,
+                onMatch: (context) => this.insertTodoList(context, true),
             },
         ];
     }
 
-    private insertTodoList(context: MarkdownShortcutContext) {
-        const list = <TodoListBlock /> ;
+    private insertTodoList(context: MarkdownShortcutContext, checked: boolean) {
+        const list = <TodoListBlock />;
         context.block.after(list);
+
+        const checkbox = list.querySelector<HTMLInputElement>('input[type="checkbox"]');
+        if (checkbox) checkbox.checked = checked;
 
         const span = list.querySelector<HTMLSpanElement>("span[contenteditable]");
         const text = context.afterText.trimStart();
