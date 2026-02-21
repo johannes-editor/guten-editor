@@ -1,6 +1,6 @@
 
 
-import { EventTypes, findCodeAncestor} from "@utils/dom";
+import { EventTypes, findCodeAncestor } from "@utils/dom";
 import { Plugin, PluginExtension, ExtensiblePlugin } from "@core/plugin-engine";
 import { KeyboardKeys } from "@utils/keyboard";
 import { findClosestBlockBySelection } from "@utils/selection";
@@ -43,6 +43,15 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
         if (event.defaultPrevented || event.isComposing) return;
         if (event.ctrlKey || event.metaKey || event.altKey) return;
 
+        if (event.key === KeyboardKeys.Tab && !event.shiftKey) {
+            const inlineHandled = this.tryApplyInlineShortcutAtCaret();
+            if (!inlineHandled) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
         const trigger = this.resolveTrigger(event);
         if (!trigger) return;
 
@@ -81,6 +90,170 @@ export class MarkdownShortcutsPlugin extends ExtensiblePlugin<MarkdownShortcutEx
         if (event.key === KeyboardKeys.Enter) return "enter";
         return null;
     }
+
+    private tryApplyInlineShortcutAtCaret(): boolean {
+        
+        const selection = globalThis.getSelection();
+        if (!selection || selection.rangeCount === 0 || !selection.isCollapsed) return false;
+
+        const range = selection.getRangeAt(0);
+        if (!(range.startContainer instanceof Text)) return false;
+        if (findCodeAncestor(range.startContainer)) return false;
+
+        const textNode = range.startContainer;
+        const caretOffset = range.startOffset;
+        const before = textNode.data.slice(0, caretOffset);
+        const after = textNode.data.slice(caretOffset);
+        
+        const match = this.findInlineMatch(before);
+        if (!match) return false;
+
+        const prefix = before.slice(0, match.fullStart);
+        const content = before.slice(match.contentStart, match.contentEnd);
+        
+        if (!content) return false;
+
+        const parent = textNode.parentNode;
+        if (!parent) return false;
+
+        const fragment = document.createDocumentFragment();
+        if (prefix) fragment.appendChild(document.createTextNode(prefix));
+
+        const formattedNode = this.createInlineFormattedNode(match.kind, content);
+        fragment.appendChild(formattedNode);
+
+        if (after) fragment.appendChild(document.createTextNode(after));
+
+        parent.replaceChild(fragment, textNode);
+
+        const nextRange = document.createRange();
+        if (formattedNode.nextSibling instanceof Text) {
+            nextRange.setStart(formattedNode.nextSibling, 0);
+            nextRange.collapse(true);
+        } else {
+            nextRange.setStartAfter(formattedNode);
+            nextRange.collapse(true);
+        }
+
+        selection.removeAllRanges();
+        selection.addRange(nextRange);
+
+        return true;
+    }
+
+    private findInlineMatch(text: string): {
+        kind: "bold" | "italic" | "boldItalic" | "strike" | "code";
+        fullStart: number;
+        contentStart: number;
+        contentEnd: number;
+    } | null {
+        const candidates: Array<{ open: string; close: string; kind: "bold" | "italic" | "boldItalic" | "strike" | "code" }> = [
+            { open: "***", close: "***", kind: "boldItalic" },
+            { open: "**", close: "**", kind: "bold" },
+            { open: "__", close: "__", kind: "bold" },
+            { open: "~~", close: "~~", kind: "strike" },
+            { open: "*", close: "*", kind: "italic" },
+            { open: "_", close: "_", kind: "italic" },
+            { open: "`", close: "`", kind: "code" },
+        ];
+
+        for (const candidate of candidates) {
+            if (!text.endsWith(candidate.close)) continue;
+
+            const closeStart = text.length - candidate.close.length;
+            if (!this.isValidClosingMarker(text, candidate.open, closeStart)) continue;
+
+            const openIndex = this.findOpeningMarker(text, candidate.open, closeStart);
+            if (openIndex < 0) continue;
+
+            const contentStart = openIndex + candidate.open.length;
+            const contentEnd = closeStart;
+            if (contentEnd <= contentStart) continue;
+
+            return {
+                kind: candidate.kind,
+                fullStart: openIndex,
+                contentStart,
+                contentEnd,
+            };
+        }
+
+        return null;
+    }
+
+    private findOpeningMarker(text: string, marker: string, closeStart: number): number {
+        let searchFrom = closeStart - marker.length;
+
+        while (searchFrom >= 0) {
+            const openIndex = text.lastIndexOf(marker, searchFrom);
+            if (openIndex < 0) return -1;
+
+            if (this.isValidOpeningMarker(text, marker, openIndex)) return openIndex;
+            searchFrom = openIndex - 1;
+        }
+
+        return -1;
+    }
+
+    private isValidOpeningMarker(text: string, marker: string, index: number): boolean {
+        const markerChar = this.getRepeatedMarkerChar(marker);
+        if (!markerChar) return true;
+
+        const prev = text[index - 1];
+        const next = text[index + marker.length];
+
+        return prev !== markerChar && next !== markerChar;
+    }
+
+    private isValidClosingMarker(text: string, marker: string, closeStart: number): boolean {
+        const markerChar = this.getRepeatedMarkerChar(marker);
+        if (!markerChar) return true;
+
+        const prev = text[closeStart - 1];
+        const next = text[closeStart + marker.length];
+
+        return prev !== markerChar && next !== markerChar;
+    }
+
+    private getRepeatedMarkerChar(marker: string): string | null {
+        if (marker.length === 0) return null;
+        const markerChar = marker[0];
+        if (!markerChar) return null;
+        return marker.split("").every((char) => char === markerChar) ? markerChar : null;
+    }
+
+    private createInlineFormattedNode(kind: "bold" | "italic" | "boldItalic" | "strike" | "code", content: string): HTMLElement {
+        if (kind === "bold") {
+            const node = document.createElement("strong");
+            node.textContent = content;
+            return node;
+        }
+
+        if (kind === "italic") {
+            const node = document.createElement("em");
+            node.textContent = content;
+            return node;
+        }
+
+        if (kind === "strike") {
+            const node = document.createElement("s");
+            node.textContent = content;
+            return node;
+        }
+
+        if (kind === "code") {
+            const node = document.createElement("code");
+            node.textContent = content;
+            return node;
+        }
+
+        const strong = document.createElement("strong");
+        const em = document.createElement("em");
+        em.textContent = content;
+        strong.appendChild(em);
+        return strong;
+    }
+
 
     private resolveInputTrigger(event: InputEvent): MarkdownShortcutTrigger | null {
         if (event.inputType === "insertText" && event.data === " ") return "space";
