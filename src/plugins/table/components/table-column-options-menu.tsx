@@ -2,7 +2,7 @@ import { DefaultProps } from "@core/components";
 import { OverlayCtor } from "@components/editor/overlay";
 import { runCommand } from "@core/command";
 import { MenuItemUI, MenuUI } from "@components/ui/composites/menu";
-import { DeleteColumn, ArrowLeftIcon, ArrowRightIcon, ColumnPlusRightIcon, ColumnPlusLeftIcon } from "@components/ui/icons";
+import { DeleteColumn, ArrowLeftIcon, ArrowRightIcon, ColumnInsertRightIcon, ColumnInsertLeftIcon } from "@components/ui/icons";
 import { BlockOptionsMenu } from "../../block-controls/index.ts";
 
 interface TableColumnOptionsItemProps extends DefaultProps {
@@ -48,12 +48,11 @@ export class TableColumnOptionsMenu extends MenuUI<TableColumnOptionsMenuProps> 
             <div class="guten-menu">
                 <ul>
                     <li>
-                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} targetCell={this.props.targetCell} icon={<ColumnPlusRightIcon />} label="Add column right" command="table.addColumnRight" />
+                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} targetCell={this.props.targetCell} icon={<ColumnInsertLeftIcon />} label="Add column left" command="table.addColumnLeft" />
                     </li>
                     <li>
-                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} targetCell={this.props.targetCell} icon={<ColumnPlusLeftIcon />} label="Add column left" command="table.addColumnLeft" />
+                        <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} targetCell={this.props.targetCell} icon={<ColumnInsertRightIcon />} label="Add column right" command="table.addColumnRight" />
                     </li>
-
                     <li>
                         <TableColumnOptionsItem table={this.props.table} columnIndex={this.props.columnIndex} targetCell={this.props.targetCell} icon={<DeleteColumn />} label="Delete column" command="table.deleteColumn" />
                     </li>

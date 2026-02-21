@@ -1,5 +1,5 @@
 import { t } from "@core/i18n";
-import { MaterialChecklist } from "@components/ui/icons";
+import { ListDetailsIcon } from "@components/ui/icons";
 import { focusOnElement } from "@utils/dom";
 import { SlashMenuExtensionPlugin } from "@plugins/slash-menu";
 import { TodoListBlock } from "../components/todo-list.tsx";
@@ -14,7 +14,7 @@ export class SlashMenuTodoListExtension extends SlashMenuExtensionPlugin {
 
     constructor() {
         super();
-        this.icon = <MaterialChecklist />
+        this.icon = <ListDetailsIcon />
         this.shortcut = "[]";
         this.label = t("todo_list");
         this.sort = 61;
