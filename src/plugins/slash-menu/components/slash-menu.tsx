@@ -29,6 +29,7 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
     private mouseY: number = 0;
     private mouseMoved: boolean = false;
     private previousScrollTop: number = 0;
+    private repositionFrame: number | null = null;
 
     static override get tagName() {
         return "guten-slash-menu";
@@ -141,6 +142,9 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         this.registerEvent(document, EventTypes.Input, this.handleInput as EventListener);
         this.registerEvent(document, EventTypes.SelectionChange, this.handleSelectionChange as EventListener);
 
+        this.registerEvent(globalThis, EventTypes.Scroll, this.handleViewportChange as EventListener, true);
+        this.registerEvent(globalThis, EventTypes.Resize, this.handleViewportChange as EventListener);
+
         this.setState({ items: this.props.items });
 
         if (!isMobileSheetViewport()) {
@@ -222,6 +226,26 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
 
     private readonly handleSelectionChange = () => {
         this.updateFilterFromEditor();
+    };
+
+    private readonly handleViewportChange = () => {
+        if (!this.isConnected || isMobileSheetViewport()) return;
+
+        if (this.repositionFrame !== null) {
+            cancelAnimationFrame(this.repositionFrame);
+        }
+
+        this.repositionFrame = requestAnimationFrame(() => {
+            this.repositionFrame = null;
+
+            const anchor = this.props.anchorNode;
+            if (!anchor?.isConnected) {
+                this.remove();
+                return;
+            }
+
+            this.positionToAnchor(anchor);
+        });
     };
 
     private removeSlashCommand() {
@@ -407,15 +431,9 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
         const menu = this.querySelector(".slash-menu");
         if (!menu) return;
 
-
-        // const previousScrollTop = menu?.scrollTop || 0;
-
         const selectedItem = menu.children[this.state.selectedIndex] as HTMLElement;
 
         if (!selectedItem) return;
-
-        const menuRect = menu.getBoundingClientRect();
-        const itemRect = selectedItem.getBoundingClientRect();
 
 
         selectedItem.scrollIntoView({
@@ -423,39 +441,12 @@ export class SlashMenuOverlay extends OverlayComponent<SlashMenuProps, SlashMenu
             inline: "nearest",
             behavior: "auto", // ou "instant"
         });
-
-        // // Verifica se o item está visível
-        // if (itemRect.top < menuRect.top) {
-        //     // Rolagem para cima
-        //     menu.scrollTop = selectedItem.offsetTop;
-        // } else if (itemRect.bottom > menuRect.bottom) {
-        //     // Rolagem para baixo
-        //     menu.scrollTop = selectedItem.offsetTop - menuRect.height + selectedItem.clientHeight;
-        // }
-
-
-
-
-
-        // const menu = this.querySelector(".slash-menu");
-        // const previousScrollTop = menu?.scrollTop || 0;
-
-        // this.setState({ selectedIndex: index });
-        // this.mouseMoved = false;
+        
 
 
         this.previousScrollTop = menu?.scrollTop || 0;
 
-        // const menu2 = this.querySelector(".slash-menu");
-        // console.log("menu depois: ", menu2);
-        // console.log("previous scroll depois: ", this.previousScrollTop);
-        // if (menu2) {
-
-        //     menu2.scrollTop = this.previousScrollTop;
-        // }
-
-
-
+        
     }
 
 }

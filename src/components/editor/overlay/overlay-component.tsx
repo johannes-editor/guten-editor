@@ -236,6 +236,10 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         return r.getBoundingClientRect();
     }
 
+    protected roundCoordinate(value: number): number {
+        return Math.round(value);
+    }
+
     positionToAnchor(anchorOrRect: Node | DOMRect): void {
 
         if (isMobileSheetViewport()) {
@@ -274,10 +278,10 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
         const showAbove = spaceBelow < menuHeight && rect.top > menuHeight;
 
         if (showAbove) {
-            this.style.bottom = `${pad.bottom - (rect.top - this.positionToAnchorVerticalGap)}px`;
+            this.style.bottom = `${this.roundCoordinate(pad.bottom - (rect.top - this.positionToAnchorVerticalGap))}px`;
             this.style.top = "";
         } else {
-            this.style.top = `${rect.bottom + this.positionToAnchorVerticalGap - pad.top}px`;
+            this.style.top = `${this.roundCoordinate(rect.bottom + this.positionToAnchorVerticalGap - pad.top)}px`;
             this.style.bottom = "";
         }
 
@@ -287,10 +291,10 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
 
 
         if (showRight) {
-            this.style.left = `${rect.right + this.positionToAnchorHorizontalGap - pad.left}px`;
+            this.style.left = `${this.roundCoordinate(rect.right + this.positionToAnchorHorizontalGap - pad.left)}px`;
             this.style.right = "";
         } else {
-            this.style.right = `${pad.right - (rect.left - this.positionToAnchorHorizontalGap)}px`;
+            this.style.right = `${this.roundCoordinate(pad.right - (rect.left - this.positionToAnchorHorizontalGap))}px`;
             this.style.left = "";
         }
     }
@@ -328,10 +332,8 @@ export abstract class OverlayComponent<P = DefaultProps, S = DefaultState> exten
             }
         }
 
-        const maxTop = Math.max(bounds.height - overlayRect.height, 0);
-        let top = Math.min(Math.max(desiredTop, 0), maxTop);
+        const top = desiredTop;
 
-        if (top < 0) top = 0;
         if (left < 0) left = 0;
 
         this.style.top = `${top}px`;

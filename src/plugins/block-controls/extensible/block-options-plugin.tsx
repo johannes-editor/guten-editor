@@ -44,20 +44,28 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
         this.extensions = extensions ?? [];
     }
 
-    static openForBlock(block: HTMLElement, anchorOrRect?: DOMRect | HTMLElement | null): BlockOptionsMenu | null {
+    static openForBlock(
+        block: HTMLElement,
+        anchorOrRect?: DOMRect | HTMLElement | null,
+        options?: { selectionRange?: Range | null; }
+    ): BlockOptionsMenu | null {
         const plugin = BlockOptionsPlugin.instance;
         if (!plugin) return null;
-        return plugin.open(block, anchorOrRect ?? undefined);
+        return plugin.open(block, anchorOrRect ?? undefined, options);
     }
 
-    private open(block: HTMLElement, anchorOrRect?: DOMRect | HTMLElement): BlockOptionsMenu | null {
+    private open(
+        block: HTMLElement,
+        anchorOrRect?: DOMRect | HTMLElement,
+        options?: { selectionRange?: Range | null; }
+    ): BlockOptionsMenu | null {
 
         const items = this.collectItems(block);
         if (!items.length) return null;
 
         const anchor = anchorOrRect instanceof HTMLElement ? anchorOrRect : undefined;
         const menuEl = appendElementOnOverlayArea(
-            <BlockOptionsMenu anchor={anchor}>
+            <BlockOptionsMenu anchor={anchor} selectionRange={options?.selectionRange ?? null}>
                 {items.map((item) => this.renderMenuItem(item, block, () => menuEl))}
             </BlockOptionsMenu>
         ) as BlockOptionsMenu;
@@ -65,7 +73,9 @@ export class BlockOptionsPlugin extends ExtensiblePlugin<BlockOptionsExtensionPl
         BlockOptionsPlugin.currentMenu = menuEl;
 
 
-        menuEl.positionToAnchor(anchorOrRect || new DOMRect());
+        if (!(anchorOrRect instanceof HTMLElement)) {
+            menuEl.positionToAnchor(anchorOrRect || new DOMRect());
+        }
 
         return menuEl;
     }

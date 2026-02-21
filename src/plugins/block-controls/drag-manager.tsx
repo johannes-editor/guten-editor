@@ -3,6 +3,7 @@ import { EventTypes } from "@utils/dom/events.ts";
 import { ParagraphBlock } from "@components/blocks/paragraph.tsx";
 import { focusOnElementAtStart } from "@utils/dom";
 import { BlockControls } from "./components/block-controls.tsx";
+import { BlockOptionsMenu } from "./components/block-options-menu.tsx";
 
 import { DragSessionController } from "./controllers/drag-session-controller.ts";
 import { BlockControlsPositioner } from "./controllers/block-controls-positioner.ts";
@@ -11,6 +12,7 @@ export class DragManager {
 
     private mutationObserver: MutationObserver | null = null;
     private overlayObserver: MutationObserver | null = null;
+    private blockOptionsMenuObserver: MutationObserver | null = null;
     private currentTarget: HTMLElement | null = null;
     private controlsHost: HTMLElement | null = null;
     private controlsWrap: HTMLElement | null = null;
@@ -20,6 +22,8 @@ export class DragManager {
     private titleArea: HTMLElement | null = null;
     private hideTimer: number | null = null;
     private layer: HTMLElement | null = null;
+
+    private lockHandleTargetWhileBlockOptionsOpen = false;
 
     private dragSession: DragSessionController;
     private positioner = new BlockControlsPositioner();
@@ -57,9 +61,10 @@ export class DragManager {
         this.titleArea = this.editorContainer?.querySelector('#titleArea') as HTMLElement | null;
         this.editorContainer?.addEventListener(EventTypes.MouseLeave, this.onEditorContainerLeave);
         this.titleArea?.addEventListener(EventTypes.MouseEnter, this.onTitleAreaEnter);
-        
+
         document.addEventListener(EventTypes.KeyDown, this.onEditorKeyDown, true);
-        document.addEventListener(EventTypes.Input, this.onEditorInput, true);    
+        document.addEventListener(EventTypes.Input, this.onEditorInput, true);
+        document.addEventListener(EventTypes.GutenOverlayGroupClose, this.onOverlayGroupClose, true);
     }
 
     stop() {
@@ -67,6 +72,9 @@ export class DragManager {
         this.mutationObserver = null;
         this.overlayObserver?.disconnect();
         this.overlayObserver = null;
+
+        this.blockOptionsMenuObserver?.disconnect();
+        this.blockOptionsMenuObserver = null;
 
         this.dragSession.dispose();
 
@@ -78,6 +86,7 @@ export class DragManager {
 
         document.removeEventListener(EventTypes.KeyDown, this.onEditorKeyDown, true);
         document.removeEventListener(EventTypes.Input, this.onEditorInput, true);
+        document.removeEventListener(EventTypes.GutenOverlayGroupClose, this.onOverlayGroupClose, true);
 
         this.unbindHandleEvents();
         this.controlsHost?.remove();
@@ -211,12 +220,14 @@ export class DragManager {
     }
 
     private onMouseEnter = (e: MouseEvent) => {
+        if (this.lockHandleTargetWhileBlockOptionsOpen) return;
         this.clearHideTimer();
         this.currentTarget = e.currentTarget as HTMLElement;
         this.showHandle();
     };
 
     private onMouseMove = (e: MouseEvent) => {
+        if (this.lockHandleTargetWhileBlockOptionsOpen) return;
         if (this.dragSession.isDragging() || !this.controlsWrap || this.controlsWrap.style.display !== 'none') return;
 
         this.currentTarget = e.currentTarget as HTMLElement;
@@ -236,10 +247,40 @@ export class DragManager {
     private onHandleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
         if (!this.currentTarget || !this.controlsWrap) return;
-        const rect = this.controlsWrap.getBoundingClientRect();
         const block = this.currentTarget;
-        runCommand('openBlockOptions', { content: { block, rect } });
+        const opened = runCommand('openBlockOptions', { content: { block, anchor: this.controlsWrap } });
+        if (opened) {
+            this.lockHandleTargetWhileBlockOptionsOpen = true;
+            this.observeBlockOptionsMenuLifecycle();
+        }
     };
+
+    private onOverlayGroupClose = () => {
+        this.lockHandleTargetWhileBlockOptionsOpen = false;
+    };
+
+    private observeBlockOptionsMenuLifecycle() {
+        this.blockOptionsMenuObserver?.disconnect();
+
+        const overlayRoot = this.resolveOverlayRoot();
+        if (!overlayRoot) return;
+
+        const isOpen = () => Boolean(overlayRoot.querySelector(BlockOptionsMenu.getTagName()));
+
+        if (!isOpen()) {
+            this.lockHandleTargetWhileBlockOptionsOpen = false;
+            return;
+        }
+
+        this.blockOptionsMenuObserver = new MutationObserver(() => {
+            if (isOpen()) return;
+            this.lockHandleTargetWhileBlockOptionsOpen = false;
+            this.blockOptionsMenuObserver?.disconnect();
+            this.blockOptionsMenuObserver = null;
+        });
+
+        this.blockOptionsMenuObserver.observe(overlayRoot, { childList: true, subtree: true });
+    }
 
     private onAddClick = (e: MouseEvent) => {
         e.preventDefault();

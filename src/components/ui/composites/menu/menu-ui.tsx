@@ -20,6 +20,7 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     private _lastSelectedAnchor: HTMLElement | null = null;
     private _hoverByMouseEnabled = true;
     private _shouldRestoreFocusOnUnmount = true;
+    private _repositionRafId: number | null = null;
 
     /** Whether the menu should start with the first item selected (index 0). */
     protected autoFocusFirst = true;
@@ -93,6 +94,8 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         this.registerEvent(this, EventTypes.Mouseover, this.onMouseOver as EventListener);
         this.registerEvent(this, EventTypes.MouseMove, this.onMouseMove as EventListener);
         this.registerEvent(document, EventTypes.GutenOverlayGroupClose, this.onOverlayGroupClose as EventListener, true);
+        this.registerEvent(globalThis, EventTypes.Scroll, this.onViewportChange as EventListener, true);
+        this.registerEvent(globalThis, EventTypes.Resize, this.onViewportChange as EventListener);
 
         if (this.autoFocusFirst !== false) {
             this.setState({ selectedIndex: 0 } as Partial<S>);
@@ -141,6 +144,19 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         this._shouldRestoreFocusOnUnmount = false;
     };
 
+    private readonly onViewportChange = () => {
+        if (!this.isConnected || !this._didInitialPosition || this.positionMode === "none") return;
+
+        if (this._repositionRafId !== null) {
+            cancelAnimationFrame(this._repositionRafId);
+        }
+
+        this._repositionRafId = requestAnimationFrame(() => {
+            this._repositionRafId = null;
+            this.repositionToAnchor();
+        });
+    };
+
     private onMouseMove = (_e: MouseEvent) => {
         this._hoverByMouseEnabled = true;
     };
@@ -175,6 +191,17 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
             });
             mo.observe(parent, { childList: true });
         }
+    }
+
+    private repositionToAnchor(): void {
+        const anchor = this.props.anchor;
+        if (!anchor || !anchor.isConnected) {
+            if (this.closeOnAnchorLoss) this.remove();
+            return;
+        }
+
+        if (this.positionMode === "relative") this.positionRelativeToMenu(anchor);
+        else this.positionToAnchor(anchor);
     }
 
     protected restoreFocusToAnchor() {
@@ -304,19 +331,22 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
     private maybeInitialReposition() {
         if (this._didInitialPosition) return;
         const { anchor } = this.props as MenuUIProps;
-        if (!anchor || !anchor.isConnected || this.positionMode === "none") return;
+        if (!anchor || !anchor.isConnected || this.positionMode === "none") {
+            return;
+        }
 
         if (this.lockWidthOnOpen) {
             const { width } = this.getBoundingClientRect();
             if (width > 0) this.style.minWidth = `${width}px`;
         }
+
+        this.repositionToAnchor();
+        this._didInitialPosition = true;
+
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                if (!anchor.isConnected) { this.remove(); return; }
-                if (this.positionMode === "relative") this.positionRelativeToMenu(anchor);
-                else this.positionToAnchor(anchor);
-                this._didInitialPosition = true;
-                // if (this.lockWidthOnOpen) setTimeout(() => (this.style.minWidth = ""), 160);
+                if (!this.isConnected || !anchor.isConnected) return;
+                this.repositionToAnchor();
             });
         });
     }

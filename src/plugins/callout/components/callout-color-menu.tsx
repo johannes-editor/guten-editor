@@ -29,6 +29,8 @@ export class CalloutColorMenu extends MenuUI<CalloutColorMenuProps, CalloutColor
 
     override props: CalloutColorMenuProps = {} as CalloutColorMenuProps;
 
+    protected override positionMode: "none" | "relative" | "anchor" = "relative";
+
     override state: CalloutColorMenuState = {
         selectedIndex: 0,
         background: "",
@@ -44,11 +46,6 @@ export class CalloutColorMenu extends MenuUI<CalloutColorMenuProps, CalloutColor
         );
 
         this.props.children = backgroundItems;
-    }
-
-    override afterRender(): void {
-        super.afterRender();
-        this.positionRelativeToMenu(this.props.anchor)
     }
 
     private syncStateFromBlock(): void {

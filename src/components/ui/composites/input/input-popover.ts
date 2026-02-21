@@ -1,6 +1,7 @@
 
 
 import { DefaultState } from "@core/components";
+import { EventTypes } from "@utils/dom";
 import { InputPopoverUI, InputPopoverUIProps } from "./input-popover-ui.tsx";
 
 export interface SelectionController {
@@ -15,9 +16,13 @@ export interface InputPopoverProps extends InputPopoverUIProps {
 
 export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState> extends InputPopoverUI<P, S> {
 
-    private range: DOMRect | null = null;
+    private anchorRect: DOMRect | null = null;
+    private anchorRange: Range | null = null;
+
     private selectionLocked = false;
     private closing = false;
+
+    private repositionFrame: number | null = null;
 
     override connectedCallback(): void {
         this.closing = false;
@@ -27,16 +32,21 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
             return;
         }
 
-        this.range = this.props.anchorRect ? this.toDOMRect(this.props.anchorRect) : this.getDOMRect();
+        if (this.props.anchorRect) {
+            this.anchorRect = this.toDOMRect(this.props.anchorRect);
+        } else {
+            this.anchorRange = this.getCurrentSelectionRange();
+        }
 
-        if (this.range) {
-            this.setPosition(this.range);
+        const initialRect = this.resolveAnchorRect();
+        if (initialRect) {
+            this.setPosition(initialRect);
         }
 
         requestAnimationFrame(() => {
-
-            if (this.range) {
-                this.setPosition(this.range);
+            const nextRect = this.resolveAnchorRect();
+            if (nextRect) {
+                this.setPosition(nextRect);
             }
         });
 
@@ -45,6 +55,9 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
             this.props.selectionController.lock();
             this.selectionLocked = true;
         }
+
+        this.registerEvent(globalThis, EventTypes.Scroll, this.handleViewportChange as EventListener, true);
+        this.registerEvent(globalThis, EventTypes.Resize, this.handleViewportChange as EventListener);
     }
 
     override disconnectedCallback(): void {
@@ -71,23 +84,7 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
         const selection = globalThis.getSelection();
         if (!selection || selection.rangeCount === 0) return null;
 
-        const range = selection.getRangeAt(0);
-
-        const rects = range.getClientRects();
-        if (rects.length > 0) return rects[0];
-
-        const br = range.getBoundingClientRect?.();
-        if (br && (br.width || br.height)) return br as DOMRect;
-
-        const el = (range.startContainer instanceof Element
-            ? range.startContainer
-            : range.startContainer?.parentElement) as Element | null;
-
-        if (el) {
-            const r = el.getBoundingClientRect();
-            if (r && (r.width || r.height)) return r as DOMRect;
-        }
-        return null;
+        return this.getDOMRectFromRange(selection.getRangeAt(0));
     }
 
     public setPosition(rect: DOMRect): void {
@@ -122,5 +119,59 @@ export abstract class InputPopover<P extends InputPopoverProps, S = DefaultState
         return typeof DOMRect.fromRect === "function"
             ? DOMRect.fromRect({ x, y, width, height })
             : new DOMRect(x, y, width, height);
+    }
+
+    private handleViewportChange = () => {
+        if (!this.isConnected || this.closing) return;
+
+        if (this.repositionFrame !== null) {
+            cancelAnimationFrame(this.repositionFrame);
+        }
+
+        this.repositionFrame = requestAnimationFrame(() => {
+            this.repositionFrame = null;
+
+            const nextRange = this.resolveAnchorRect();
+            if (!nextRange) return;
+
+            this.setPosition(nextRange);
+        });
+    };
+
+    private resolveAnchorRect(): DOMRect | null {
+        if (this.anchorRect) return this.anchorRect;
+        if (this.anchorRange) return this.getDOMRectFromRange(this.anchorRange);
+        return this.getDOMRect();
+    }
+    
+    private getDOMRectFromRange(range: Range): DOMRect | null {
+        if (!range.startContainer?.isConnected || !range.endContainer?.isConnected) {
+            return null;
+        }
+
+        const br = range.getBoundingClientRect?.();
+        if (br && (br.width || br.height)) return br as DOMRect;
+
+        const startElement = range.startContainer instanceof Element
+            ? range.startContainer
+            : range.startContainer?.parentElement;
+
+        if (startElement) {
+            const r = startElement.getBoundingClientRect();
+            if (r && (r.width || r.height)) return r as DOMRect;
+        }
+
+        return null;
+    }
+
+    private getCurrentSelectionRange(): Range | null {
+        const selection = globalThis.getSelection();
+        if (!selection || selection.rangeCount === 0) return null;
+
+        try {
+            return selection.getRangeAt(0).cloneRange();
+        } catch {
+            return null;
+        }
     }
 }

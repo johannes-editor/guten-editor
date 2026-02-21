@@ -9,6 +9,8 @@ export interface BlockOptionsProps extends DefaultProps {
 
 export class BlockOptionsMenu extends MenuUI<BlockOptionsProps> {
 
+    protected override positionMode: "none" | "relative" | "anchor" = "anchor";
+
     override closeOnAnchorLoss: boolean = false;
 
     override props: BlockOptionsProps = {} as BlockOptionsProps;
@@ -19,7 +21,7 @@ export class BlockOptionsMenu extends MenuUI<BlockOptionsProps> {
         cleanupCaretAnchor(this.props.anchor ?? null, {
             restoreSelection: this.shouldRestoreAnchorSelection,
         });
-        
+
         super.onUnmount();
     }
 
