@@ -96,14 +96,8 @@ export class MenuItemUI<P extends DefaultProps, S = DefaultState> extends Compon
         }
 
         .guten-menu-item-right[data-kind="chevron"] {
-          visibility: hidden;
-          opacity: 0.6;
-        }
-
-        .guten-menu-item button.selected .guten-menu-item-right[data-kind="chevron"],
-        .guten-menu-item button:hover .guten-menu-item-right[data-kind="chevron"],
-        .guten-menu-item button:focus .guten-menu-item-right[data-kind="chevron"] {
           visibility: visible;
+          opacity: 0.6;
         }
 
         .guten-menu-item-shortcut {
