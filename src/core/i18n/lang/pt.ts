@@ -122,6 +122,12 @@ const pt: TranslationSchema = {
     theme: 'Tema',
     settings: 'Configurações',
     language: 'Idioma',
+
+    block_control_add_below: 'Adicionar parágrafo abaixo',
+    block_control_add_above_alt_click: 'Alt+Clique para adicionar acima',
+    block_control_drag_move: 'Arrastar para mover bloco',
+    block_control_drag_menu_context: 'Clique com o botão direito para abrir o menu',
+
     auto: 'Auto',
 };
 

@@ -30,7 +30,7 @@ export class BlockControl extends Component<BlockControlProps> {
         const cursor = this.props.cursor ?? "pointer";
 
         return (
-            <Tooltip text={this.props.tooltipText} shortcut="" placement="right">
+            <Tooltip text={this.props.tooltipText} placement="right">
                 <button
                     type="button"
                     aria-label={this.props.ariaLabel}

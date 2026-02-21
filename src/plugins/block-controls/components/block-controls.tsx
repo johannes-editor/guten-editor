@@ -1,9 +1,9 @@
 import { Component, DefaultProps } from "@core/components";
 import { PlusIcon, GripVerticalIcon } from "@components/ui/icons";
 import { BlockControl } from "./block-control.tsx";
+import { t } from "@core/i18n";
 
 export class BlockControls extends Component<DefaultProps> {
-
     static override styles = this.extendStyles(/*css */`
         .block-controls{
             position: absolute;
@@ -15,19 +15,25 @@ export class BlockControls extends Component<DefaultProps> {
     ` );
 
     override render(): HTMLElement {
+
+        const addBelowLabel = t("block_control_add_below");
+        const addAboveHint = t("block_control_add_above_alt_click");
+        const dragMoveLabel = t("block_control_drag_move");
+        const dragMenuHint = t("block_control_drag_menu_context");
+        
         return (
             <div className="block-controls">
                 <BlockControl
                     controlType="add"
-                    ariaLabel="Add paragraph below (Alt+Click to add above)"
-                    tooltipText="Add paragraph below\nAlt+Click to add above"
+                    ariaLabel={`${addBelowLabel}. ${addAboveHint}`}
+                    tooltipText={`${addBelowLabel}\n${addAboveHint}`}
                     icon={PlusIcon}
                     cursor="pointer"
                 />
                 <BlockControl
                     controlType="drag"
-                    ariaLabel="Drag to move block"
-                    tooltipText="Drag to move block \n Right click to open menu"
+                    ariaLabel={`${dragMoveLabel}. ${dragMenuHint}`}
+                    tooltipText={`${dragMoveLabel}\n${dragMenuHint}`}
                     icon={GripVerticalIcon}
                     cursor="grab"
                 />

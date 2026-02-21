@@ -31,7 +31,7 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
             display: flex;
             flex-direction: column;
             padding: var(--space-xs) var(--space-sm);
-            text-align: center;
+            text-align: left;
             position: absolute;
             border-radius: var(--radius-sm);
             box-shadow: var(--shadow-md);
@@ -121,6 +121,8 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
             open = false
         } = this.props as TooltipProps;
 
+        const tooltipText = text?.replace(/\\n/g, "\n");
+
         const shortcutEl = shortcut
             ? (
                 <span class="shortcut">
@@ -149,7 +151,7 @@ export class Tooltip<P extends TooltipProps = TooltipProps, S = DefaultState>
                         data-placement={placement}
                         data-open={open ? "true" : "false"}
                     >
-                        {text}
+                        {tooltipText}
                         {shortcutEl}
                     </span>
                 )}
