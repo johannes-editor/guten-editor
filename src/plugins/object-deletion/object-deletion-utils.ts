@@ -8,6 +8,7 @@ export const FOCUSABLE_OBJECT_SELECTOR = [
     ".masonry-gallery__tile[data-mosaic-tile]",
     "[data-youtube-placeholder='true']",
     ".youtube-embed[data-youtube-embed='true']",
+    "hr.block-separator",
 ].join(",");
 
 const BLOCK_SELECTOR = ".block";
