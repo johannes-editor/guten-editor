@@ -9,6 +9,12 @@
             "active": true
         },
         {
+            "path": "./extensions/markdown-shortcut-table-extension.tsx",
+            "class": "MarkdownShortcutTableExtension",
+            "active": true,
+            "description": "Adds markdown shortcuts to create tables."
+        },
+        {
             "path": "./extensions/block-options-table-extension.tsx",
             "class": "BlockOptionsTableExtension",
             "active": true,
