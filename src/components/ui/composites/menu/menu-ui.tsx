@@ -344,10 +344,8 @@ export class MenuUI<P extends MenuUIProps = MenuUIProps, S extends MenuUIState =
         this._didInitialPosition = true;
 
         requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                if (!this.isConnected || !anchor.isConnected) return;
-                this.repositionToAnchor();
-            });
+            if (!this.isConnected || !anchor.isConnected) return;
+            this.repositionToAnchor();
         });
     }
 
